@@ -55,10 +55,32 @@ Antwoord 6:
 
 ((45 + 3 - 1)! / (45!(3-1)!)) - (((15 + 3 - 1)! / (15!(3-1)!)) - ((15 + 2 - 1)! / (15!(2-1)!))) = 961
 
+Opdracht 7:
 
+Antwoord 1:
 
+Proteïn Pow(d)er
 
+Antwoord 2:
 
+We hebben een string van x beschikbare posities. Bij de eitwit HHPHHHPH, hebben we dus 8 beschikbare posities waarvan er 2 gevuld moeten worden door P en de overige 6 posities door H. De mogelijke eiwitten zijn dus: 8!/2!6!.
+Bij de eiwit HHPHHHPHPHHHPH geldt dan 14!/4!10! etc.
 
+Antwoord 3:
 
+De werkelijke state-space grootte kan hier nooit boven liggen omdat ik alle mogelijke eiwitten heb berekend.
 
+Antwoord 4:
+
+De werkelijke state-space grootte kan hier nooit boven liggen omdat ik alle mogelijke eiwitten heb berekend.
+
+Antwoord 5:
+
+De werkelijke state-space grootte kan hier nooit boven liggen omdat ik alle mogelijke eiwitten heb berekend.
+
+Antwoord 6:
+
+Voor HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH geldt: 
+50!/24!26! = 1.21549E14 = 121,549,000,000,000
+Voor HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH geldt:
+50!/21!6!23! = 3.19819E19 = 31,981,900,000,000,000,000
