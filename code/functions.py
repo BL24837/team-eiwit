@@ -2,19 +2,14 @@ from constants import *
 
 class Board:
     def __init__(self):
-        self.grid = []
+        self.grid = [[0 for _ in range(WIDTH)] for _ in range(HEIGHT)]
 
     def check_empty(self):
-        if self.squares == 0:
-            return True
-        else:
-            return False
+        for row in self.grid:
+            for cell in row:
+                if cell != 0:
+                    return False
 
     def print_grid(self):
-        rows = WIDTH
-        cols = HEIGHT
-        for i in range(rows):
-            row = [0] * WIDTH
-            self.grid.append(row)
-        for row in grid:
+        for row in self.grid:
             print(row)
