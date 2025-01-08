@@ -38,7 +38,10 @@ class Board:
         ]
         for neighbor in neighbors:
             if neighbor in self.grid:
-                self.score += new_amino.get_bond_strength(self.grid[neighbor])
+                # Controleer of het buur-amino niet de directe voorganger of opvolger in de keten is
+                if neighbor != self.positions[-2]:  # De laatste geplaatste was direct verbonden
+                    self.score += new_amino.get_bond_strength(self.grid[neighbor])
+
 
     def plot_board(self):
         x_coords, y_coords = zip(*self.positions)
@@ -57,6 +60,8 @@ class ProteinState:
     def __init__(self, sequence):
         self.sequence = sequence
         self.board = Board()
+        self.best_score = float('inf')
+        self.best_board = None
         self.board.place_amino_acid(AminoAcid(sequence[0], (0, 0)))
 
     def get_valid_moves(self):
@@ -67,46 +72,42 @@ class ProteinState:
             (0, 1),   # Omhoog
             (0, -1)   # Omlaag
         ]
-        if len(self.board.positions) == 1:
-            return directions
-        else:
-            prev_x, prev_y = self.board.positions[-2]
-            return [d for d in directions if (last_x + d[0], last_y + d[1]) != (prev_x, prev_y)]
+        return directions
 
-    def add_amino_acid(self):
-        next_index = len(self.board.positions)
-        if next_index >= len(self.sequence):
-            return False
+    def backtrack(self, index):
+        print(1)
+        if index == len(self.sequence):
+            if self.board.score < self.best_score:
+                self.best_score = self.board.score
+                self.best_board = Board()
+                self.best_board.grid = self.board.grid.copy()
+                self.best_board.positions = self.board.positions.copy()
+                self.best_board.score = self.board.score
+            return
 
-        current_aa_type = self.sequence[next_index]
+        current_aa_type = self.sequence[index]
 
-        # Prioriteer bewegingen richting de dichtstbijzijnde H
-        if current_aa_type == 'H':
-            h_positions = [pos for pos in self.board.positions if self.board.grid[pos].amino_type == 'H']
-            if h_positions:
-                last_x, last_y = self.board.positions[-1]
-                h_target = min(h_positions, key=lambda pos: abs(pos[0] - last_x) + abs(pos[1] - last_y))
-                dx, dy = h_target[0] - last_x, h_target[1] - last_y
-                prioritized_moves = [(dx, dy)] + self.get_valid_moves()
-            else:
-                prioritized_moves = self.get_valid_moves()
-        else:
-            prioritized_moves = self.get_valid_moves()
-
-        for dx, dy in prioritized_moves:
+        for dx, dy in self.get_valid_moves():
             last_x, last_y = self.board.positions[-1]
             new_pos = (last_x + dx, last_y + dy)
 
             if not self.board.is_occupied(new_pos):
-                new_aa = AminoAcid(self.sequence[next_index], new_pos)
+                new_aa = AminoAcid(current_aa_type, new_pos)
                 self.board.place_amino_acid(new_aa)
+                previous_score = self.board.score
                 self.board.update_score(new_aa)
-                return True
-        return False
 
-# Testen van de volledige implementatie met visualisatie
-protein = ProteinState("HHPHHHPH")
-while protein.add_amino_acid():
-    pass
+                self.backtrack(index + 1)
 
-protein.board.plot_board()
+                self.board.grid.pop(new_pos)
+                self.board.positions.pop()
+                self.board.score = previous_score
+
+    def find_best_folding(self):
+
+        self.backtrack(1)
+        self.best_board.plot_board()
+
+# Testen van de volledige backtracking-implementatie met visualisatie
+protein = ProteinState("HPHPPHHPHPPHPHHPPHPH")
+protein.find_best_folding()
