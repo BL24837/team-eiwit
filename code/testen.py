@@ -14,6 +14,7 @@ class AminoAcid:
             return -1
         return 0
 
+
 class Board:
     def __init__(self):
         self.grid = {}
@@ -50,6 +51,7 @@ class Board:
         plt.grid(True)
         plt.title(f"Protein Folding - Score: {self.score}")
         plt.show()
+
 
 class ProteinState:
     def __init__(self, sequence):
