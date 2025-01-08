@@ -78,3 +78,17 @@ Voor HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH geldt:
 50!/24!26! = 1.21549E14 = 121,549,000,000,000
 Voor HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH geldt:
 50!/21!6!23! = 3.19819E19 = 31,981,900,000,000,000,000
+
+Vraag 7:
+
+Antwoord 3:
+Het eerste aminozuur heeft een ontelbaar aantal keuze om zich ergens op de grid te plaatsen. De tweede heeft door de vrije ruimte hieromheen vier keuzes om zich te plaatsen. Daarna heeft elk van de aminozuren maximaal 3 richtingen die de aminozuur kan kiezen. Dit is een versimpelde aanname, omdat sommige aminozuren maar 2 richtingen hebben. 
+
+Antwoord 4:
+De bovengrens van onze state-space kan worden berekend met de volgende formule: 4 * (3^n-2)
+
+Antwoord 5:
+
+Antwoord 6:
+Voor HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH geldt:
+4 * (3 ^ 50 - 2) = 3.19066 * 10 ^ 23
