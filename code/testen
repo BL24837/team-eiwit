@@ -78,7 +78,22 @@ class ProteinState:
         if next_index >= len(self.sequence):
             return False
 
-        for dx, dy in self.get_valid_moves():
+        current_aa_type = self.sequence[next_index]
+
+        # Prioriteer bewegingen richting de dichtstbijzijnde H
+        if current_aa_type == 'H':
+            h_positions = [pos for pos in self.board.positions if self.board.grid[pos].amino_type == 'H']
+            if h_positions:
+                last_x, last_y = self.board.positions[-1]
+                h_target = min(h_positions, key=lambda pos: abs(pos[0] - last_x) + abs(pos[1] - last_y))
+                dx, dy = h_target[0] - last_x, h_target[1] - last_y
+                prioritized_moves = [(dx, dy)] + self.get_valid_moves()
+            else:
+                prioritized_moves = self.get_valid_moves()
+        else:
+            prioritized_moves = self.get_valid_moves()
+
+        for dx, dy in prioritized_moves:
             last_x, last_y = self.board.positions[-1]
             new_pos = (last_x + dx, last_y + dy)
 
