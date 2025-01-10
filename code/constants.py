@@ -1,2 +1,0 @@
-WIDTH = 
-HEIGHT = 
