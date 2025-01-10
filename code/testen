@@ -37,8 +37,15 @@ class Board:
             (x, y - 1)
         ]
         for neighbor in neighbors:
+<<<<<<< HEAD
             if neighbor in self.grid and neighbor != self.positions[-2]:
                 self.score += new_amino.get_bond_strength(self.grid[neighbor])
+=======
+            if neighbor in self.grid:
+                # Controleer of het buur-amino niet de directe voorganger of opvolger in de keten is
+                if neighbor != self.positions[-2]:  # De laatste geplaatste was direct verbonden
+                    self.score += new_amino.get_bond_strength(self.grid[neighbor])
+>>>>>>> ae7acb86c4d6810a5d59b026c81cfbeed721408c
 
     def plot_board(self):
         x_coords, y_coords = zip(*self.positions)
@@ -122,9 +129,15 @@ class ProteinState:
         self.best_board.plot_board()
 
 # Testen van de volledige backtracking-implementatie met visualisatie
+<<<<<<< HEAD
 string = "HPHPPHHPHPPHPHHPPHPH"
 protein = ProteinState(string)
 protein.find_best_folding()
 et = time.time()
 elapsed_time = et-st
 print(f"Execution time: {elapsed_time} voor {string}")
+=======
+protein = ProteinState("PPPHPHHCPPC")
+protein.find_best_folding()
+
+>>>>>>> ae7acb86c4d6810a5d59b026c81cfbeed721408c
