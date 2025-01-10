@@ -1,12 +1,6 @@
-class Aminoacid:
-    """
+class AminoAcid:
+    def __init__(self, type_):
+        self.type = type_  # 'H', 'P', or 'C'
 
-    
-
-
-    """
-
-    def __init__(self, amino_type,index):
-        self.amino_type = amino_type
-        self.coordinates = [0,0,0]
-        self.index = index
+    def __repr__(self):
+        return f"AminoAcid(type='{self.type}')"
