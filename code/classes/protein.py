@@ -1,11 +1,10 @@
-
+from protein import Board
 
 class Aminozuur:
-    def __init__(self):
-        self.amino_type = # H, C, P;
-        self.index = # plaatst in sequentie;
-        self.x = # x coordinaat;
-        self.y = # y coordinaat;
+    def __init__(self, type: str, index: int, position: ):
+        self.amino_type = type
+        self.index = index
+        self.position = position
 
     def get_score_stabiliteit(self, other):
         if self.amino_type == "H" and other.amino_type == "H":
@@ -17,9 +16,21 @@ class Aminozuur:
         return 0
 
 class Eiwit:
-    def __init__(self):
-        self.sequentie = ;
+    def __init__(self, sequence: str):
+        self.sequence = sequence
+        self.board = Board()
         self.aminozuren = []
-        self.grid_size = #lengte van de sequentie alle kanten op;
+        self.best_stabillity = float()
+        self.best_board = None
 
+    def get_valid_moves(self):
+        
+        directions = [
+            (1, 0),
+            (-1, 0),
+            (0, 1),
+            (0, -1)
+        ]
+
+        return directions
 
