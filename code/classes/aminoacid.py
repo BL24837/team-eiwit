@@ -13,3 +13,4 @@ class Aminozuur:
         self.amino_type = amino_type
         self.coordinates = [0,0,0]
         self.index = index
+        return 1

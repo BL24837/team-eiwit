@@ -122,7 +122,7 @@ class ProteinState:
         self.best_board.plot_board()
 
 # Testen van de volledige backtracking-implementatie met visualisatie
-string = "HPHPPHHPHPPHPHHPPHPH"
+string = "HPHPPHHPHP"
 protein = ProteinState(string)
 protein.find_best_folding()
 et = time.time()
