@@ -1,9 +1,11 @@
 import matplotlib.pyplot as plt
+import csv
 import time 
 st = time.time()
+
 class AminoAcid:
     def __init__(self, amino_type, position):
-        self.amino_type = amino_type  # 'H', 'P' of 'C'
+        self.amino_type = amino_type
         self.position = position
 
     def get_bond_strength(self, other):
@@ -69,7 +71,6 @@ class ProteinState:
             (0, -1)   # Omlaag
         ]
 
-        # Sorteer de richtingen op basis van gunstige bindingen
         def binding_potential(move):
             new_pos = (last_x + move[0], last_y + move[1])
             neighbors = [
@@ -119,10 +120,11 @@ class ProteinState:
 
     def find_best_folding(self):
         self.backtrack(1)
+        
+        # Toon de beste oplossing in een plot
         self.best_board.plot_board()
 
-# Testen van de volledige backtracking-implementatie met visualisatie
-string = "HPHPPHHPHPPHPHHPPHPH"
+string = "HPHPPHH"
 protein = ProteinState(string)
 protein.find_best_folding()
 et = time.time()
