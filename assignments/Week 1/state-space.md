@@ -6,6 +6,9 @@ Een student heeft 12 verschillende vakken van 2 uur welke geroosterd moeten word
 
 Antwoord 1:
 
+Order: Nee
+Repetition: Nee
+
 20! / (12!(20-12))! = 20! / (12! * 8!) = 125970
 
 Opdracht 2:
@@ -13,6 +16,9 @@ Opdracht 2:
 Je fietst door Manhattan, New York en kunt bij elk kruispunt linksaf, rechtsaf of rechtdoor. Hoeveel verschillende routes kun je rijden vanaf een gegeven beginpunt en richting met daarin 20 kruispunten?
 
 Antwoord 2:
+
+Order: Ja
+Repetition: Ja
 
 3^20 = 3,486,784,401
 
@@ -66,11 +72,11 @@ De werkelijke state-space grootte kan hier nooit boven liggen omdat ik alle moge
 
 Antwoord 4:
 
-n!/a!b!c!. Met n het aantal mogelijke posities, met a het aantal keer voor letter a, met b het aantal keer voor letter b en c het aantal keer voor letter c
+De werkelijke state-space grootte kan hier nooit boven liggen omdat ik alle mogelijke eiwitten heb berekend.
 
 Antwoord 5:
 
-Stel we hebben een string van 5 mogelijke posities: ,,,,_ (de kommas worden gebruikt om aan te duiden dat het verschillende posities zijn). En we hebben 2 letters: A en B. Volgens mijn formule zou het aantal mogelijke posities 10 moeten zijn. Dit klopt ook want als ik alle mogelijke posities uitschrijf: AAABB, AABAB, AABBA, ABABA, ABBAA, ABAAB, BAAAB, BAABA, BABAA, BBAAA.
+De werkelijke state-space grootte kan hier nooit boven liggen omdat ik alle mogelijke eiwitten heb berekend.
 
 Antwoord 6:
 
@@ -81,14 +87,28 @@ Voor HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH geldt:
 
 Vraag 7:
 
+Antwoord 1:
+
+Antwoord 2:
+
+We hebben een string van x beschikbare posities. Bij de eitwit HHPHHHPH, hebben we dus 8 beschikbare posities waarvan er 2 gevuld moeten worden door P en de overige 6 posities door H. De mogelijke eiwitten zijn dus: 8!/2!6!.
+Bij de eiwit HHPHHHPHPHHHPH geldt dan 14!/4!10! etc.
+
 Antwoord 3:
-Het eerste aminozuur heeft een ontelbaar aantal keuze om zich ergens op de grid te plaatsen. De tweede heeft door de vrije ruimte hieromheen vier keuzes om zich te plaatsen. Daarna heeft elk van de aminozuren maximaal 3 richtingen die de aminozuur kan kiezen. Dit is een versimpelde aanname, omdat sommige aminozuren maar 2 richtingen hebben. 
+
+De werkelijke state-space grootte kan hier nooit boven liggen omdat ik alle mogelijke eiwitten heb berekend.
 
 Antwoord 4:
-De bovengrens van onze state-space kan worden berekend met de volgende formule: 4 * (3^n-2)
+
+De werkelijke state-space grootte kan hier nooit boven liggen omdat ik alle mogelijke eiwitten heb berekend.
 
 Antwoord 5:
 
+De werkelijke state-space grootte kan hier nooit boven liggen omdat ik alle mogelijke eiwitten heb berekend.
+
 Antwoord 6:
-Voor HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH geldt:
-4 * (3 ^ 50 - 2) = 3.19066 * 10 ^ 23
+
+Voor HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH geldt: 
+50!/24!26! = 1.21549E14 = 121,549,000,000,000
+Voor HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH geldt:
+50!/21!6!23! = 3.19819E19 = 31,981,900,000,000,000,000
