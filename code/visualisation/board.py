@@ -1,5 +1,3 @@
-import matplotlib.pyplot as plt
-
 class Board:
     def __init__(self):
         self.grid = {}
@@ -12,21 +10,22 @@ class Board:
 
     def is_occupied(self, position):
         return position in self.grid
-    
-    def get_valid_moves(self):
-        last_x, last_y = self.board.positions[-1]
-        directions = [
-            (1, 0),
-            (-1, 0),
-            (0, 1),
-            (0, -1)
+
+    def update_score(self, new_amino):
+        x, y = new_amino.position
+        neighbors = [
+            (x + 1, y),
+            (x - 1, y),
+            (x, y + 1),
+            (x, y - 1)
         ]
-        return directions
-    
+        for neighbor in neighbors:
+            if neighbor in self.grid and neighbor != self.positions[-2]:
+                self.score += new_amino.get_bond_strength(self.grid[neighbor])
+
     def plot_board(self):
         x_coords, y_coords = zip(*self.positions)
         colors = {'H': 'red', 'P': 'blue', 'C': 'green'}
-        # aangepast aan de grote van de sequence, dus minimaal 2 * de sequence alle richtingen op
         plt.figure(figsize=(6, 6))
         for position, amino_acid in self.grid.items():
             plt.scatter(position[0], position[1], color=colors[amino_acid.amino_type], s=200)
