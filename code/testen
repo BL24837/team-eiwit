@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
-
+import time 
+st = time.time()
 class AminoAcid:
     def __init__(self, amino_type, position):
         self.amino_type = amino_type  # 'H', 'P' of 'C'
@@ -13,7 +14,6 @@ class AminoAcid:
         elif ('C' in (self.amino_type, other.amino_type)) and ('H' in (self.amino_type, other.amino_type)):
             return -1
         return 0
-
 
 class Board:
     def __init__(self):
@@ -37,11 +37,8 @@ class Board:
             (x, y - 1)
         ]
         for neighbor in neighbors:
-            if neighbor in self.grid:
-                # Controleer of het buur-amino niet de directe voorganger of opvolger in de keten is
-                if neighbor != self.positions[-2]:  # De laatste geplaatste was direct verbonden
-                    self.score += new_amino.get_bond_strength(self.grid[neighbor])
-
+            if neighbor in self.grid and neighbor != self.positions[-2]:
+                self.score += new_amino.get_bond_strength(self.grid[neighbor])
 
     def plot_board(self):
         x_coords, y_coords = zip(*self.positions)
@@ -54,7 +51,6 @@ class Board:
         plt.grid(True)
         plt.title(f"Protein Folding - Score: {self.score}")
         plt.show()
-
 
 class ProteinState:
     def __init__(self, sequence):
@@ -72,10 +68,28 @@ class ProteinState:
             (0, 1),   # Omhoog
             (0, -1)   # Omlaag
         ]
-        return directions
+
+        # Sorteer de richtingen op basis van gunstige bindingen
+        def binding_potential(move):
+            new_pos = (last_x + move[0], last_y + move[1])
+            neighbors = [
+                (new_pos[0] + 1, new_pos[1]),
+                (new_pos[0] - 1, new_pos[1]),
+                (new_pos[0], new_pos[1] + 1),
+                (new_pos[0], new_pos[1] - 1)
+            ]
+            score = sum(1 for neighbor in neighbors if neighbor in self.board.grid and self.board.grid[neighbor].get_bond_strength(AminoAcid(self.sequence[-1], new_pos)) < 0)
+            return score
+
+        sorted_directions = sorted(directions, key=binding_potential, reverse=True)
+
+        # Elimineer spiegelbeelden door slechts één oriëntatie te testen
+        if len(self.board.positions) == 1:
+            sorted_directions = [sorted_directions[0]]
+
+        return sorted_directions
 
     def backtrack(self, index):
-        print(1)
         if index == len(self.sequence):
             if self.board.score < self.best_score:
                 self.best_score = self.board.score
@@ -104,10 +118,13 @@ class ProteinState:
                 self.board.score = previous_score
 
     def find_best_folding(self):
-
         self.backtrack(1)
         self.best_board.plot_board()
 
 # Testen van de volledige backtracking-implementatie met visualisatie
-protein = ProteinState("HPHPPHHPHPPHPHHPPHPH")
+string = "HPHPPHHPHPPHPHHPPHPH"
+protein = ProteinState(string)
 protein.find_best_folding()
+et = time.time()
+elapsed_time = et-st
+print(f"Execution time: {elapsed_time} voor {string}")
