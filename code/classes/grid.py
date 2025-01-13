@@ -1,8 +1,10 @@
-class Grid:
-    def __init__(self):
-        self.grid = {}
 
-    def place(self, x, y, amino_acid):
+class Grid:
+    def __init__(self, start_amino_acid):
+        self.grid = {}
+        self.grid[(0, 0)] = start_amino_acid
+
+    def place_on_grid(self, x, y, amino_acid):
         self.grid[(x, y)] = amino_acid
 
     def get_neighbors(self, x, y):
@@ -12,3 +14,5 @@ class Grid:
             self.grid.get((x, y - 1)),
             self.grid.get((x, y + 1)),
         ]
+    
+     
