@@ -15,4 +15,3 @@ class Grid:
             self.grid.get((x, y + 1)),
         ]
     
-     
