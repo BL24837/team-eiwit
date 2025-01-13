@@ -1,6 +1,6 @@
-from utils import read_sequences,export_results_to_csv
+from 'utils' import read_sequences,export_results_to_csv
 from protein import Protein
-from visualize import visualize_protein
+from 'visualize' import visualize_protein
 
 def fold_protein(sequence):
     protein = Protein(sequence)
