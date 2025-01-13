@@ -12,3 +12,4 @@ class Grid:
             self.grid.get((x, y - 1)),
             self.grid.get((x, y + 1)),
         ]
+    
