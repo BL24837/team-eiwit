@@ -1,5 +1,4 @@
 
-
 class AminoAcid:
     def __init__(self, type):
         self.type = type  # 'H', 'P', or 'C'
