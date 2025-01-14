@@ -1,57 +1,115 @@
-from .aminoacid import *
+from aminoacid import AminoAcid
 
 class Protein:
-    def __init__(self, sequence):
-        self.sequence = [AminoAcid(char) for char in sequence]
-        self.grid = {}  
-        self.score = 0  
+    def __init__(self, sequence: str):
+        self.sequence = sequence
+        self.best_score = 0
+        self.amino_acids = {}
+        self.grid = {}
+        self.make_aminoacids()
 
-    def place_on_grid(self, x, y, amino_acid):
-        self.grid[(x, y)] = amino_acid
+    def make_aminoacids(self):
+        """
+        Fills the dictionary amino acids with AminoAcid objects and places them on the grid.
+        Each amino acid is placed at a unique position based on its index in the sequence.
+        """
+        for index, char in enumerate(self.sequence):
+
+            x, y, z = index, 0, 0 
+            
+            amino_acid = AminoAcid(char, index, x, y, z)
+            
+            self.amino_acids[index] = amino_acid
+            
+            self.place_on_grid(x, y, z, char)
+
+    def get_neighbours(self, aminoacid):
+        """
+        """
+        neighbours = []
+
+        for other_amino_acid in self.amino_acids.values():
+
+            if other_amino_acid == aminoacid:
+                continue
+
+            ax, ay, az = aminoacid.position
+            bx, by, bz = other_amino_acid.position
+
+            if abs(ax - bx) + abs(ay - by) + abs(az - bz) == 1:
+                neighbours.append(other_amino_acid)
+
+        return neighbours
 
     def calculate_score(self):
-        self.score = 0
-        for (x1, y1), amino1 in self.grid.items():
-            for (x2, y2), amino2 in self.grid.items():
-                if abs(x1 - x2) + abs(y1 - y2) == 1:  
-                    self.score += self.get_bond_score(amino1, amino2)
+        """
+        
+        """
+        score = 0
 
-    def get_bond_score(self, amino1, amino2):
-        if amino1.type == 'H' and amino2.type == 'H':
-            return -1
-        if amino1.type == 'C' and amino2.type == 'C':
-            return -5
-        if 'C' in {amino1.type, amino2.type} and 'H' in {amino1.type, amino2.type}:
-            return -1
-        return 0
-    
-    def print_structure(self):
-    
-        min_x = min(pos[0] for pos in self.grid.keys())
-        max_x = max(pos[0] for pos in self.grid.keys())
-        min_y = min(pos[1] for pos in self.grid.keys())
-        max_y = max(pos[1] for pos in self.grid.keys())
+        for index, amino_acid in self.amino_acids.items():
 
-        grid_width = max_x - min_x + 1
-        grid_height = max_y - min_y + 1
-        grid = [[' ' for _ in range(grid_width * 2 - 1)] for _ in range(grid_height * 2 - 1)]
+            if amino_acid.type == 'H' or amino_acid.type == 'C':
+                neighbours = self.get_neighbours(amino_acid)
 
-        for (x, y), amino_acid in self.grid.items():
-            grid[(y - min_y) * 2][(x - min_x) * 2] = amino_acid.type
+                for neighbour in neighbours:
+                    if abs(index - neighbour.index) == 1:
+                        continue
+                    
+                    if amino_acid.type == 'H' and neighbour.type == 'H':
+                        score -= 1
+                    elif (amino_acid.type == 'H' and neighbour.type == 'C') or (amino_acid.type == 'C' and neighbour.type == 'H'):
+                        score -= 1
+                    elif amino_acid.type == 'C' and neighbour.type == 'C':
+                        score -= 5
 
-        for (x1, y1), amino1 in self.grid.items():
-            for (x2, y2), amino2 in self.grid.items():
-                if abs(x1 - x2) + abs(y1 - y2) == 1:  
-                    mid_x = (x1 + x2) - min_x * 2
-                    mid_y = (y1 + y2) - min_y * 2
-                    if x1 == x2:  
-                        grid[mid_y][mid_x * 2] = '|'
-                    if y1 == y2:  
-                        grid[mid_y * 2][mid_x] = '-'
+        score = score // 2
 
-        for row in reversed(grid): 
-            print(''.join(row))
+        return score
 
+    def get_move_value(self, amino1, amino2):
+        """
+        Returns the value of the move made based on the change in coordinates from start to end.
+        """
+        sx, sy, sz = amino1.position
+        ex, ey, ez = amino2.position
 
-    def __repr__(self):
-        return f"Protein(sequence='{''.join([aa.type for aa in self.sequence])}', score={self.score})"
+        if ex > sx:
+            return 1  
+        elif ex < sx:
+            return -1 
+        elif ey > sy:
+            return 2
+        elif ey < sy:
+            return -2
+        elif ez > sz:
+            return 3 
+        elif ez < sz:
+            return -3 
+
+    def get_valid_moves(self, amino):
+        """
+        Returns a list of valid moves for the given amino acid.
+        A move is valid if the resulting position is not already occupied.
+        """
+        x, y, z = amino.position
+        potential_moves = [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
+        valid_moves = []
+
+        for dx, dy, dz in potential_moves:
+            new_position = (x + dx, y + dy, z + dz)
+            
+            if new_position not in self.grid:
+                valid_moves.append(new_position)
+
+        return valid_moves
+
+    def place_on_grid(self, x: int, y: int, z:int, type):
+        self.grid[(x, y, z)] = type
+       
+
+if __name__ == "__main__":
+    protein = Protein("HHHCHC")
+    amino = protein.amino_acids[3]
+    valid_moves = protein.get_valid_moves(amino)
+    print(f"Valid moves for amino acid {amino}: {valid_moves}")
