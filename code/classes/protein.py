@@ -1,10 +1,32 @@
 from .aminoacid import *
 
+
+
 class Protein:
+
     def __init__(self, sequence):
-        self.sequence = [AminoAcid(char) for char in sequence]
-        self.grid = {}  
-        self.score = 0  
+        self.chain = []
+        self.score = 0
+        self.sequence = sequence
+        self.create()
+
+    
+    def create(self):
+        for c in self.sequence:
+
+			# set molecule type to either polair (P), hydrophobic (H) or cysteine (C)
+            if (c.upper() == 'H'):
+                type = "hydrophobic"
+
+            elif (c.upper() == 'P'):
+                type = "polair"
+                
+            elif (c.upper() == 'C'): 
+                type = "cysteine"
+            else:
+                print('wrong amino-acid only excepting H/P/C ')
+            
+            self.chain.append(AminoAcid(type))
 
     def place_on_grid(self, x, y, amino_acid):
         self.grid[(x, y)] = amino_acid

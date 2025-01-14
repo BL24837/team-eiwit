@@ -124,7 +124,7 @@ class ProteinState:
         # Toon de beste oplossing in een plot
         self.best_board.plot_board()
 
-string = "HPHPPHH"
+string = "HHPHHHPHPHHHPH"
 protein = ProteinState(string)
 protein.find_best_folding()
 et = time.time()
