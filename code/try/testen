@@ -53,6 +53,7 @@ class Board:
         plt.grid(True)
         plt.title(f"Protein Folding - Score: {self.score}")
         plt.show()
+    
 
 class ProteinState:
     def __init__(self, sequence):
@@ -118,11 +119,7 @@ class ProteinState:
                 self.board.positions.pop()
                 self.board.score = previous_score
 
-    def find_best_folding(self):
-        self.backtrack(1)
-        
-        # Toon de beste oplossing in een plot
-        self.best_board.plot_board()
+    
 
 string = "HHPHHHPHPHHHPH"
 protein = ProteinState(string)

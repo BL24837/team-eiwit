@@ -9,6 +9,7 @@ class Protein:
         self.score = 0
         self.sequence = sequence
         self.create()
+        self.grid = {}
 
     
     def create(self):
