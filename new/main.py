@@ -4,14 +4,14 @@ from random_algorithm import RandomFolding
 
 def main():
     # Define a protein sequence
-    sequence = "HHPHHHPH"
+    sequence = "HHPHHHPHPHHHPH"
 
     # Create a Protein object
     protein = Protein(sequence)
 
     # Perform random folding
     random_folding = RandomFolding(protein)
-    folded_protein = random_folding.execute(iterations=10000)
+    folded_protein = random_folding.execute(iterations=100000000)
 
     # Calculate the stability of the protein
     stability = folded_protein.calculate_stability()
