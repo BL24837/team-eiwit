@@ -1,3 +1,5 @@
+import random
+
 # random fold algoritme
 def random_fold_protein(sequence):
     protein = Protein(sequence)
