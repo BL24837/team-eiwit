@@ -1,8 +1,5 @@
 from aminoacid import AminoAcid
 
-
-
-
 class Protein:
     def __init__(self, sequence: str):
         self.sequence = sequence
@@ -41,10 +38,12 @@ class Protein:
 
             if abs(ax - bx) + abs(ay - by) + abs(az - bz) == 1:
                 neighbours.append(other_amino_acid)
+        
+        print(f"Neighbours of {aminoacid}: {neighbours}")
 
         return neighbours
 
-    def calculate_score(self):
+    def calculate_score_aminoacids(self):
         """
         
         """
@@ -115,4 +114,5 @@ if __name__ == "__main__":
     protein = Protein("HHHCHC")
     amino = protein.amino_acids[3]
     valid_moves = protein.get_valid_moves(amino)
+    print(protein.calculate_score_aminoacids())
     print(f"Valid moves for amino acid {amino}: {valid_moves}")

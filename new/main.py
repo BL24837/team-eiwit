@@ -11,7 +11,7 @@ def main():
 
     # Perform random folding
     random_folding = RandomFolding(protein)
-    folded_protein = random_folding.execute(iterations=150)
+    folded_protein = random_folding.execute(iterations=10000)
 
     # Calculate the stability of the protein
     stability = folded_protein.calculate_stability()

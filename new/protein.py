@@ -104,6 +104,11 @@ class Protein:
             "z_positive": np.array([[0, -1, 0], [1, 0, 0], [0, 0, 1]]),
             "z_negative": np.array([[0, 1, 0], [-1, 0, 0], [0, 0, 1]])
         }
+    
+    def copy(self):
+        new_protein = Protein(self.sequence)
+        new_protein.amino_acids = self.amino_acids.copy()  # Maak een kopie van de lijst
+        return new_protein
 
 # Example usage
 sequence = "HCHHCHC"

@@ -1,52 +1,52 @@
-from code.classes.aminoacid import AminoAcid
 from code.classes.protein import Protein
-from code.classes.grid import Grid
 from code.visualisation.board import *
 from code.classes.visualize import Visualize
 from code.classes.utils import utils
-from code.classes.grid import *
 
 import random
 
-# random fold algoritme
-def random_fold_protein(sequence):
-    grid = Grid()
-    protein = Protein(sequence)
-    x, y, z = 0, 0, 0
-    i = 0
+protein = Protein("HCHC")  # Sample sequence
+best_score = protein.random_fold(iterations=1000)
+print(f"Best score found: {best_score}")
 
-    for amino_acid in protein.sequence:
-        # Create amino acid object
-        amino_acid_obj = AminoAcid(amino_acid, i, x, y, z, 0)
-        protein.add_aminoacid(amino_acid_obj)
-        grid.place_on_grid(x, y, z, amino_acid_obj)
 
-        if i == 0:
-            i += 1
-            continue
+# # random fold algoritme
+# def random_fold_protein(sequence):
+#     protein = Protein(sequence)
+#     x, y, z = 0, 0, 0
+#     i = 0
 
-        valid_move = False
-        while not valid_move:
-            move = random.choice([(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0)])
-            new_x, new_y, new_z = x + move[0], y + move[1], z + move[2]
+#     for amino_acid in protein.sequence:
+#         amino_acid_obj = AminoAcid(amino_acid, i, x, y, z, 0)
+#         protein.add_aminoacid(amino_acid_obj)
+#         grid.place_on_grid(x, y, z, amino_acid_obj)
+
+#         if i == 0:
+#             i += 1
+#             continue
+
+#         valid_move = False
+#         while not valid_move:
+#             move = random.choice([(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0)])
+#             new_x, new_y, new_z = x + move[0], y + move[1], z + move[2]
             
-            # Check if the new position is already occupied
-            if grid.grid.get((new_x, new_y, new_z)) is None:
-                # Update position and add amino acid
-                x, y, z = new_x, new_y, new_z
-                grid.place_on_grid(x, y, z, amino_acid_obj)
-                valid_move = True
-                i += 1
+#             # Check if the new position is already occupied
+#             if grid.grid.get((new_x, new_y, new_z)) is None:
+#                 # Update position and add amino acid
+#                 x, y, z = new_x, new_y, new_z
+#                 grid.place_on_grid(x, y, z, amino_acid_obj)
+#                 valid_move = True
+#                 i += 1
 
-    score = grid.calculate_score()
-    print(f"Final score: {score}")
-    return score
+#     score = grid.calculate_score()
+#     print(f"Final score: {score}")
+#     return score
 
-if __name__ == "__main__":
-    sequence = "HHPHHHPH"
+# if __name__ == "__main__":
+#     sequence = "HHPHHHPH"
 
-    for char in range(1000000):
-        random_fold_protein(sequence)
+#     for char in range(1000000):
+#         random_fold_protein(sequence)
 
 
 
