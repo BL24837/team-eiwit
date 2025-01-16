@@ -5,8 +5,7 @@ from greedy_algorithm import HybridFolding
 from hillclimber import HillClimb
 
 def main():
-    # Define a protein sequence
-    sequence = "CPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPC"
+    sequence = "HHPHHHPHPHHHPH"
 
     # Create a Protein object
     protein = Protein(sequence)
