@@ -40,3 +40,4 @@ class RandomFolding:
     
         print(f"Final best stability: {best_stability}")
         return best_protein
+    
