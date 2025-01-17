@@ -1,118 +1,116 @@
-from aminoacid import AminoAcid
+import numpy as np
 
 class Protein:
-    def __init__(self, sequence: str):
+    def __init__(self, sequence=None):
         self.sequence = sequence
-        self.best_score = 0
-        self.amino_acids = {}
-        self.grid = {}
-        self.make_aminoacids()
+        self.amino_acids = []  # List to hold amino acid information
+        self.initialize_protein_structure()
 
-    def make_aminoacids(self):
+    def initialize_protein_structure(self):
         """
-        Fills the dictionary amino acids with AminoAcid objects and places them on the grid.
-        Each amino acid is placed at a unique position based on its index in the sequence.
+        Initializes the protein structure with default positions in 3D space.
         """
-        for index, char in enumerate(self.sequence):
+        if self.sequence:
+            for index, amino_acid in enumerate(self.sequence):
+                self.amino_acids.append({
+                    "type": amino_acid,
+                    "position": np.array([index, 0, 0]),
+                    "index": index
+                })
 
-            x, y, z = index, 0, 0 
-            
-            amino_acid = AminoAcid(char, index, x, y, z)
-            
-            self.amino_acids[index] = amino_acid
-            
-            self.place_on_grid(x, y, z, char)
-
-    def get_neighbours(self, aminoacid):
+    def calculate_neighbors(self, position):
         """
+        Calculate the neighbor positions in 3D space for a given position.
         """
-        neighbours = []
+        offsets = np.array([
+            [0, 1, 0], [1, 0, 0], [0, 0, 1],  # Positive directions
+            [0, -1, 0], [-1, 0, 0], [0, 0, -1]  # Negative directions
+        ])
+        return [position + offset for offset in offsets]
 
-        for other_amino_acid in self.amino_acids.values():
-
-            if other_amino_acid == aminoacid:
-                continue
-
-            ax, ay, az = aminoacid.position
-            bx, by, bz = other_amino_acid.position
-
-            if abs(ax - bx) + abs(ay - by) + abs(az - bz) == 1:
-                neighbours.append(other_amino_acid)
-        
-        print(f"Neighbours of {aminoacid}: {neighbours}")
-
-        return neighbours
-
-    def calculate_score_aminoacids(self):
+    def calculate_stability(self):
         """
-        
+        Calculate the stability score of the protein structure.
         """
-        score = 0
+        stability_score = 0
+        for amino_acid in self.amino_acids:
+            if amino_acid["type"] in ["H", "C"]:
+                neighbors = self.calculate_neighbors(amino_acid["position"])
+                for neighbor in neighbors:
+                    for other in self.amino_acids:
+                        if np.array_equal(other["position"], neighbor):
+                            if abs(amino_acid["index"] - other["index"]) > 1:
+                                bond_score = self.calculate_bond_score(
+                                    amino_acid["type"], other["type"])
+                                stability_score += bond_score
+        return stability_score // 2
 
-        for index, amino_acid in self.amino_acids.items():
-
-            if amino_acid.type == 'H' or amino_acid.type == 'C':
-                neighbours = self.get_neighbours(amino_acid)
-
-                for neighbour in neighbours:
-                    if abs(index - neighbour.index) == 1:
-                        continue
-                    
-                    if amino_acid.type == 'H' and neighbour.type == 'H':
-                        score -= 1
-                    elif (amino_acid.type == 'H' and neighbour.type == 'C') or (amino_acid.type == 'C' and neighbour.type == 'H'):
-                        score -= 1
-                    elif amino_acid.type == 'C' and neighbour.type == 'C':
-                        score -= 5
-
-        score = score // 2
-
-        return score
-
-    def get_move_value(self, amino1, amino2):
+    def calculate_bond_score(self, type1, type2):
         """
-        Returns the value of the move made based on the change in coordinates from start to end.
+        Calculate the bond score between two amino acid types.
         """
-        sx, sy, sz = amino1.position
-        ex, ey, ez = amino2.position
+        if {type1, type2} == {"H"} or {type1, type2} == {"C", "H"}:
+            return -1
+        elif {type1, type2} == {"C"}:
+            return -5
+        return 0
 
-        if ex > sx:
-            return 1  
-        elif ex < sx:
-            return -1 
-        elif ey > sy:
-            return 2
-        elif ey < sy:
-            return -2
-        elif ez > sz:
-            return 3 
-        elif ez < sz:
-            return -3 
-
-    def get_valid_moves(self, amino):
+    def rotate_amino_acid(self, amino_index, pivot_index, rotation_matrix):
         """
-        Returns a list of valid moves for the given amino acid.
-        A move is valid if the resulting position is not already occupied.
+        Rotates an amino acid around a pivot using the specified rotation matrix.
         """
-        x, y, z = amino.position
-        potential_moves = [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
-        valid_moves = []
+        pivot_position = self.amino_acids[pivot_index]["position"]
+        relative_position = self.amino_acids[amino_index]["position"] - pivot_position
+        rotated_position = np.dot(rotation_matrix, relative_position)
+        self.amino_acids[amino_index]["position"] = rotated_position + pivot_position
 
-        for dx, dy, dz in potential_moves:
-            new_position = (x + dx, y + dy, z + dz)
-            
-            if new_position not in self.grid:
-                valid_moves.append(new_position)
+    def find_valid_rotations(self, pivot_index):
+        """
+        Find valid rotation options for a pivot point.
+        """
+        valid_rotations = []
+        rotation_matrices = self.get_rotation_matrices()
+        for label, matrix in rotation_matrices.items():
+            if self.is_rotation_valid(pivot_index, matrix):
+                valid_rotations.append(label)
+        return valid_rotations
 
-        return valid_moves
+    def is_rotation_valid(self, pivot_index, rotation_matrix):
+        """
+        Check if a rotation is valid for a given pivot and rotation matrix.
+        """
+        pivot_position = self.amino_acids[pivot_index]["position"]
+        for amino_acid in self.amino_acids:
+            if amino_acid["index"] > pivot_index:
+                original_position = amino_acid["position"]
+                relative_position = original_position - pivot_position
+                rotated_position = np.dot(rotation_matrix, relative_position) + pivot_position
+                if any(
+                    np.array_equal(rotated_position, other["position"])
+                    for other in self.amino_acids
+                ):
+                    return False
+        return True
 
-    def place_on_grid(self, x: int, y: int, z:int, type):
-        self.grid[(x, y, z)] = type
-       
+    def get_rotation_matrices(self):
+        """
+        Define and return rotation matrices for all possible directions.
+        """
+        return {
+            "x_positive": np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]]),
+            "x_negative": np.array([[1, 0, 0], [0, 0, -1], [0, 1, 0]]),
+            "y_positive": np.array([[0, 0, -1], [0, 1, 0], [1, 0, 0]]),
+            "y_negative": np.array([[0, 0, 1], [0, 1, 0], [-1, 0, 0]]),
+            "z_positive": np.array([[0, -1, 0], [1, 0, 0], [0, 0, 1]]),
+            "z_negative": np.array([[0, 1, 0], [-1, 0, 0], [0, 0, 1]])
+        }
+    
+    def copy(self):
+        new_protein = Protein(self.sequence)
+        new_protein.amino_acids = self.amino_acids.copy()  # Maak een kopie van de lijst
+        return new_protein
 
-if __name__ == "__main__":
-    protein = Protein("HHHCHC")
-    amino = protein.amino_acids[3]
-    valid_moves = protein.get_valid_moves(amino)
-    print(protein.calculate_score_aminoacids())
-    print(f"Valid moves for amino acid {amino}: {valid_moves}")
+# Example usage
+sequence = "HCHHCHC"
+protein = Protein(sequence)
+print("Stability:", protein.calculate_stability())

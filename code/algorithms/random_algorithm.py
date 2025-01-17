@@ -1,7 +1,7 @@
 import copy
 import random
 import matplotlib.pyplot as plt
-from visualize import ProteinVisualizer
+from code.visualisation.visualize import ProteinVisualizer
 
 class RandomFolding:
     def __init__(self, protein):
