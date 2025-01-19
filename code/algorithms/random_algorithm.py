@@ -1,7 +1,7 @@
 import copy
 import random
-import matplotlib.pyplot as plt
 from code.visualisation.visualize import ProteinVisualizer
+from code.visualisation.distribution import Distribution
 
 class RandomFolding:
     def __init__(self, protein):
@@ -22,6 +22,7 @@ class RandomFolding:
         stabilities = []
 
         for _ in range(iterations):
+            print(f"Iteration {_ + 1}/{iterations}, Current best stability: {best_stability}")
             print(f"Current best stability: {best_stability}")
 
             success = self.perform_random_rotation()
@@ -37,10 +38,9 @@ class RandomFolding:
         print(f"Final best stability: {best_stability}")
 
         # Visualisatie
-        self.plot_stability_distribution(stabilities)
+        Distribution(stabilities)
         visualizer = ProteinVisualizer(best_protein)
         visualizer.display()
-
         return best_protein
     
     def perform_random_rotation(self):
@@ -88,16 +88,4 @@ class RandomFolding:
         for i in range(pivot_index + 1, len(self.protein.amino_acids)):
             self.protein.rotate_amino_acid(i, pivot_index, rotation_matrix)
 
-
-    def plot_stability_distribution(self, stabilities):
-        """
-        Plot de distributie van stabiliteit over de verschillende iteraties.
         
-        Args:
-            stabilities (list): Lijst van stabiliteitswaarden per iteratie.
-        """
-        plt.hist(stabilities, bins=30, edgecolor='black')
-        plt.title('Distributie van stabiliteit bij random folding')
-        plt.xlabel('Stabiliteit')
-        plt.ylabel('Frequentie')
-        plt.show()

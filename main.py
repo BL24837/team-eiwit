@@ -2,11 +2,12 @@
 from code.algorithms.greedy_algorithm import *
 from code.algorithms.random_algorithm import *
 from code.algorithms.hillclimber import *
+# from code.algorithms.beam_search import *
 from code.visualisation.visualize import ProteinVisualizer
 from code.classes.protein import *
 
 def main():
-    sequence = "HHPHHHPHPHHHPH"
+    sequence = "HHPHHHPHPHHHPHHPPHPHHPHPPPHHPHPHHHPHHP"
 
     # Create a Protein object
     protein = Protein(sequence)
@@ -24,16 +25,21 @@ def main():
         random_folding = RandomFolding(protein)
         folded_protein = random_folding.execute(iterations=iterations)
     
-    if choice == "2":
+    elif choice == "2":
         # Perform random folding
-        iteration = int(input("Enter the number of iterations for hillclimber folding: ").strip())
-        hillclimber_folding = HillClimb(protein)
-        folded_protein = hillclimber_folding.execute(iteration=iteration)
+        iterations = int(input("Enter the number of iterations for hillclimber folding: ").strip())
+        hillclimber_folding = HillClimber(protein)
+        folded_protein = hillclimber_folding.execute(iterations=iterations)
     
     elif choice == "3":
         # Perform greedy folding
         greedy_folding = HybridFolding(protein)
         folded_protein = greedy_folding.execute()
+
+    # elif choice == "4":
+    #     # Perform beam search
+    #     greedy_folding = BeamSearch(protein)
+    #     folded_protein = greedy_folding.execute()
     
     else:
         print("Invalid choice. Please select 1, 2, or 3.")
