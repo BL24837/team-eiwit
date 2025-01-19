@@ -1,8 +1,7 @@
-from random_algorithm import RandomFolding
-from protein import Protein
+from code.algorithms.random_algorithm import RandomFolding
+from code.visualisation.visualize import ProteinVisualizer
+from code.classes.protein import Protein
 import matplotlib.pyplot as plt
-from visualize import ProteinVisualizer
-from random_algorithm import RandomFolding
 
 import copy
 import random

@@ -2,6 +2,7 @@ from visualize import ProteinVisualizer
 import copy
 import random
 import matplotlib.pyplot as plt
+from code.visualisation.visualize import ProteinVisualizer
 
 class RandomFolding:
     def __init__(self, protein):
@@ -23,15 +24,10 @@ class RandomFolding:
 
         directions = ['x_positive', 'x_negative', 'y_positive', 'y_negative', 'z_positive', 'z_negative']
 
-        stabilities = []
+        stabilities = [] 
 
-        for iteration in range(iterations):
-            # Generate a new seed for each iteration
-            seed1 = random.randint(1, 1000)
-            seed2 = random.randint(1, 1000)
-            seed = seed1 * seed2
-            random.seed(seed)
-
+        for _ in range(iterations):
+            print(f"Current best stability: {best_stability}")
             pivot_index = random.randint(0, len(self.protein.amino_acids) - 1)
             direction = random.choice(directions)
             rotation_matrices = self.protein.get_rotation_matrices()
@@ -50,23 +46,23 @@ class RandomFolding:
     
         print(f"Final best stability: {best_stability}")
 
-        # visualizer = ProteinVisualizer(best_protein)
+        visualizer = ProteinVisualizer(best_protein)
 
-        # plot_stability_distribution(stabilities)
+        plot_stability_distribution(stabilities)
 
-        # visualizer.display()
+        visualizer.display()
 
         return best_protein
     
 def plot_stability_distribution(stabilities):
         """
-        Plot the distribution of stability over the iterations.
+        Plot de distributie van stabiliteit over de verschillende iteraties.
         
         Args:
-            stabilities (list): List of stability values for each iteration.
+            stabilities (list): Lijst van stabiliteitswaarden per iteratie.
         """
         plt.hist(stabilities, bins=30, edgecolor='black')
-        plt.title('Distribution of Stability during Random Folding')
-        plt.xlabel('Stability')
-        plt.ylabel('Frequency')
+        plt.title('Distributie van stabiliteit bij random folding')
+        plt.xlabel('Stabiliteit')
+        plt.ylabel('Frequentie')
         plt.show()

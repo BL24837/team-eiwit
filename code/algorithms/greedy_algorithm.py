@@ -1,10 +1,31 @@
-from protein import Protein
+from code.classes.protein import Protein
 import copy
 import random
 
 class HybridFolding:
     """
     Combines exploratory random folding with iterative greedy refinement.
+    
+    The algorithm is an adapted greedy approach that starts with a random
+    folding phase to find an initial configuration. Since at least four amino acids
+    are required to form a potential bond and achieve a minimum stability score of -1, 
+    the algorithm begins by applying random folding to the first four amino acids.
+    Once a configuration with a stability score of -1 or lower is found,
+    it becomes the starting structure.
+
+    From this starting point, the algorithm proceeds iteratively.
+    It first applies random folding to one additional amino acid.
+    If this does not improve the stability,
+    it tries random folding with two additional amino acids.
+    This process continues, incrementing the number of amino acids involved
+    in random folding, until a configuration with a better stability score is found.
+
+    When a new configuration with improved stability is identified,
+    the algorithm resets and repeats the process,
+    starting from the last point of improvement.
+    It applies random folding to one additional amino acid,
+    then two, and so on, continuing until the entire sequence
+    has been processed and optimized.
     """
     def __init__(self, protein: Protein):
         self.protein = protein
@@ -143,7 +164,7 @@ class HybridFolding:
             print(f"Skipping: pivot index {n} out of range.")
             return False
 
-        for attempt in range(200):  # Try up to 100 random configurations
+        for attempt in range(100):  # Try up to 100 random configurations
             temp_protein = copy.deepcopy(protein)
 
             for i in range(max(0, n - 2), min(n + 2, len(temp_protein.amino_acids))):
