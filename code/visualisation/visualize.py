@@ -40,5 +40,15 @@ class ProteinVisualizer:
         ax.set_ylabel("Y")
         ax.set_zlabel("Z")
         ax.set_title("3D Visualization of Protein Structure")
+
+        max_range = np.ptp(positions, axis=0).max()
+        mid_x = (positions[:, 0].max() + positions[:, 0].min()) * 0.5
+        mid_y = (positions[:, 1].max() + positions[:, 1].min()) * 0.5
+        mid_z = (positions[:, 2].max() + positions[:, 2].min()) * 0.5
+
+        ax.set_xlim(mid_x - max_range / 2, mid_x + max_range / 2)
+        ax.set_ylim(mid_y - max_range / 2, mid_y + max_range / 2)
+        ax.set_zlim(mid_z - max_range / 2, mid_z + max_range / 2)
+        
         plt.legend()
         plt.show()
