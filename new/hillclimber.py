@@ -20,35 +20,42 @@ class HillClimb:
 
         stabilities = [] 
 
+    
+
         for _ in range(iteration):
             random_folding = self.random_fold()
 
             length_random_folding = len(random_folding.sequence)
+            
+            for pass_number in range(2):  # Repeat the process twice
+                print(f"Starting pass {pass_number + 1}")
+                
 
-            # Walks from the back of the brotein to the starting point
-            for i in range(length_random_folding - 1, 0, -1):
-                pivot_index = i
-                for direction in directions:
-                    rotation_matrices = random_folding.get_rotation_matrices()
-                    rotation_matrix = rotation_matrices[direction]
+                # Walks from the back of the brotein to the starting point
+                for i in range(length_random_folding - 1, 0, -1):
+                    pivot_index = i
+                    for direction in directions:
+                        rotation_matrices = random_folding.get_rotation_matrices()
+                        rotation_matrix = rotation_matrices[direction]
 
-                    if random_folding.is_rotation_valid(pivot_index, rotation_matrix):
-                        temp_folding = random_folding
+                        if random_folding.is_rotation_valid(pivot_index, rotation_matrix):
+                            temp_folding = random_folding
 
-                        for j in range(pivot_index + 1, len(random_folding.amino_acids)):
-                            temp_folding.rotate_amino_acid(j, pivot_index, rotation_matrix)
-                        
-                        if temp_folding.calculate_stability() < best_stability:
-                            best_stability = temp_folding.calculate_stability()
-                            best_protein = copy.deepcopy(temp_folding)
+                            for j in range(pivot_index + 1, len(random_folding.amino_acids)):
+                                temp_folding.rotate_amino_acid(j, pivot_index, rotation_matrix)
+                            
+                            if temp_folding.calculate_stability() < best_stability:
+                                best_stability = temp_folding.calculate_stability()
+                                best_protein = copy.deepcopy(temp_folding)
 
-            if random_folding.calculate_stability() < best_stability:
-                best_stability = random_folding.calculate_stability()
-                best_protein = copy.deepcopy(random_folding)
+                if random_folding.calculate_stability() < best_stability:
+                    best_stability = random_folding.calculate_stability()
+                    best_protein = copy.deepcopy(random_folding)
 
-            stabilities.append(best_stability)
+                stabilities.append(best_stability)
 
-            print(f"op dit moment best stability: {best_stability}")
+                print(f"op dit moment best stability: {best_stability}")
+        
         
         visualizer = ProteinVisualizer(best_protein)
 
@@ -63,7 +70,7 @@ class HillClimb:
     def random_fold(self):
         random_object = RandomFolding(self.protein)
 
-        random_folding = random_object.execute(iterations=10)
+        random_folding = random_object.execute(iterations=10000)
 
         return random_folding
     
