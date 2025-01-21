@@ -64,6 +64,13 @@ class Protein:
         rotated_position = np.dot(rotation_matrix, relative_position)
         self.amino_acids[amino_index]["position"] = rotated_position + pivot_position
 
+    def rotate_protein(self, pivot_index, rotation_matrix):
+        """
+        Rotates the whole protein around a pivot using the specified rotation matrix.
+        """
+        for i in range(pivot_index + 1, len(self.amino_acids)):
+            self.rotate_amino_acid(i, pivot_index, rotation_matrix)
+
     def find_valid_rotations(self, pivot_index):
         """
         Find valid rotation options for a pivot point.
