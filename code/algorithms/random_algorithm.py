@@ -39,8 +39,7 @@ class RandomFolding:
 
         # Visualisatie
         Distribution(stabilities)
-        visualizer = ProteinVisualizer(best_protein)
-        visualizer.display()
+        
         return best_protein
     
     def perform_random_rotation(self):
