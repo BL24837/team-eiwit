@@ -8,6 +8,7 @@ from code.visualisation.visualize import ProteinVisualizer
 from code.classes.protein import *
 
 def main():
+    # Fill in your sequence
     sequence = "PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP"
 
     # Create a Protein object
@@ -20,8 +21,8 @@ def main():
     print("3: Greedy Folding")
     print("4: Beam search folding")
     print("5: Simulatedannealing folding")
-    print("6: Other")
-    choice = input("Enter your choice (1, 2 ,3 ,4 or 5): ").strip()
+    print("6: Other options")
+    choice = input("Enter your choice (1, 2 ,3 ,4, 5 or 6): ").strip()
 
     if choice == "1":
         # Perform random folding
@@ -59,21 +60,36 @@ def main():
         if choice == "1":
             print(f"Length of protein: {len(protein.amino_acids)}")
             return
-
+        
+        else:
+            print("Invalid choice. Please select 1, 2, 3, 4, or 5.")
+            return
+    
     else:
         print("Invalid choice. Please select 1, 2, 3, 4, or 5.")
         return
 
-    # Calculate the stability of the protein
-    stability = folded_protein.calculate_stability()
-    print(f"Protein Stability after folding: {stability}")
+    print("1: Stabillity")
+    print("2: Visualizer")
+    print("3: Both")
+    choice = input("Enter your choice (1, 2 or 3): ").strip()
 
-    # Initialize the visualizer
-    visualizer = ProteinVisualizer(folded_protein)
+    if choice == "1":
+        # Stabillity
+        stability = folded_protein.calculate_stability()
+        print(f"Protein Stability after folding: {stability}")
 
-    # Show the 3D visualization of the protein
-    visualizer.display()
+    elif choice == "2":
+        # Visualize protein
+        visualizer = ProteinVisualizer(folded_protein)
+        visualizer.display()
+
+    elif choice == "3":
+        # Stabillity en visualize protein
+        stability = folded_protein.calculate_stability()
+        print(f"Protein Stability after folding: {stability}")
+        visualizer = ProteinVisualizer(folded_protein)
+        visualizer.display()
 
 if __name__ == "__main__":
-
     main()
