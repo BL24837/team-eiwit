@@ -1,12 +1,11 @@
 from code.classes.protein import Protein
 from code.algorithms.random_algorithm import RandomFolding
+from code.experiment.si_graph import SiGraph
 import numpy as np
-import random
-import copy
-import math
+import random, copy, math
 
 class SimulatedAnnealing:
-    def __init__(self, protein: Protein, initial_temp=100.0, cooling_rate=0.998, min_temp=1.0, max_attempts_per_temp=100, random_folding_iterations=1000):
+    def __init__(self, protein: Protein, initial_temp=100.0, cooling_rate=0.985, min_temp=1.0, max_attempts_per_temp=100, random_folding_iterations=1000):
         """
         Initialize the Simulated Annealing class with parameters.
         """
@@ -17,7 +16,7 @@ class SimulatedAnnealing:
         self.max_attempts_per_temp = max_attempts_per_temp
         self.random_folding_iterations = random_folding_iterations
         self.current_protein = None  # Store the initial folded protein
-
+        
     def initialize_random_protein(self) -> Protein:
         """
         Use the RandomFolding algorithm to generate a random initial protein configuration.
@@ -42,6 +41,9 @@ class SimulatedAnnealing:
         # Initialize the temperature
         current_temp = self.initial_temp
         iteration_count = 0
+        si_graph = []
+
+        si_graph.append(f"{best_stability},{iteration_count}")
 
         while current_temp > self.min_temp:
             # Try random mutations per temperature
@@ -83,10 +85,15 @@ class SimulatedAnnealing:
                         if current_stability < best_stability:
                             best_protein = new_protein.copy()
                             best_stability = current_stability
+                            si_graph.append(f"{best_stability},{iteration_count}")
 
             # Lower the current temperature
             current_temp *= self.cooling_rate
             iteration_count += 1
+
+        si_graph.append(f"{best_stability},{iteration_count}")
+
+        SiGraph(si_graph)
 
         print("Optimization complete.")
         print(f"Best Stability: {best_stability}")
