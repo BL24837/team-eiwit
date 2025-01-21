@@ -2,7 +2,7 @@ from code.classes.protein import Protein
 import copy
 import random
 
-class HybridFolding:
+class GreedyFolding:
     """
     Combines exploratory random folding with iterative greedy refinement.
     

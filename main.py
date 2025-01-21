@@ -20,6 +20,7 @@ def main():
     print("3: Greedy Folding")
     print("4: Beam search folding")
     print("5: Simulatedannealing folding")
+    print("6: Other")
     choice = input("Enter your choice (1, 2 ,3 ,4 or 5): ").strip()
 
     if choice == "1":
@@ -36,7 +37,7 @@ def main():
     
     elif choice == "3":
         # Perform greedy folding
-        greedy_folding = HybridFolding(protein)
+        greedy_folding = GreedyFolding(protein)
         folded_protein = greedy_folding.execute()
 
     elif choice == "4":
@@ -49,6 +50,15 @@ def main():
         # Perform simulated annealing
         sa = SimulatedAnnealing(protein)
         folded_protein = sa.run()
+
+    elif choice == "6":
+        print("1: Length of protein")
+
+        choice = input("Enter your choice (1, 2 ,3 ,4 or 5): ").strip()
+
+        if choice == "1":
+            print(f"Length of protein: {len(protein.amino_acids)}")
+            return
 
     else:
         print("Invalid choice. Please select 1, 2, 3, 4, or 5.")

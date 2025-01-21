@@ -1,5 +1,4 @@
 import numpy as np
-from visualisation.visualize import *
 
 from code.visualisation.visualize import *
 from code.classes.protein import *
