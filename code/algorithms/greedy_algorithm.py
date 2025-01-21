@@ -190,7 +190,7 @@ if __name__ == "__main__":
     sequence = "PPPHHPPHHPPPPPHHHHHHHPPHHPPPPHHPPHPP"  # Define the protein sequence
     protein = Protein(sequence)
 
-    hybrid_folding = HybridFolding(protein)
+    hybrid_folding = GreedyFolding(protein)
     folded_protein = hybrid_folding.execute()
 
     print("Final structure after Hybrid Folding:")
