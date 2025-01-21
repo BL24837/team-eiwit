@@ -3,6 +3,7 @@ from code.algorithms.random_algorithm import *
 from code.algorithms.hillclimber import *
 from code.algorithms.beam_search import *
 from code.algorithms.Simulatedannealing import *
+from code.visualisation.data import Data
 from code.visualisation.visualize import ProteinVisualizer
 from code.classes.protein import *
 
@@ -64,4 +65,5 @@ def main():
     visualizer.display()
 
 if __name__ == "__main__":
+
     main()

@@ -57,7 +57,7 @@ class RandomFolding:
         rotation_matrix = rotation_matrices[direction]
 
         if self.protein.is_rotation_valid(pivot_index, rotation_matrix):
-            self.rotate_protein(pivot_index, rotation_matrix)
+            self.protein.rotate_protein(pivot_index, rotation_matrix)
             return True
         return False
         
@@ -73,19 +73,6 @@ class RandomFolding:
             bool: True if the rotation is valid, False otherwise.
         """
         if self.protein.is_rotation_valid(pivot_index, rotation_matrix):
-            self.rotate_protein(pivot_index, rotation_matrix)
+            self.protein.rotate_protein(pivot_index, rotation_matrix)
             return True
         return False
-        
-    def rotate_protein(self, pivot_index, rotation_matrix):
-        """
-        Rotates the protein structure around a pivot point with a given rotation matrix.
-        
-        Args:
-            pivot_index (int): The index of the pivot point.
-            rotation_matrix (numpy.ndarray): The rotation matrix to rotate the protein.
-        """
-        for i in range(pivot_index + 1, len(self.protein.amino_acids)):
-            self.protein.rotate_amino_acid(i, pivot_index, rotation_matrix)
-
-        
