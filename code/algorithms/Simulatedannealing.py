@@ -78,7 +78,17 @@ class SimulatedAnnealing:
 
         si_graph.append(f"{best_stability},{iteration_count}")
 
-        SiGraph(si_graph)
+        si_graph = SiGraph(
+            si_graph,  # Contains the stability and iteration data
+            protein_params={  # Pass the configuration parameters used for this run
+                'protein_sequence': self.protein.sequence,
+                'initial_temp': self.initial_temp,
+                'cooling_rate': self.cooling_rate,
+                'min_temp': self.min_temp,
+                'max_attempts_per_temp': self.max_attempts_per_temp,
+                'random_folding_iterations': self.random_folding_iterations
+            }
+        )
 
         print("Optimization complete.")
         print(f"Best Stability: {best_stability}")

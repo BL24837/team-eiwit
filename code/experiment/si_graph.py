@@ -3,11 +3,12 @@ import csv
 import os
 
 class SiGraph():
-    def __init__(self, sigraph, filename="si_data.csv"):
+    def __init__(self, sigraph, protein_params, filename="si_data.csv"):
         # Construct the path to the CSV file in the /data/si_data directory
         csv_directory = os.path.join(os.path.dirname(__file__), '../..', 'data')
         self.filename = os.path.join(csv_directory, filename)
         self.sigraph = sigraph
+        self.protein_params = protein_params  # Store the protein parameters
         self.plot_sigraph()
 
     def plot_sigraph(self):
@@ -62,10 +63,21 @@ class SiGraph():
             # Write the run header (e.g., Run 1)
             writer.writerow([f"Run {run_number}"])
 
+            # Write the protein parameters (e.g., initial temperature, cooling rate, etc.)
+            writer.writerow([f"Protein Sequence: {self.protein_params['protein_sequence']}"])
+            writer.writerow([f"Initial Temperature: {self.protein_params['initial_temp']}"])
+            writer.writerow([f"Cooling Rate: {self.protein_params['cooling_rate']}"])
+            writer.writerow([f"Minimum Temperature: {self.protein_params['min_temp']}"])
+            writer.writerow([f"Max Attempts per Temperature: {self.protein_params['max_attempts_per_temp']}"])
+            writer.writerow([f"Random Folding Iterations: {self.protein_params['random_folding_iterations']}"])
+
+            # Write a blank line to separate the parameters from the iteration data
+            writer.writerow([])
+
             # Write the column headers (Iteration, Stability)
             writer.writerow(["Iteration", "Stability"])
 
-            # Write the run data
+            # Write the run data (iteration and stability)
             for iteration, stability in zip(iteration_data, stability_data):
                 writer.writerow([iteration, stability])  # Write each row
 
@@ -75,20 +87,18 @@ class SiGraph():
         print(f"Run {run_number} data saved to {self.filename}")
 
     def get_next_run_number(self):
-    # Check if the CSV file exists and find the highest run number
+        # Check if the CSV file exists and find the highest run number
         if os.path.exists(self.filename):
             with open(self.filename, mode='r', newline='') as file:
                 reader = csv.reader(file)
                 runs = []
 
                 for row in reader:
-                    # Check if the row is not empty and starts with "Run"
-                    if row and row[0].startswith("Run"):
+                    if row and row[0].startswith("Run"):  # Check if the row starts with "Run"
                         try:
-                            run_number = int(row[0].split()[1])  # Extract the run number
+                            run_number = int(row[0].split()[1])
                             runs.append(run_number)
                         except (IndexError, ValueError):
-                            # Skip rows that don't have a valid run number format
                             continue
 
                 if runs:
@@ -96,4 +106,4 @@ class SiGraph():
                 else:
                     return 1  # Start with Run 1 if no runs exist
         else:
-            return 1  # If the file doesn't exist, start with Run 1
+            return 1
