@@ -1,9 +1,8 @@
 from code.classes.protein import Protein
 from code.algorithms.random_algorithm import RandomFolding
+from code.experiment.si_graph import SiGraph
 import numpy as np
-import random
-import copy
-import math
+import random, copy, math
 
 class SimulatedAnnealing:
     def __init__(self, protein: Protein, initial_temp=100.0, cooling_rate=0.990, min_temp=1.0, max_attempts_per_temp=100, random_folding_iterations=1000):
@@ -41,6 +40,9 @@ class SimulatedAnnealing:
 
         current_temp = self.initial_temp
         iteration_count = 0
+        si_graph = []
+
+        si_graph.append(f"{best_stability},{iteration_count}")
 
         while current_temp > self.min_temp:
             for attempt in range(self.max_attempts_per_temp):
@@ -69,9 +71,24 @@ class SimulatedAnnealing:
                         if current_stability < best_stability:
                             self.best_protein = copy.deepcopy(new_protein)
                             best_stability = current_stability
+                            si_graph.append(f"{best_stability},{iteration_count}")
 
             current_temp *= self.cooling_rate
             iteration_count += 1
+
+        si_graph.append(f"{best_stability},{iteration_count}")
+
+        si_graph = SiGraph(
+            si_graph,  # Contains the stability and iteration data
+            protein_params={  # Pass the configuration parameters used for this run
+                'protein_sequence': self.protein.sequence,
+                'initial_temp': self.initial_temp,
+                'cooling_rate': self.cooling_rate,
+                'min_temp': self.min_temp,
+                'max_attempts_per_temp': self.max_attempts_per_temp,
+                'random_folding_iterations': self.random_folding_iterations
+            }
+        )
 
         print("Optimization complete.")
         print(f"Best Stability: {best_stability}")

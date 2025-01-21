@@ -8,7 +8,36 @@ from code.visualisation.visualize import ProteinVisualizer
 from code.classes.protein import *
 
 def main():
+<<<<<<< HEAD
     sequence = "HHPHHHCPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPCPHPHHHPH"
+=======
+    # Fill in your sequence
+    sequence = None
+
+    sequences = {
+        1: "HHPHHHPH",
+        2: "HHPHHHPHPHHHPH",
+        3: "HPHPPHHPHPPHPHHPPHPH",
+        4: "PPPHHPPHHPPPPPHHHHHHHPPHHPPPPHHPPHPP",
+        5: "HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH",
+        6: "PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP",
+        7: "CPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPC",
+        8: "HCPHPCPHPCHCHPHPPPHPPPHPPPPHPCPHPPPHPHHHCCHCHCHCHH",
+        9: "HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH"
+    }
+
+    print("Choose a sequence:")
+    for key, value in sequences.items():
+        print(f"{key}: {value}")
+
+    choice = int(input("Enter a number between 1 and 9 to select the sequence: "))
+
+    if 1 <= choice <= 9:
+        sequence = sequences[choice]
+        print(f"You selected sequence {choice}: {sequence}")
+    else:
+        print("Invalid choice, please enter a number between 1 and 9.")
+>>>>>>> 98ae19514dacc6f630c546f2123b86f725aaa9c6
 
     # Create a Protein object
     protein = Protein(sequence)
