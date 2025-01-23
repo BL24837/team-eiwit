@@ -8,6 +8,10 @@ from code.visualisation.visualize import ProteinVisualizer
 from code.classes.protein import *
 
 def main():
+<<<<<<< HEAD
+=======
+    sequence = "HHPHHHCPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPCPHPHHHPH"
+>>>>>>> b41b55599a625c809a982777ca1cfc176c5d4cbd
     # Fill in your sequence
     sequence = None
 
@@ -69,7 +73,7 @@ def main():
         # Perform beam search
         beam_width = int(input("Enter the beam width for beam search folding: ").strip())
         beam_search = BeamSearchProteinFolding(sequence, beam_width)
-        folded_protein = beam_search.run()
+        folded_protein = beam_search.run() # extra optie plot_distribution = False
 
     elif choice == "5":
         # Perform simulated annealing

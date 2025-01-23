@@ -1,5 +1,5 @@
 import numpy as np
-
+import matplotlib.pyplot as plt
 from code.visualisation.visualize import *
 from code.classes.protein import *
 import copy
@@ -15,8 +15,9 @@ class BeamSearchProteinFolding:
             np.array([0, 1, 0]), np.array([1, 0, 0]), np.array([0, -1, 0]), np.array([-1, 0, 0]),
             np.array([0, 0, 1]), np.array([0, 0, -1])
         ]
+        self.stabilities = []  # Opslag voor stabiliteit van kandidaten
 
-    def run(self):
+    def run(self, plot_distribution=True):
         """
         Voert beam search uit om de stabiliteit van een eiwitconfiguratie te optimaliseren.
         """
@@ -47,6 +48,27 @@ class BeamSearchProteinFolding:
             candidates.sort(key=lambda x: x[0])
             beam = [protein for _, protein in candidates[:self.beam_width]]
 
+            # Stabiliteit van alle kandidaten opslaan
+            self.stabilities.extend([stability for stability, _ in candidates])
+
+        # Plot de distributie als dit is aangevraagd
+        if plot_distribution:
+            self.plot_stability_distribution()
+
         # Retourneer de beste configuratie
         best_protein = min(beam, key=lambda protein: protein.calculate_stability())
         return best_protein
+
+    def plot_stability_distribution(self):
+        """
+        Plot de distributie van stabiliteit over de verschillende iteraties.
+        """
+        if not self.stabilities:
+            print("Geen stabiliteitsscores om te visualiseren. Voer eerst het algoritme uit.")
+            return
+        
+        plt.hist(self.stabilities, bins=30, edgecolor='black')
+        plt.title('Distributie van stabiliteit bij Beam Search')
+        plt.xlabel('Stabiliteit')
+        plt.ylabel('Frequentie')
+        plt.show()
