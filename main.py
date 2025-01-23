@@ -1,94 +1,24 @@
-from code.algorithms.greedy_algorithm import *
-from code.algorithms.random_algorithm import *
-from code.algorithms.hillclimber import *
-from code.algorithms.beam_search import *
-from code.algorithms.Simulatedannealing import *
-from code.visualisation.data import Data
 from code.visualisation.visualize import ProteinVisualizer
 from code.classes.protein import *
+import helpers
 
 def main():
-    # Fill in your sequence
+    choice, algorithm = helpers.get_algorithm()
     sequence = None
 
-    sequences = {
-        1: "HHPHHHPH",
-        2: "HHPHHHPHPHHHPH",
-        3: "HPHPPHHPHPPHPHHPPHPH",
-        4: "PPPHHPPHHPPPPPHHHHHHHPPHHPPPPHHPPHPP",
-        5: "HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH",
-        6: "PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP",
-        7: "CPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPC",
-        8: "HCPHPCPHPCHCHPHPPPHPPPHPPPPHPCPHPPPHPHHHCCHCHCHCHH",
-        9: "HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH"
-    }
-
-    print("Choose a sequence:")
-    for key, value in sequences.items():
-        print(f"{key}: {value}")
-
-    choice = int(input("Enter a number between 1 and 9 to select the sequence: "))
-
-    if 1 <= choice <= 9:
-        sequence = sequences[choice]
-        print(f"You selected sequence {choice}: {sequence}")
-    else:
-        print("Invalid choice, please enter a number between 1 and 9.")
-
-    # Create a Protein object
-    protein = Protein(sequence)
-
-    # Select folding algorithm
-    print("Select folding algorithm:")
-    print("1: Random Folding")
-    print("2: Hillclimber")
-    print("3: Greedy Folding")
-    print("4: Beam search folding")
-    print("5: Simulatedannealing folding")
-    print("6: Other options")
-    choice = input("Enter your choice (1, 2 ,3 ,4, 5 or 6): ").strip()
-
-    if choice == "1":
-        # Perform random folding
-        iterations = int(input("Enter the number of iterations for random folding: ").strip())
-        random_folding = RandomFolding(protein)
-        folded_protein = random_folding.execute(iterations=iterations)
-    
-    elif choice == "2":
-        # Perform hillclimber folding
-        iterations = int(input("Enter the number of iterations for hillclimber folding: ").strip())
-        hillclimber_folding = HillClimber(protein)
-        folded_protein = hillclimber_folding.execute(iterations=iterations)
-    
-    elif choice == "3":
-        # Perform greedy folding
-        greedy_folding = GreedyFolding(protein)
-        folded_protein = greedy_folding.execute()
-
-    elif choice == "4":
-        # Perform beam search
-        beam_width = int(input("Enter the beam width for beam search folding: ").strip())
-        beam_search = BeamSearchProteinFolding(sequence, beam_width)
-        folded_protein = beam_search.run() # extra optie plot_distribution = False
-
-    elif choice == "5":
-        # Perform simulated annealing
-        sa = SimulatedAnnealing(protein)
-        folded_protein = sa.run()
+    if not choice == "6":
+        sequence = helpers.get_sequence()
+        protein = Protein(sequence)
+        dimension = helpers.get_dimension()
+        filename = helpers.get_filename()
+        folded_protein = helpers.run_algorithm(choice, protein, dimension, algorithm, filename)
 
     elif choice == "6":
-        print("1: Length of protein")
-
-        choice = input("Enter your choice (1, 2 ,3 ,4 or 5): ").strip()
-
-        if choice == "1":
-            print(f"Length of protein: {len(protein.amino_acids)}")
-            return
         
-        else:
-            print("Invalid choice. Please select 1, 2, 3, 4, or 5.")
-            return
-    
+        choice_menu = helpers.get_choise_menu()
+
+        helpers.run_choise_menu(choice_menu, protein)
+
     else:
         print("Invalid choice. Please select 1, 2, 3, 4, or 5.")
         return

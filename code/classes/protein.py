@@ -3,7 +3,7 @@ import numpy as np
 class Protein:
     def __init__(self, sequence=None):
         self.sequence = sequence
-        self.amino_acids = []  # List to hold amino acid information
+        self.amino_acids = []
         self.initialize_protein_structure()
 
     def initialize_protein_structure(self):
@@ -116,8 +116,3 @@ class Protein:
         new_protein = Protein(self.sequence)
         new_protein.amino_acids = self.amino_acids.copy()  # Maak een kopie van de lijst
         return new_protein
-
-# Example usage
-sequence = "HCHHCHC"
-protein = Protein(sequence)
-print("Stability:", protein.calculate_stability())

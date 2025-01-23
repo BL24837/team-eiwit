@@ -39,7 +39,7 @@ class SimulatedAnnealing:
         plt.grid(True)
         plt.show()
 
-    def run(self) -> Protein:
+    def execute(self) -> Protein:
         """
         Apply simulated annealing to optimize the protein folding.
         Always returns the best found protein configuration.
