@@ -8,9 +8,6 @@ from code.visualisation.visualize import ProteinVisualizer
 from code.classes.protein import *
 
 def main():
-<<<<<<< HEAD
-    sequence = "HHPHHHCPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPCPHPHHHPH"
-=======
     # Fill in your sequence
     sequence = None
 
@@ -37,7 +34,6 @@ def main():
         print(f"You selected sequence {choice}: {sequence}")
     else:
         print("Invalid choice, please enter a number between 1 and 9.")
->>>>>>> 98ae19514dacc6f630c546f2123b86f725aaa9c6
 
     # Create a Protein object
     protein = Protein(sequence)
