@@ -4,6 +4,7 @@ import helpers
 
 def main():
     choice, algorithm = helpers.get_algorithm()
+    sequence = None
 
     if not choice == "6":
         sequence = helpers.get_sequence()

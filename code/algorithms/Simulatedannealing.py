@@ -5,7 +5,7 @@ import numpy as np
 import random, copy, math
 
 class SimulatedAnnealing:
-    def __init__(self, protein: Protein, initial_temp=100.0, cooling_rate=0.990, min_temp=1.0, max_attempts_per_temp=100, random_folding_iterations=1000):
+    def __init__(self, protein: Protein, initial_temp=5.0, cooling_rate=0.9995, min_temp=0.1, max_attempts_per_temp=100, random_folding_iterations=1000):
         """
         Initialize the Simulated Annealing class with parameters.
         """
@@ -46,7 +46,7 @@ class SimulatedAnnealing:
 
         while current_temp > self.min_temp:
             for attempt in range(self.max_attempts_per_temp):
-                print(f"Iteration: {iteration_count}, Temperature: {current_temp:.2f}, Attempt: {attempt+1}, Current Stability: {current_stability}, Best Stability: {best_stability}")
+                print(f"Iteration: {iteration_count}, Temperature: {current_temp:.6f}, Attempt: {attempt+1}, Current Stability: {current_stability}, Best Stability: {best_stability}")
 
                 possible_folds = list(range(len(current_protein.amino_acids) - 1))
                 if not possible_folds:
@@ -59,12 +59,19 @@ class SimulatedAnnealing:
                 if new_protein.is_rotation_valid(pivot, rotation_matrix):
                     for amino_index in range(pivot + 1, len(new_protein.amino_acids)):
                         new_protein.rotate_amino_acid(amino_index, pivot, rotation_matrix)
-                    
+
                     new_stability = new_protein.calculate_stability()
                     delta_e = new_stability - current_stability
-                    probability = math.exp(-delta_e / current_temp) if delta_e > 0 else 1
 
-                    if delta_e < 0 or random.uniform(0, 1) < probability:
+                    if delta_e < 0:
+                        # Always accept improvements
+                        accept = True
+                    else:
+                        # Accept worse solutions with a probability
+                        probability = math.exp(-delta_e / current_temp)
+                        accept = random.uniform(0, 1) < probability
+
+                    if accept:
                         current_protein = copy.deepcopy(new_protein)
                         current_stability = new_stability
 
@@ -73,6 +80,7 @@ class SimulatedAnnealing:
                             best_stability = current_stability
                             si_graph.append(f"{best_stability},{iteration_count}")
 
+            # exponential cooling influenced by cooling_rate
             current_temp *= self.cooling_rate
             iteration_count += 1
 
