@@ -8,10 +8,6 @@ from code.visualisation.visualize import ProteinVisualizer
 from code.classes.protein import *
 
 def main():
-<<<<<<< HEAD
-=======
-    sequence = "HHPHHHCPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPCPHPHHHPH"
->>>>>>> b41b55599a625c809a982777ca1cfc176c5d4cbd
     # Fill in your sequence
     sequence = None
 

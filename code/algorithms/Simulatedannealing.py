@@ -3,6 +3,7 @@ from code.algorithms.random_algorithm import RandomFolding
 from code.experiment.si_graph import SiGraph
 import numpy as np
 import random, copy, math
+import matplotlib.pyplot as plt
 
 class SimulatedAnnealing:
     def __init__(self, protein: Protein, initial_temp=5.0, cooling_rate=0.9995, min_temp=0.1, max_attempts_per_temp=100, random_folding_iterations=1000):
@@ -24,6 +25,19 @@ class SimulatedAnnealing:
         """
         random_folding = RandomFolding(self.protein)
         return random_folding.execute(iterations=self.random_folding_iterations)
+    
+    def plot_temperature_vs_iterations(self, temperatures, iterations):
+        """
+        Plot the temperature against the number of iterations.
+        """
+        plt.figure(figsize=(10, 6))
+        plt.plot(iterations, temperatures, label="Temperature")
+        plt.xlabel("Iterations")
+        plt.ylabel("Temperature")
+        plt.title("Temperature vs Iterations")
+        plt.legend()
+        plt.grid(True)
+        plt.show()
 
     def run(self) -> Protein:
         """
@@ -41,6 +55,9 @@ class SimulatedAnnealing:
         current_temp = self.initial_temp
         iteration_count = 0
         si_graph = []
+
+        temperatures = []
+        iterations = []
 
         si_graph.append(f"{best_stability},{iteration_count}")
 
@@ -80,6 +97,9 @@ class SimulatedAnnealing:
                             best_stability = current_stability
                             si_graph.append(f"{best_stability},{iteration_count}")
 
+            temperatures.append(current_temp)
+            iterations.append(iteration_count)
+
             # exponential cooling influenced by cooling_rate
             current_temp *= self.cooling_rate
             iteration_count += 1
@@ -97,6 +117,8 @@ class SimulatedAnnealing:
                 'random_folding_iterations': self.random_folding_iterations
             }
         )
+
+        self.plot_temperature_vs_iterations(temperatures, iterations)
 
         print("Optimization complete.")
         print(f"Best Stability: {best_stability}")
