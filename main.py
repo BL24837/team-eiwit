@@ -26,12 +26,15 @@ def main():
     print("Choose a sequence:")
     for key, value in sequences.items():
         print(f"{key}: {value}")
+    print("10: Enter your own sequence")
 
     choice = int(input("Enter a number between 1 and 9 to select the sequence: "))
 
     if 1 <= choice <= 9:
         sequence = sequences[choice]
         print(f"You selected sequence {choice}: {sequence}")
+    elif choice == 10:
+        sequence = input("Enter the sequence: ").strip()
     else:
         print("Invalid choice, please enter a number between 1 and 9.")
 
@@ -78,13 +81,46 @@ def main():
 
     elif choice == "6":
         print("1: Length of protein")
+        print("1: Visualize protein")
 
         choice = input("Enter your choice (1, 2 ,3 ,4 or 5): ").strip()
 
         if choice == "1":
             print(f"Length of protein: {len(protein.amino_acids)}")
             return
-        
+        elif choice == "2":
+            ProteinVisualizer(protein).display()
+        elif choice == "3":
+
+            directions = ['x_positive', 'x_negative', 'y_positive', 'y_negative', 'z_positive', 'z_negative']
+
+            try:
+                pivot = int(input("Enter your pivot point (index): ").strip())
+                direction = input("Enter your direction (x_positive, x_negative, y_positive, y_negative, z_positive, z_negative): ").strip()
+
+                if direction not in directions:
+                    print("Invalid direction. Please choose from:", directions)
+                    return False
+
+                if pivot < 0 or pivot >= len(protein.amino_acids):
+                    print("Invalid pivot point. Please choose a valid index within the protein.")
+                    return False
+
+                rotation_matrices = protein.get_rotation_matrices()
+                rotation_matrix = rotation_matrices[direction]
+
+                if protein.is_rotation_valid(pivot, rotation_matrix):
+                    protein.rotate_protein(pivot, rotation_matrix)
+                    print("Rotation performed successfully!")
+                    ProteinVisualizer(protein).display()
+                    return True
+                else:
+                    print("Rotation is not valid.")
+                    return False
+                
+            except ValueError:
+                print("Invalid input. Please enter a numerical pivot point.")
+                return False
         else:
             print("Invalid choice. Please select 1, 2, 3, 4, or 5.")
             return

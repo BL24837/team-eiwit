@@ -59,19 +59,3 @@ class RandomFolding:
             self.protein.rotate_protein(pivot_index, rotation_matrix)
             return True
         return False
-        
-    def check_rotation(self, pivot_index, rotation_matrix):
-        """
-        Checks if the rotation of the protein structure is valid.
-        
-        Args:
-            pivot_index (int): The index of the pivot point.
-            rotation_matrix (numpy.ndarray): The rotation matrix to rotate the protein.
-        
-        Returns:
-            bool: True if the rotation is valid, False otherwise.
-        """
-        if self.protein.is_rotation_valid(pivot_index, rotation_matrix):
-            self.protein.rotate_protein(pivot_index, rotation_matrix)
-            return True
-        return False
