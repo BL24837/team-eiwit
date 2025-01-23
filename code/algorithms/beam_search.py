@@ -17,7 +17,7 @@ class BeamSearchProteinFolding:
         ]
         self.stabilities = []  # Opslag voor stabiliteit van kandidaten
 
-    def run(self, plot_distribution=True):
+    def execute(self, plot_distribution=True):
         """
         Voert beam search uit om de stabiliteit van een eiwitconfiguratie te optimaliseren.
         """

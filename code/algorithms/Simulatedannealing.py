@@ -25,7 +25,7 @@ class SimulatedAnnealing:
         random_folding = RandomFolding(self.protein)
         return random_folding.execute(iterations=self.random_folding_iterations)
 
-    def run(self) -> Protein:
+    def execute(self) -> Protein:
         """
         Apply simulated annealing to optimize the protein folding.
         Always returns the best found protein configuration.
