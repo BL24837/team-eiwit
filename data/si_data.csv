@@ -631,3 +631,39 @@ Initial Temperature: 2.0
 Cooling Rate: 0.995
 Minimum Temperature: 0.6
 Max Attempts per Temperature: 100
+Run 30
+Protein Sequence: HPHPPHHPHPPHPHHPPHPH
+Initial Temperature: 3.0
+Cooling Rate: 0.999
+Minimum Temperature: 1
+Max Attempts per Temperature: 100
+Run 31
+Protein Sequence: HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH
+Initial Temperature: 2.0
+Cooling Rate: 0.995
+Minimum Temperature: 0.6
+Max Attempts per Temperature: 100
+Run 32
+Protein Sequence: CPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPC
+Initial Temperature: 2.0
+Cooling Rate: 0.995
+Minimum Temperature: 0.6
+Max Attempts per Temperature: 100
+Run 33
+Protein Sequence: CPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPC
+Initial Temperature: 2.0
+Cooling Rate: 0.995
+Minimum Temperature: 0.6
+Max Attempts per Temperature: 100
+Run 34
+Protein Sequence: CPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPC
+Initial Temperature: 2.0
+Cooling Rate: 0.995
+Minimum Temperature: 0.6
+Max Attempts per Temperature: 100
+Run 35
+Protein Sequence: CPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPC
+Initial Temperature: 2.0
+Cooling Rate: 0.995
+Minimum Temperature: 0.6
+Max Attempts per Temperature: 100

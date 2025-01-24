@@ -29,8 +29,8 @@ class SimulatedAnnealing:
             self.initial_temp = 3.0
             self.min_temp = 1
         elif 35 <= protein_length <= 50:
-            self.cooling_rate = 0.995
-            self.initial_temp = 2.0
+            self.cooling_rate = 0.999
+            self.initial_temp = 3.5
             self.min_temp = 0.6
         else:
             self.cooling_rate = 0.990
@@ -130,22 +130,22 @@ class SimulatedAnnealing:
             current_temp *= self.cooling_rate
             iteration_count += 1
 
-        si_graph.append(f"{best_stability},{iteration_count}")
+        # si_graph.append(f"{best_stability},{iteration_count}")
 
-        si_graph = SiGraph(
-            si_graph,  # Contains the stability and iteration data
-            protein_params={  # Pass the configuration parameters used for this run
-                'protein_sequence': self.protein.sequence,
-                'initial_temp': self.initial_temp,
-                'cooling_rate': self.cooling_rate,
-                'min_temp': self.min_temp,
-                'max_attempts_per_temp': self.max_attempts_per_temp,
-                'hillclimber_iterations': self.hillclimber_iterations
-            }
-        )
+        # si_graph = SiGraph(
+        #     si_graph,  # Contains the stability and iteration data
+        #     protein_params={  # Pass the configuration parameters used for this run
+        #         'protein_sequence': self.protein.sequence,
+        #         'initial_temp': self.initial_temp,
+        #         'cooling_rate': self.cooling_rate,
+        #         'min_temp': self.min_temp,
+        #         'max_attempts_per_temp': self.max_attempts_per_temp,
+        #         'hillclimber_iterations': self.hillclimber_iterations
+        #     }
+        # )
 
-        self.plot_temperature_vs_iterations(temperatures, iterations)
+        # self.plot_temperature_vs_iterations(temperatures, iterations)
 
-        print("Optimization complete.")
-        print(f"Best Stability: {best_stability}")
+        # print("Optimization complete.")
+        # print(f"Best Stability: {best_stability}")
         return self.best_protein

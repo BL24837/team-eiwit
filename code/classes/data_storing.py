@@ -1,56 +1,49 @@
-import csv, os, re
+import csv
+import os
+import re
 
 class DataStoring:
     def __init__(self, 
-                 sequence:str=None,
-                 dimension:str=None, 
-                 algorithm:str=None, 
-                 parameters:dict=None, 
-                 best_protein:object=None, 
-                 stabillities:list=None, 
-                 filename:str=None):
-        self.csv_directory = os.path.join(os.path.dirname(__file__), '../..', 'results', dimension, algorithm, sequence)
-        self.dimension = dimension
+                 algorithm: str = None, 
+                 parameters: dict = None, 
+                 best_protein: object = None, 
+                 filename: str = None):
+        self.csv_directory = os.path.join(os.path.dirname(__file__), '../..', 'results')
         self.algorithm = algorithm
         self.filename = filename
         self.parameters = parameters
         self.best_protein = best_protein
-        self.stabillities = stabillities
-        self.execute()
 
     def execute(self):
-        print(self.filename)
-        if not self.filename:
-            print("No filename provided. Creating a new CSV file.")
-            self.make_csv_name()
+        # Controleer of de bestandsnaam geldig is
+        if not self.filename or not self.filename.endswith('.csv'):
+            raise ValueError("Geef een bestandsnaam op met de extensie '.csv'.")
         
-    def make_csv_name(self):
-        """
-        Generates a unique filename and creates the CSV file if it doesn't exist.
-        """
-        csv_files = [f for f in os.listdir(self.csv_directory) if f.endswith('.csv')]
+        # Construeer het volledige pad naar het bestand
+        full_path = os.path.join(self.csv_directory, self.filename)
 
-        max_num = 0
-        for file in csv_files:
-            match = re.search(r'exp(\d+)', file)
-            if match:
-                num = int(match.group(1))
-                max_num = max(max_num, num)
+        # Controleer of het bestand bestaat
+        if not os.path.isfile(full_path):
+            raise FileNotFoundError(f"Het bestand '{full_path}' bestaat niet.")
+        
+        print(f"Bestand gevonden: {full_path}")
+        return full_path
 
-        self.filename = f"exp{max_num + 1}.csv"
+    def 
 
-        filepath = os.path.join(self.csv_directory, self.filename)
-        filepath = os.path.join(self.csv_directory, self.filename)
-        if not os.path.exists(filepath):
-            with open(filepath, 'w', newline='') as csvfile:
-                pass 
+
     
-    def create_csv(self):
-
-        return 
-    def save_to_csv(self):
-        with open(self.filename, mode='a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([self.parameters, self.best_protein, self.stabillities])
 
 
+
+if __name__ == "__main__":
+    # Voeg de extensie toe aan de bestandsnaam
+    filename = "exp1.csv"  # Zorg ervoor dat dit een .csv-bestand is
+    data = DataStoring(filename=filename)
+    
+    try:
+        # Roep de execute-methode aan
+        file_path = data.execute()
+        print(f"Het geselecteerde bestand is: {file_path}")
+    except (ValueError, FileNotFoundError) as e:
+        print(f"Fout: {e}")

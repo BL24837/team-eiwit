@@ -43,17 +43,6 @@ def get_sequence():
 
     return sequence
 
-def get_dimension():
-    """
-    Get the dimension from the user. The user can choose between 2D and 3D.
-    """
-    print("Select the dimension:")
-    print("1: 2D")
-    print("2: 3D")
-    dimension = input("Enter your choice (1 or 2): ").strip()
-
-    return dimension
-
 def get_algorithm():
     algorithm = {
         1: "Random Folding",
@@ -82,7 +71,6 @@ def get_algorithm():
         return None
     
 def get_filename():
-    print("Enter the filename for the results. Look into the folder results. Than your chosen dimension, algorithm and sequence. If already existing files check for the same parameters, else type in exp + 1. If none is put in, the code creates self a csv file with name exp + 1.")
     filename = input("Enter the filename: ").strip()
     if not filename:  # Check if filename is empty
         return None
@@ -98,8 +86,8 @@ def get_choise_menu():
     return choice_menu
 
 # Run the chosen things functions
-def run_algorithm(choice: int, protein, dimension, algorithm, filename):
-    data = DataStoring(sequence=protein.sequence, dimension=dimension, algorithm=algorithm, filename=filename)
+def run_algorithm(choice: int, protein, algorithm, filename):
+    data = DataStoring(sequence=protein.sequence, algorithm=algorithm, filename=filename)
     folded_protein = None
 
     if choice == 1:
@@ -132,11 +120,6 @@ def run_algorithm(choice: int, protein, dimension, algorithm, filename):
         # Perform simulated annealing
         sa = SimulatedAnnealing(data, protein)
         folded_protein = sa.execute()
-
-    elif choice == 6:
-        lgbm_folding = LightGBMFolding(data, protein)
-        lgbm_folding.train_model()
-        folded_protein = lgbm_folding.predict_best_folding()
 
     return folded_protein
 

@@ -8,15 +8,9 @@ def main():
 
     if not choice == "7":
         sequence = helpers.get_sequence()
-        print(f"Sequence: {sequence}")
         protein = Protein(sequence)
-        print(f"Protein: {protein}")
-        dimension = helpers.get_dimension()
-        print(f"Dimension: {dimension}")
         filename = helpers.get_filename()
-        print(f"Filename: {filename}")
-        folded_protein = helpers.run_algorithm(choice=choice, protein=protein, dimension=dimension, algorithm=algorithm, filename=filename)
-        print(f"Folded Protein: {folded_protein.sequence}")
+        folded_protein = helpers.run_algorithm(choice=choice, protein=protein, algorithm=algorithm, filename=filename)
 
     elif choice == "7":
         
