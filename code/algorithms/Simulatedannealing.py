@@ -7,8 +7,22 @@ import matplotlib.pyplot as plt
 class SimulatedAnnealing:
     def __init__(self, data: DataStoring, protein: Protein, max_attempts_per_temp=100, hillclimber_iterations=1000):
         """
-        Initialize the Simulated Annealing class with parameters.
-        Uses the HillClimber algorithm as part of the optimization process.
+        The algorithm begins by using the HillClimber algorithm to find a locally optimized
+        starting structure for the protein. From this initial configuration, it iteratively
+        modifies the protein's structure by selecting random pivots and applying rotations.
+
+        At each step, the new configuration is evaluated for stability. Better configurations 
+        are always accepted, while worse configurations are accepted probabilistically based 
+        on the current temperature. This probabilistic acceptance allows the algorithm to 
+        escape local minima.
+
+        The temperature gradually decreases after each iteration following an exponential 
+        cooling schedule, reducing the likelihood of accepting worse solutions over time. 
+        Periodically, the HillClimber algorithm is applied locally to refine the current 
+        configuration further.
+
+        The algorithm terminates when the temperature drops below a minimum threshold,
+        returning the best-found protein configuration with the lowest stability score.
         """
         self.data = data
         self.protein = protein
