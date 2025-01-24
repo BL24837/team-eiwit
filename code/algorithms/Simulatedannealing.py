@@ -1,7 +1,6 @@
 from code.classes.protein import Protein
 from code.classes.data_storing import DataStoring
 from code.algorithms.hillclimber import HillClimber  # Importeer HillClimber
-from code.experiment.si_graph import SiGraph
 import random, copy, math
 import matplotlib.pyplot as plt
 
