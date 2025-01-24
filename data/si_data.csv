@@ -613,3 +613,21 @@ Iteration,Stability
 7,-13.0
 0,-10.0
 
+Run 27
+Protein Sequence: HHPHHHPHPHHHPH
+Initial Temperature: 3.0
+Cooling Rate: 0.999
+Minimum Temperature: 1
+Max Attempts per Temperature: 100
+Run 28
+Protein Sequence: HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH
+Initial Temperature: 2.0
+Cooling Rate: 0.995
+Minimum Temperature: 0.6
+Max Attempts per Temperature: 100
+Run 29
+Protein Sequence: PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP
+Initial Temperature: 2.0
+Cooling Rate: 0.995
+Minimum Temperature: 0.6
+Max Attempts per Temperature: 100

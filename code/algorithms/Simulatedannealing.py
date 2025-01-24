@@ -1,21 +1,20 @@
 from code.classes.protein import Protein
 from code.classes.data_storing import DataStoring
-from code.algorithms.random_algorithm import RandomFolding
+from code.algorithms.hillclimber import HillClimber  # Importeer HillClimber
 from code.experiment.si_graph import SiGraph
-import numpy as np
 import random, copy, math
 import matplotlib.pyplot as plt
 
 class SimulatedAnnealing:
-    def __init__(self, data: DataStoring, protein: Protein, max_attempts_per_temp=100, random_folding_iterations=1000):
+    def __init__(self, data: DataStoring, protein: Protein, max_attempts_per_temp=100, hillclimber_iterations=1000):
         """
         Initialize the Simulated Annealing class with parameters.
-        The cooling rate and initial temperature are adjusted based on protein length.
+        Uses the HillClimber algorithm as part of the optimization process.
         """
         self.data = data
         self.protein = protein
         self.max_attempts_per_temp = max_attempts_per_temp
-        self.random_folding_iterations = random_folding_iterations
+        self.hillclimber_iterations = hillclimber_iterations
         self.current_protein = None  # Store the initial folded protein
         self.best_protein = None  # Track the best protein configuration found
 
@@ -38,12 +37,12 @@ class SimulatedAnnealing:
             self.initial_temp = 3.0
             self.min_temp = 1
 
-    def initialize_random_protein(self) -> Protein:
+    def initialize_with_hillclimber(self) -> Protein:
         """
-        Use the RandomFolding algorithm to generate a random initial protein configuration.
+        Use the HillClimber algorithm to generate an optimized initial protein configuration.
         """
-        random_folding = RandomFolding(data=self.data, protein=self.protein)
-        return random_folding.execute(iterations=self.random_folding_iterations)
+        hill_climber = HillClimber(protein=self.protein, max_iterations=self.hillclimber_iterations)
+        return hill_climber.execute()
     
     def plot_temperature_vs_iterations(self, temperatures, iterations):
         """
@@ -61,10 +60,12 @@ class SimulatedAnnealing:
     def execute(self) -> Protein:
         """
         Apply simulated annealing to optimize the protein folding.
+        Uses HillClimber for intermediate local optimization.
         Always returns the best found protein configuration.
         """
+        # Use HillClimber for the initial configuration
         if self.current_protein is None:
-            self.current_protein = self.initialize_random_protein()
+            self.current_protein = self.initialize_with_hillclimber()
 
         current_protein = copy.deepcopy(self.current_protein)
         self.best_protein = copy.deepcopy(current_protein)
@@ -111,8 +112,14 @@ class SimulatedAnnealing:
                         current_protein = copy.deepcopy(new_protein)
                         current_stability = new_stability
 
+                        # Apply HillClimber locally every few iterations
+                        if iteration_count % 10 == 0:
+                            hill_climber = HillClimber(protein=current_protein, max_iterations=10)
+                            current_protein = hill_climber.execute()
+                            current_stability = current_protein.calculate_stability()
+
                         if current_stability < best_stability:
-                            self.best_protein = copy.deepcopy(new_protein)
+                            self.best_protein = copy.deepcopy(current_protein)
                             best_stability = current_stability
                             si_graph.append(f"{best_stability},{iteration_count}")
 
@@ -133,7 +140,7 @@ class SimulatedAnnealing:
                 'cooling_rate': self.cooling_rate,
                 'min_temp': self.min_temp,
                 'max_attempts_per_temp': self.max_attempts_per_temp,
-                'random_folding_iterations': self.random_folding_iterations
+                'hillclimber_iterations': self.hillclimber_iterations
             }
         )
 

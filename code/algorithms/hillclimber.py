@@ -1,102 +1,51 @@
-from code.algorithms.random_algorithm import RandomFolding
-from code.visualisation.visualize import ProteinVisualizer
-from code.classes.data_storing import DataStoring
-import copy
+from code.classes.protein import Protein
 import random
-import matplotlib.pyplot as plt
+import copy
 
 class HillClimber:
-    def __init__(self, data: DataStoring, protein):
+    def __init__(self, protein: Protein, max_iterations=1000):
         """
-        Initialiseer de HillClimber met een gegeven eiwit.
-        
-        Args:
-            protein (Protein): Het eiwit dat zal worden geoptimaliseerd.
+        Initialize the HillClimber class.
         """
-        self.data = data
         self.protein = protein
+        self.max_iterations = max_iterations
 
-    def execute(self, iterations, random_folding_iterations=1000):
+    def execute(self) -> Protein:
         """
-        Voer het HillClimber-algoritme uit om een eiwitvouwingsstructuur met optimale stabiliteit te vinden.
-
-        Args:
-            iterations (int): Het maximale aantal iteraties voor hill climbing.
-            random_folding_iterations (int): Het aantal iteraties voor het random folding-algoritme om de startconfiguratie te genereren.
-
-        Returns:
-            Protein: De eiwitstructuur met de beste stabiliteit die is gevonden.
+        Apply the hill climbing algorithm to optimize the protein folding.
+        Returns the best protein configuration found.
         """
-        # Gebruik RandomFolding om een initiële configuratie te genereren
-        print("Initializing with RandomFolding...")
-        random_folding = RandomFolding(self.protein)
-        best_protein = random_folding.execute(random_folding_iterations)
-        best_stability = best_protein.calculate_stability()
-        stabilities = [best_stability]
+        current_protein = copy.deepcopy(self.protein)
+        best_protein = copy.deepcopy(current_protein)
+        current_stability = current_protein.calculate_stability()
+        best_stability = current_stability
 
-        print(f"Starting Hill Climber with initial stability: {best_stability}")
+        for iteration in range(self.max_iterations):
+            print(f"HillClimber Iteration: {iteration + 1}, Current Stability: {current_stability}, Best Stability: {best_stability}")
 
-        for iteration in range(iterations):
-            print(f"Iteration {iteration + 1}/{iterations}, Current best stability: {best_stability}")
+            possible_folds = list(range(len(current_protein.amino_acids) - 1))
+            if not possible_folds:
+                break
 
-            # Maak een willekeurige rotatie
-            pivot_index, rotation_matrix = self.get_random_rotation(best_protein)
-            if pivot_index is None or rotation_matrix is None:
-                continue   # Sla over als de rotatie ongeldig is
+            pivot = random.choice(possible_folds)
+            rotation_matrix = random.choice(list(current_protein.get_rotation_matrices().values()))
+            new_protein = copy.deepcopy(current_protein)
 
-            # Pas de rotatie tijdelijk toe
-            original_state = copy.deepcopy(best_protein)
-            best_protein.rotate_amino_acid(pivot_index, pivot_index, rotation_matrix)
-            new_stability = best_protein.calculate_stability()
+            if new_protein.is_rotation_valid(pivot, rotation_matrix):
+                for amino_index in range(pivot + 1, len(new_protein.amino_acids)):
+                    new_protein.rotate_amino_acid(amino_index, pivot, rotation_matrix)
 
-            # Accepteer de rotatie als de stabiliteit verbetert
-            if new_stability < best_stability:
-                best_stability = new_stability
-            else:
-                # Keer terug naar de vorige staat als er geen verbetering is
-                best_protein = original_state
+                new_stability = new_protein.calculate_stability()
 
-            stabilities.append(best_stability)
+                if new_stability < current_stability:
+                    # Accept the new configuration if stability improves
+                    current_protein = copy.deepcopy(new_protein)
+                    current_stability = new_stability
 
-        print(f"Final best stability: {best_stability}")
+                    if current_stability < best_stability:
+                        best_protein = copy.deepcopy(new_protein)
+                        best_stability = current_stability
 
-        # Visualiseer de resultaten
-        self.plot_stability_progress(stabilities)
-        visualizer = ProteinVisualizer(best_protein)
-        visualizer.display()
-
+        print("HillClimber Optimization complete.")
+        print(f"Best Stability: {best_stability}")
         return best_protein
-
-    def get_random_rotation(self, protein):
-        """
-        Genereer een willekeurige rotatiematrix en pivotindex voor het eiwit.
-
-        Args:
-            protein (Protein): Het eiwit waarvoor de rotatie wordt berekend.
-
-        Returns:
-            tuple: De pivotindex en de rotatiematrix.
-        """
-        directions = list(protein.get_rotation_matrices().keys())
-        pivot_index = random.randint(0, len(protein.amino_acids) - 1)
-        direction = random.choice(directions)
-        rotation_matrices = protein.get_rotation_matrices()
-        rotation_matrix = rotation_matrices[direction]
-
-        if protein.is_rotation_valid(pivot_index, rotation_matrix):
-            return pivot_index, rotation_matrix
-        return None, None
-
-    def plot_stability_progress(self, stabilities):
-        """
-        Visualiseer de voortgang van de stabiliteit gedurende de iteraties.
-
-        Args:
-            stabilities (list): Een lijst van stabiliteitswaarden per iteratie.
-        """
-        plt.plot(stabilities, label="Stability Progress")
-        plt.xlabel("Iteration")
-        plt.ylabel("Stability")
-        plt.title("Hill Climber Stability Progress")
-        plt.legend()
-        plt.show()
