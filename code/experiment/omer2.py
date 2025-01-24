@@ -1,24 +1,24 @@
+import csv
 import matplotlib.pyplot as plt
 from code.visualisation.timer import Timer
 from code.algorithms.beam_search import BeamSearchProteinFolding
 from code.classes.protein import Protein
 
-
-def run_and_plot_beam_search(sequence, max_beam_width):
+def run_and_export_beam_search(sequence, max_beam_width, output_file):
     """
-    Voert beam search uit voor beam widths van 1 tot max_beam_width en maakt een grafiek.
-    X-as: beam_width
-    Y-as: Score
+    Voert beam search uit voor beam widths van 1 tot max_beam_width, exporteert resultaten naar CSV en maakt een grafiek.
     
     Args:
         sequence (str): De eiwitsequentie.
         max_beam_width (int): Maximale beam width om te proberen.
+        output_file (str): Naam van het CSV-bestand voor de resultaten.
     """
     beam_widths = []
     scores = []
-    
+    results = []
+
     for beam_width in range(1, max_beam_width + 1):
-        #print(f"Running beam search for beam width: {beam_width}")
+        print(f"Running beam search for beam width: {beam_width}")
         
         # Timer starten
         timer = Timer()
@@ -38,8 +38,16 @@ def run_and_plot_beam_search(sequence, max_beam_width):
         # Resultaten opslaan
         beam_widths.append(beam_width)
         scores.append(score)
+        results.append({"beam_width": beam_width, "score": score})
         
-        #print(f"Beam width: {beam_width}, Score: {score}, Time: {elapsed_time:.2f} seconds")
+        print(f"Beam width: {beam_width}, Score: {score}, Time: {elapsed_time:.2f} seconds")
+    
+    # Schrijf resultaten naar CSV
+    with open(output_file, mode="w", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=["beam_width", "score"])
+        writer.writeheader()
+        writer.writerows(results)
+    print(f"Resultaten succesvol geëxporteerd naar {output_file}.")
     
     # Resultaten plotten
     plt.figure(figsize=(10, 6))
@@ -54,4 +62,6 @@ def run_and_plot_beam_search(sequence, max_beam_width):
 if __name__ == "__main__":
     sequence = "HCHHCHC"  # De gewenste eiwitsequentie
     max_beam_width = 10  # Maximale beam width om te proberen
-    run_and_plot_beam_search(sequence, max_beam_width)
+    output_file = "beam_search_results_omer.csv"  # Naam van het uitvoerbestand
+    
+    run_and_export_beam_search(sequence, max_beam_width, output_file)
