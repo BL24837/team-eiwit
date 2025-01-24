@@ -5,6 +5,7 @@ from code.algorithms.beam_search import *
 from code.algorithms.Simulatedannealing import *
 from code.classes.data_storing import DataStoring
 from code.visualisation.timer import Timer
+import os
 
 # Get information of the user via the terminal functions
 def get_sequence():
@@ -71,9 +72,30 @@ def get_algorithm():
         return None
     
 def get_filename():
-    filename = input("Enter the filename. For example exp1.csv").strip()
-    if not filename:  # Check if filename is empty
-        return None
+    while True:  # Blijf vragen totdat een geldig bestaand bestand wordt ingevoerd
+        print("Check your file where you want to save the data. Check the parameters. For example exp1.csv")
+        filename = input("Enter the filename: ").strip()
+
+        # Controleer of de bestandsnaam leeg is
+        if not filename:  
+            print("No filename provided. Please enter a valid filename.")
+            continue  # Vraag opnieuw om de bestandsnaam
+
+        # Controleer of de bestandsnaam eindigt op .csv
+        if not filename.endswith('.csv'):
+            print("Invalid file extension. Please use a .csv file extension.")
+            continue  # Vraag opnieuw om de bestandsnaam
+
+        # Controleer of het bestand al bestaat
+        file_path = os.path.join(os.path.dirname(__file__), 'results', filename)
+
+        if os.path.isfile(file_path):  # Bestand bestaat al
+            print(f"File '{filename}' found. Data will be appended.")
+            break  # Als het bestand bestaat, stop met vragen
+        else:  # Bestand bestaat niet
+            print(f"File '{filename}' does not exist. Please enter an existing file.")
+            continue  # Vraag opnieuw om de bestandsnaam
+
     return filename
 
 def get_choise_menu():

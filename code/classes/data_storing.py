@@ -14,6 +14,20 @@ class DataStoring:
         self.parameters = parameters
         self.protein = best_protein
 
+    def simulatedannealing(self, data):
+        """
+        Schrijft de resultaten van Simulated Annealing naar de CSV-bestand.
+        """
+        full_path = self.get_path()
+
+        # Voeg een lege regel toe voordat we de resultaten toevoegen
+        with open(full_path, mode='a', newline='') as csv_file:
+            csv_file.write("\n")  # Voeg een lege regel toe om data te scheiden
+            
+            # Voeg de resultaten toe aan het bestand
+            for entry in data:
+                csv_file.write(entry + "\n")
+
     def beam_search_data(self, protein, score, elapsed_time):
         """
         Schrijft de gegenereerde output en elapsed_time naar de CSV-bestand.

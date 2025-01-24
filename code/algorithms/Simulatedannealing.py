@@ -29,8 +29,8 @@ class SimulatedAnnealing:
             self.initial_temp = 3.0
             self.min_temp = 1
         elif 35 <= protein_length <= 50:
-            self.cooling_rate = 0.999
-            self.initial_temp = 3.5
+            self.cooling_rate = 0.95
+            self.initial_temp = 2
             self.min_temp = 0.6
         else:
             self.cooling_rate = 0.990
@@ -79,6 +79,9 @@ class SimulatedAnnealing:
         temperatures = []
         iterations = []
 
+        best_stabillity_hundred = []
+        data = []
+
         si_graph.append(f"{best_stability},{iteration_count}")
 
         while current_temp > self.min_temp:
@@ -122,30 +125,27 @@ class SimulatedAnnealing:
                             self.best_protein = copy.deepcopy(current_protein)
                             best_stability = current_stability
                             si_graph.append(f"{best_stability},{iteration_count}")
+                
+                best_stabillity_hundred.append(current_stability)
+
+                if (attempt + 1) % 100 == 0:
+                    best_stabillity_hundred.append(current_stability)
+                    data.append(f"{iteration_count}, {min(best_stabillity_hundred)}, {current_temp}")
+                    best_stabillity_hundred = []
 
             temperatures.append(current_temp)
             iterations.append(iteration_count)
 
-            # exponential cooling influenced by cooling_rate
             current_temp *= self.cooling_rate
             iteration_count += 1
 
-        # si_graph.append(f"{best_stability},{iteration_count}")
+        self.export_results(data)
 
-        # si_graph = SiGraph(
-        #     si_graph,  # Contains the stability and iteration data
-        #     protein_params={  # Pass the configuration parameters used for this run
-        #         'protein_sequence': self.protein.sequence,
-        #         'initial_temp': self.initial_temp,
-        #         'cooling_rate': self.cooling_rate,
-        #         'min_temp': self.min_temp,
-        #         'max_attempts_per_temp': self.max_attempts_per_temp,
-        #         'hillclimber_iterations': self.hillclimber_iterations
-        #     }
-        # )
-
-        # self.plot_temperature_vs_iterations(temperatures, iterations)
-
-        # print("Optimization complete.")
-        # print(f"Best Stability: {best_stability}")
         return self.best_protein
+    
+    def export_results(self, data):
+        """
+        Exporteer de resultaten in het juiste format naar een bestand.
+        """
+        self.data.simulatedannealing(data)
+
