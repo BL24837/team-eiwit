@@ -1,8 +1,12 @@
+import csv
 import numpy as np
 import matplotlib.pyplot as plt
 from code.classes.data_storing import DataStoring
 from code.visualisation.visualize import *
 from code.classes.protein import *
+from code.visualisation.timer import Timer
+from code.visualisation.data import *
+
 import copy
 
 class BeamSearchProteinFolding:
@@ -36,7 +40,7 @@ class BeamSearchProteinFolding:
             # Genereer nieuwe configuraties vanuit de huidige beam
             for current_protein in beam:
                 last_pos = current_protein.amino_acids[step - 1]["position"]
-                for direction in self.directions:
+                for direction_index, direction in enumerate(self.directions):
                     new_pos = last_pos + direction
 
                     # Controleer of de nieuwe positie geldig is
@@ -54,8 +58,8 @@ class BeamSearchProteinFolding:
             self.stabilities.extend([stability for stability, _ in candidates])
 
         # Plot de distributie als dit is aangevraagd
-        if plot_distribution:
-            self.plot_stability_distribution()
+        # if plot_distribution:
+        #     self.plot_stability_distribution()
 
         # Retourneer de beste configuratie
         best_protein = min(beam, key=lambda protein: protein.calculate_stability())
@@ -74,3 +78,17 @@ class BeamSearchProteinFolding:
         plt.xlabel('Stabiliteit')
         plt.ylabel('Frequentie')
         plt.show()
+
+    def export_results(self, protein, score, file_name, elapsed_time):
+        """
+        Exporteer de resultaten in het juiste format naar een bestand.
+        """
+        data = Data(protein)
+        output = data.generate_output(score)
+
+        with open(file_name, mode="w") as file:
+            file.write(output)
+            file.write(f"\nTIME elapsed: {elapsed_time:.2f} seconds")
+        print(f"Resultaten succesvol geëxporteerd naar {file_name}.")
+
+

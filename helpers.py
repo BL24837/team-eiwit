@@ -5,6 +5,7 @@ from code.algorithms.beam_search import *
 from code.algorithms.Simulatedannealing import *
 from code.classes.data_storing import DataStoring
 from code.visualisation.data import Data
+from code.visualisation.timer import Timer
 
 # Get information of the user via the terminal functions
 def get_sequence():
@@ -113,8 +114,16 @@ def run_algorithm(choice: int, protein, algorithm, filename):
         # Perform beam search
         sequence = protein.sequence
         beam_width = int(input("Enter the beam width for beam search folding: ").strip())
+        timer = Timer()
+        timer.start()
         beam_search = BeamSearchProteinFolding(data, sequence, beam_width)
         folded_protein = beam_search.execute() # extra optie plot_distribution = False
+        timer.stop()
+        elapsed = timer.elapsed_time()
+        score = folded_protein.calculate_stability()
+        print(elapsed)
+        beam_search.export_results(folded_protein, score, "beam_search_results.txt",elapsed)
+
 
     elif choice == 5:
         # Perform simulated annealing
