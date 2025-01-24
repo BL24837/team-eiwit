@@ -61,13 +61,14 @@ def get_algorithm():
         3: "Greedy Folding",
         4: "Beam search folding",
         5: "Simulatedannealing folding",
+        6: "lightBGM"
     }
     print("Choose a algorithm:")
     for key, value in algorithm.items():
         print(f"{key}: {value}")
     print("10: Enter your own sequence")
 
-    choice = input("Enter your choice (1, 2 ,3 ,4, 5 or 6): ").strip()
+    choice = input("Enter your choice (1, 2 ,3 ,4, 5, 6 or 7): ").strip()
     try:
         choice = int(choice)
         if choice in algorithm:
@@ -131,6 +132,11 @@ def run_algorithm(choice: int, protein, dimension, algorithm, filename):
         # Perform simulated annealing
         sa = SimulatedAnnealing(data, protein)
         folded_protein = sa.execute()
+
+    elif choice == 6:
+        lgbm_folding = LightGBMFolding(data, protein)
+        lgbm_folding.train_model()
+        folded_protein = lgbm_folding.predict_best_folding()
 
     return folded_protein
 

@@ -7,19 +7,36 @@ import random, copy, math
 import matplotlib.pyplot as plt
 
 class SimulatedAnnealing:
-    def __init__(self, data: DataStoring, protein: Protein, initial_temp=5.0, cooling_rate=0.9995, min_temp=0.1, max_attempts_per_temp=100, random_folding_iterations=1000):
+    def __init__(self, data: DataStoring, protein: Protein, max_attempts_per_temp=100, random_folding_iterations=1000):
         """
         Initialize the Simulated Annealing class with parameters.
+        The cooling rate and initial temperature are adjusted based on protein length.
         """
         self.data = data
         self.protein = protein
-        self.initial_temp = initial_temp
-        self.cooling_rate = cooling_rate
-        self.min_temp = min_temp
         self.max_attempts_per_temp = max_attempts_per_temp
         self.random_folding_iterations = random_folding_iterations
         self.current_protein = None  # Store the initial folded protein
         self.best_protein = None  # Track the best protein configuration found
+
+        # Adjust cooling rate and initial temperature based on protein length
+        protein_length = len(protein.sequence)
+        if protein_length < 25:
+            self.cooling_rate = 0.999
+            self.initial_temp = 3.0
+            self.min_temp = 1
+        elif 25 <= protein_length < 35:
+            self.cooling_rate = 0.997
+            self.initial_temp = 3.0
+            self.min_temp = 1
+        elif 35 <= protein_length <= 50:
+            self.cooling_rate = 0.995
+            self.initial_temp = 2.0
+            self.min_temp = 0.6
+        else:
+            self.cooling_rate = 0.990
+            self.initial_temp = 3.0
+            self.min_temp = 1
 
     def initialize_random_protein(self) -> Protein:
         """

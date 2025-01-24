@@ -6,7 +6,7 @@ def main():
     choice, algorithm = helpers.get_algorithm()
     sequence = None
 
-    if not choice == "6":
+    if not choice == "7":
         sequence = helpers.get_sequence()
         print(f"Sequence: {sequence}")
         protein = Protein(sequence)
@@ -18,7 +18,7 @@ def main():
         folded_protein = helpers.run_algorithm(choice=choice, protein=protein, dimension=dimension, algorithm=algorithm, filename=filename)
         print(f"Folded Protein: {folded_protein.sequence}")
 
-    elif choice == "6":
+    elif choice == "7":
         
         choice_menu = helpers.get_choise_menu()
 
