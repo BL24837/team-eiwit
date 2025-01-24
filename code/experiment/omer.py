@@ -7,6 +7,9 @@ def run_beam_search_experiments(sequence, max_beam_width, output_file):
     """
     Voert beam search uit voor verschillende beam widths en slaat de resultaten op.
     
+    X-as : Beam_width
+    Y-as : Score
+
     Args:
         sequence (str): De eiwitsequentie.
         max_beam_width (int): Maximale beam width om te proberen.
