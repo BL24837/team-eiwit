@@ -1,6 +1,8 @@
 from code.visualisation.visualize import ProteinVisualizer
-from code.classes.protein import *
+from code.visualisation.timer import Timer
+from code.classes.protein import Protein
 import helpers
+
 
 def main():
     choice, algorithm = helpers.get_algorithm()
