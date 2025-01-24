@@ -8,4 +8,4 @@ H, -1
 P, -2
 H, 0
 FOOTER score: -3
-TIME elapsed: 2.25 seconds
+TIME elapsed: 0.19 seconds

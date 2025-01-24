@@ -58,8 +58,8 @@ class BeamSearchProteinFolding:
             self.stabilities.extend([stability for stability, _ in candidates])
 
         # Plot de distributie als dit is aangevraagd
-        if plot_distribution:
-            self.plot_stability_distribution()
+        # if plot_distribution:
+        #     self.plot_stability_distribution()
 
         # Retourneer de beste configuratie
         best_protein = min(beam, key=lambda protein: protein.calculate_stability())
