@@ -5,7 +5,6 @@ from code.classes.data_storing import DataStoring
 from code.visualisation.visualize import *
 from code.classes.protein import *
 from code.visualisation.timer import Timer
-from code.visualisation.data import *
 
 import copy
 
@@ -79,16 +78,8 @@ class BeamSearchProteinFolding:
         plt.ylabel('Frequentie')
         plt.show()
 
-    def export_results(self, protein, score, file_name, elapsed_time):
+    def export_results(self, protein, score, elapsed_time):
         """
         Exporteer de resultaten in het juiste format naar een bestand.
         """
-        data = Data(protein)
-        output = data.generate_output(score)
-
-        with open(file_name, mode="w") as file:
-            file.write(output)
-            file.write(f"\nTIME elapsed: {elapsed_time:.2f} seconds")
-        print(f"Resultaten succesvol geëxporteerd naar {file_name}.")
-
-
+        self.data.beam_search_data(protein, score, elapsed_time)

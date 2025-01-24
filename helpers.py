@@ -4,7 +4,6 @@ from code.algorithms.hillclimber import *
 from code.algorithms.beam_search import *
 from code.algorithms.Simulatedannealing import *
 from code.classes.data_storing import DataStoring
-from code.visualisation.data import Data
 from code.visualisation.timer import Timer
 
 # Get information of the user via the terminal functions
@@ -72,7 +71,7 @@ def get_algorithm():
         return None
     
 def get_filename():
-    filename = input("Enter the filename: ").strip()
+    filename = input("Enter the filename. For example exp1.csv").strip()
     if not filename:  # Check if filename is empty
         return None
     return filename
@@ -88,7 +87,7 @@ def get_choise_menu():
 
 # Run the chosen things functions
 def run_algorithm(choice: int, protein, algorithm, filename):
-    data = DataStoring(sequence=protein.sequence, algorithm=algorithm, filename=filename)
+    data = DataStoring(algorithm=algorithm, filename=filename)
     folded_protein = None
 
     if choice == 1:
@@ -122,7 +121,7 @@ def run_algorithm(choice: int, protein, algorithm, filename):
         elapsed = timer.elapsed_time()
         score = folded_protein.calculate_stability()
         print(elapsed)
-        beam_search.export_results(folded_protein, score, "beam_search_results.txt",elapsed)
+        beam_search.export_results(folded_protein, score, elapsed)
 
 
     elif choice == 5:
