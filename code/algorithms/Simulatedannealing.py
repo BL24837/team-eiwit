@@ -1,4 +1,5 @@
 from code.classes.protein import Protein
+from code.classes.data_storing import DataStoring
 from code.algorithms.random_algorithm import RandomFolding
 from code.experiment.si_graph import SiGraph
 import numpy as np
@@ -6,10 +7,11 @@ import random, copy, math
 import matplotlib.pyplot as plt
 
 class SimulatedAnnealing:
-    def __init__(self, protein: Protein, initial_temp=5.0, cooling_rate=0.9995, min_temp=0.1, max_attempts_per_temp=100, random_folding_iterations=1000):
+    def __init__(self, data: DataStoring, protein: Protein, initial_temp=5.0, cooling_rate=0.9995, min_temp=0.1, max_attempts_per_temp=100, random_folding_iterations=1000):
         """
         Initialize the Simulated Annealing class with parameters.
         """
+        self.data = data
         self.protein = protein
         self.initial_temp = initial_temp
         self.cooling_rate = cooling_rate
@@ -23,7 +25,7 @@ class SimulatedAnnealing:
         """
         Use the RandomFolding algorithm to generate a random initial protein configuration.
         """
-        random_folding = RandomFolding(self.protein)
+        random_folding = RandomFolding(data=self.data, protein=self.protein)
         return random_folding.execute(iterations=self.random_folding_iterations)
     
     def plot_temperature_vs_iterations(self, temperatures, iterations):

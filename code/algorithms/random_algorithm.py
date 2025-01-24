@@ -1,10 +1,13 @@
 import copy
 import random
+from code.classes.data_storing import DataStoring
+from code.classes.protein import Protein
 from code.visualisation.visualize import ProteinVisualizer
 from code.visualisation.distribution import Distribution
 
 class RandomFolding:
-    def __init__(self, protein):
+    def __init__(self, data, protein):
+        self.data = data
         self.protein = protein
 
     def execute(self, iterations):

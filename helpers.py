@@ -51,6 +51,7 @@ def get_dimension():
     print("1: 2D")
     print("2: 3D")
     dimension = input("Enter your choice (1 or 2): ").strip()
+
     return dimension
 
 def get_algorithm():
@@ -96,37 +97,42 @@ def get_choise_menu():
     return choice_menu
 
 # Run the chosen things functions
-def run_algorithm(choice, protein, dimension, algorithm, filename):
-    print(f"Running {filename} algorithm...")
+def run_algorithm(choice: int, protein, dimension, algorithm, filename):
     data = DataStoring(sequence=protein.sequence, dimension=dimension, algorithm=algorithm, filename=filename)
+    folded_protein = None
 
-    if choice == "1":
+    if choice == 1:
         # Perform random folding
         iterations = int(input("Enter the number of iterations for random folding: ").strip())
-        random_folding = RandomFolding(protein, data)
+        random_folding = RandomFolding(data, protein)
+        if random_folding:
+            print("Random folding is  possible")
         folded_protein = random_folding.execute(iterations=iterations)
     
-    elif choice == "2":
+    elif choice == 2:
         # Perform hillclimber folding
         iterations = int(input("Enter the number of iterations for random folding: ").strip())
-        hillclimber_folding = HillClimber(protein, data)
+        hillclimber_folding = HillClimber(data, protein)
         folded_protein = hillclimber_folding.execute(iterations=iterations)
     
-    elif choice == "3":
+    elif choice == 3:
         # Perform greedy folding
-        greedy_folding = GreedyFolding(protein, data)
+        greedy_folding = GreedyFolding(data, protein)
         folded_protein = greedy_folding.execute()
 
-    elif choice == "4":
+    elif choice == 4:
         # Perform beam search
+        sequence = protein.sequence
         beam_width = int(input("Enter the beam width for beam search folding: ").strip())
-        beam_search = BeamSearchProteinFolding(sequence, beam_width, data)
+        beam_search = BeamSearchProteinFolding(data, sequence, beam_width)
         folded_protein = beam_search.execute() # extra optie plot_distribution = False
 
-    elif choice == "5":
+    elif choice == 5:
         # Perform simulated annealing
-        sa = SimulatedAnnealing(protein, data)
+        sa = SimulatedAnnealing(data, protein)
         folded_protein = sa.execute()
+
+    return folded_protein
 
 def run_choise_menu(choice, protein):
     if choice == "1":

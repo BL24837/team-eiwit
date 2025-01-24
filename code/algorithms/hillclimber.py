@@ -1,17 +1,19 @@
 from code.algorithms.random_algorithm import RandomFolding
 from code.visualisation.visualize import ProteinVisualizer
+from code.classes.data_storing import DataStoring
 import copy
 import random
 import matplotlib.pyplot as plt
 
 class HillClimber:
-    def __init__(self, protein):
+    def __init__(self, data: DataStoring, protein):
         """
         Initialiseer de HillClimber met een gegeven eiwit.
         
         Args:
             protein (Protein): Het eiwit dat zal worden geoptimaliseerd.
         """
+        self.data = data
         self.protein = protein
 
     def execute(self, iterations, random_folding_iterations=1000):

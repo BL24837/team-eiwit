@@ -1,14 +1,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from code.classes.data_storing import DataStoring
 from code.visualisation.visualize import *
 from code.classes.protein import *
 import copy
 
 class BeamSearchProteinFolding:
-    def __init__(self, sequence, beam_width):
+    def __init__(self, data, sequence, beam_width):
         """
         Initialiseert de Beam Search klasse met een sequentie en een beam width.
         """
+        self.data = data
         self.sequence = sequence
         self.beam_width = beam_width
         self.directions = [

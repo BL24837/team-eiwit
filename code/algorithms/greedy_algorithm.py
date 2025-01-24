@@ -1,4 +1,5 @@
 from code.classes.protein import Protein
+from code.classes.data_storing import DataStoring
 import copy
 import random
 
@@ -27,7 +28,8 @@ class GreedyFolding:
     then two, and so on, continuing until the entire sequence
     has been processed and optimized.
     """
-    def __init__(self, protein: Protein):
+    def __init__(self, data: DataStoring, protein: Protein):
+        self.data = data
         self.protein = protein
 
     def execute(self) -> Protein:
