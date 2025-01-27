@@ -245,6 +245,8 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
                         writer.writerow(['Iteration', 'Stability'])
                     elif choice == 1:  # Random Folding
                         writer.writerow(['Iteration', 'Stability'])
+                    elif choice == 4:  # beam search Folding
+                        writer.writerow(['Beam Width', 'Stability'])
                     # Schrijf de bestaande gegevens opnieuw
                     fw.writelines(temp_data)
     else:
@@ -257,11 +259,16 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
                 writer.writerow(['Iteration', 'Stability'])
             elif choice == 1:  # Random Algorithm
                 writer.writerow(['Iteration', 'Stability'])
+            elif choice == 4:  # beam search Folding
+                writer.writerow(['Beam Width', 'Stability'])
 
     if not os.path.isfile(summary_filepath):
         with open(summary_filepath, mode='w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow(['Run', 'Execution Time (s)', 'Stability', 'Protein Folding Sequence'])
+            if choice == 4:
+                writer.writerow(['Beam Width', 'Execution Time (s)', 'Stability', 'Protein Folding Sequence'])
+            else:
+                writer.writerow(['Run', 'Execution Time (s)', 'Stability', 'Protein Folding Sequence'])
 
     # Looptijden instellen
     end_time = datetime.now() + timedelta(minutes=x_times)
@@ -272,12 +279,22 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
     while datetime.now() < end_time:
         start_time = time.time()  # Starttijd van deze run
 
-        if choice == 5:  # Simulated Annealing
+        if choice == 4:  # Beam Search
+            beam_search = BeamSearchProteinFolding(DataStoring(algorithm=algorithm, filename=filename), protein=protein, beam_width=1)
+            folded_protein, beam_data = beam_search.execute_with_dynamic_beam_width(end_time)
+
+            # Log de Beam Search gegevens naar raw data CSV
+            with open(raw_filepath, mode='a', newline='') as f:
+                writer = csv.writer(f)
+                for beam_width, stability in beam_data:
+                    writer.writerow([beam_width, stability])
+
+        elif choice == 5:  # Simulated Annealing
             # Simulated Annealing uitvoeren
             sa = SimulatedAnnealing(DataStoring(algorithm=algorithm, filename=filename), protein)
             folded_protein, iteration_data = sa.execute()
 
-            # Sla logginggegevens op in de raw data file
+            # Log de iteration data naar raw data CSV
             with open(raw_filepath, mode='a', newline='') as f:
                 writer = csv.writer(f)
                 for iteration, temp, stability in iteration_data:
@@ -291,7 +308,7 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
             # Stabiliteit van de huidige vouwing berekenen
             current_stability = folded_protein.calculate_stability()
 
-            # Voeg gegevens toe aan de raw data file
+            # Log gegevens naar raw data CSV
             with open(raw_filepath, mode='a', newline='') as f:
                 writer = csv.writer(f)
                 writer.writerow([run_count + 1, current_stability])
@@ -300,24 +317,28 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
             random_folding = RandomFolding(DataStoring(algorithm=algorithm, filename=filename), protein)
             folded_protein = random_folding.execute(iterations=10000)
 
+            # Log de random folding data
             current_stability = folded_protein.calculate_stability()
+            with open(raw_filepath, mode='a', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow([run_count + 1, current_stability])
 
-            # Update beste vouwing
-            if best_stability is None or current_stability < best_stability:
-                best_stability = current_stability
-                best_protein = folded_protein
-
+        # Bereken de stabiliteit en tijd van de huidige run
+        current_stability = folded_protein.calculate_stability()
         execution_time = time.time() - start_time  # Looptijd van deze run
 
         # Voeg samenvattingsgegevens toe aan het summary-bestand
         with open(summary_filepath, mode='a', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow([run_count + 1, execution_time, current_stability, folded_protein.sequence])
+            if choice == 4:  # Beam Search
+                writer.writerow([beam_width, execution_time, current_stability, folded_protein.sequence])
+            else:  # Andere algoritmen
+                writer.writerow([run_count + 1, execution_time, current_stability, folded_protein.sequence])
 
         print(f"Run {run_count + 1} completed: Time={execution_time:.2f}s, Stability={current_stability}")
         run_count += 1
 
-    print(f"Finished {x_times} minutes of execution. Total runs: {run_count}")
+
 
     # Toon de beste vouwing na afloop van de loop
     if best_protein:

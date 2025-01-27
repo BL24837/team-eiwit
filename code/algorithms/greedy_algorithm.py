@@ -41,13 +41,15 @@ class GreedyFolding:
         """
         # Phase 1: Find the minimal starting point with -1 stability
         print("Starting exploratory random folding phase...")
-        best_protein = self.find_initial_negative_stability()
+        first_protein = self.find_initial_negative_stability()
 
         # Phase 2: Iterative greedy folding
         print("Starting greedy refinement phase...")
-        refined_protein = self.iterative_random_and_greedy_folding(best_protein)
+        best_protein = self.iterative_random_and_greedy_folding(first_protein)
 
-        return refined_protein
+        self.export_results(best_protein)
+
+        return best_protein
 
     def find_initial_negative_stability(self) -> Protein:
         """

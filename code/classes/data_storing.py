@@ -27,6 +27,20 @@ class DataStoring:
                 writer.writerow(['Run', 'Execution Time (s)', 'Stability', 'Protein Folding Sequence'])
                 print(f"Headers toegevoegd aan bestand: {full_path}")
 
+    def log_beam_search(self, beam_data):
+        """
+        Logt gegevens van meerdere Beam Search-runs naar een CSV-bestand.
+
+        :param beam_data: Een lijst van tuples (beam_width, elapsed_time, stability).
+        """
+        filepath = self.get_path()
+        self.ensure_csv_headers(filepath, ['Beam Width', 'Execution Time (s)', 'Stability'])
+
+        with open(filepath, mode='a', newline='') as csv_file:
+            writer = csv.writer(csv_file)
+            for beam_width, elapsed_time, stability in beam_data:
+                writer.writerow([beam_width, elapsed_time, stability])
+
     def simulatedannealing(self, data):
         """
         Schrijft de resultaten van Simulated Annealing naar de CSV-bestand.

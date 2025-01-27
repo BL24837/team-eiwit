@@ -5,16 +5,17 @@ from code.classes.data_storing import DataStoring
 from code.visualisation.visualize import *
 from code.classes.protein import *
 from code.visualisation.timer import Timer
+from helpers import *
 
 import copy
 
 class BeamSearchProteinFolding:
-    def __init__(self, data, sequence, beam_width):
+    def __init__(self, data: DataStoring , protein:Protein, beam_width):
         """
         Initialiseert de Beam Search klasse met een sequentie en een beam width.
         """
         self.data = data
-        self.sequence = sequence
+        self.protein = protein
         self.beam_width = beam_width
         self.directions = [
             np.array([0, 1, 0]), np.array([1, 0, 0]), np.array([0, -1, 0]), np.array([-1, 0, 0]),
@@ -26,8 +27,7 @@ class BeamSearchProteinFolding:
         """
         Voert beam search uit om de stabiliteit van een eiwitconfiguratie te optimaliseren.
         """
-        protein = Protein(self.sequence)
-        n = len(protein.amino_acids)
+        n = len(self.protein.amino_acids)
 
         # Initialiseer de beam met de startconfiguratie
         beam = [protein]
@@ -62,6 +62,67 @@ class BeamSearchProteinFolding:
 
         # Retourneer de beste configuratie
         best_protein = min(beam, key=lambda protein: protein.calculate_stability())
+        return best_protein
+    
+    def execute_with_dynamic_beam_width(self, end_time):
+        """
+        Voert Beam Search uit met dynamische beam widths tot de opgegeven eindtijd.
+        Retourneert de beste vouwing en logt gegevens via DataStoring.
+
+        :param end_time: Eindtijd voor de uitvoering.
+        :return: Best gevonden Protein.
+        """
+        n = len(self.protein.amino_acids)
+
+        beam_width = 1
+        best_protein = None
+        best_stability = float('inf')
+        beam_data = []
+
+        while datetime.now() < end_time:
+            # Initialiseer de beam met de startconfiguratie
+            beam = [protein]
+
+            for step in range(1, n):
+                candidates = []
+
+                # Genereer nieuwe configuraties vanuit de huidige beam
+                for current_protein in beam:
+                    last_pos = current_protein.amino_acids[step - 1]["position"]
+                    for direction in self.directions:
+                        new_pos = last_pos + direction
+
+                        # Controleer of de nieuwe positie geldig is
+                        if not any(np.array_equal(new_pos, aa["position"]) for aa in current_protein.amino_acids[:step]):
+                            new_protein = copy.deepcopy(current_protein)
+                            new_protein.amino_acids[step]["position"] = new_pos
+                            stability = new_protein.calculate_stability()
+                            candidates.append((stability, new_protein))
+
+                # Behoud alleen de beste configuraties
+                candidates.sort(key=lambda x: x[0])
+                beam = [protein for _, protein in candidates[:beam_width]]
+
+            # Zoek de beste configuratie in de huidige beam
+            current_best_protein = min(beam, key=lambda protein: protein.calculate_stability())
+            current_stability = current_best_protein.calculate_stability()
+
+            if current_stability < best_stability:
+                best_stability = current_stability
+                best_protein = current_best_protein
+
+                    # Voeg gegevens toe voor deze beam width
+            elapsed_time = (datetime.now() - end_time).total_seconds()  # Bereken de tijd
+            beam_data.append((beam_width, elapsed_time, current_stability))
+
+
+            # Verhoog de beam width voor de volgende iteratie
+            beam_width += 1
+
+        # Log alle verzamelde beam search gegevens via DataStoring
+        self.data.log_beam_search(beam_data)
+
+
         return best_protein
 
     def plot_stability_distribution(self):
