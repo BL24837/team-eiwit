@@ -8,6 +8,9 @@ def run_and_export_beam_search(sequence, max_beam_width, output_file):
     """
     Voert beam search uit voor beam widths van 1 tot max_beam_width, exporteert resultaten naar CSV en maakt een grafiek.
     
+    X-as beam width
+    Y-as score
+
     Args:
         sequence (str): De eiwitsequentie.
         max_beam_width (int): Maximale beam width om te proberen.

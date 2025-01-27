@@ -1,4 +1,5 @@
 import csv
+import matplotlib.pyplot as plt
 from code.visualisation.timer import Timer
 from code.algorithms.beam_search import BeamSearchProteinFolding
 from code.classes.protein import Protein
@@ -8,7 +9,7 @@ def run_beam_search_experiments(sequence, max_beam_width, output_file):
     Voert beam search uit voor verschillende beam widths en slaat de resultaten op.
     
     X-as : Beam_width
-    Y-as : Score
+    Y-as : Score en Tijd
 
     Args:
         sequence (str): De eiwitsequentie.
@@ -43,11 +44,24 @@ def run_beam_search_experiments(sequence, max_beam_width, output_file):
         writer.writeheader()
         writer.writerows(results)
     print(f"Resultaten opgeslagen in {output_file}.")
+    
+    # Plot de resultaten
+    beam_widths = [result["beam_width"] for result in results]
+    times = [result["time"] for result in results]
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(beam_widths, times, marker='o', linestyle='-', label="Time (seconds)")
+    plt.title("Beam Width vs Time")
+    plt.xlabel("Beam Width")
+    plt.ylabel("Time (seconds)")
+    plt.grid(True)
+    plt.legend()
+    plt.show()
 
 # Voorbeeldgebruik
 if __name__ == "__main__":
-    sequence = "HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH"  # Vervang dit door de gewenste eiwitsequentie
-    max_beam_width = 4
+    sequence = "HCPHPHP"  # Vervang dit door de gewenste eiwitsequentie
+    max_beam_width = 10
     output_file = "beam_search_experiments2.csv"
     
     run_beam_search_experiments(sequence, max_beam_width, output_file)
