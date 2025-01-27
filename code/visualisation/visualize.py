@@ -7,7 +7,7 @@ class ProteinVisualizer:
     def __init__(self, protein):
         self.protein = protein
 
-    def display(self):
+    def display(self, return_figure=False):
         """
         Visualize the 3D structure of the protein using matplotlib.
         """
@@ -56,4 +56,11 @@ class ProteinVisualizer:
         ax.grid(True)
         
         plt.legend()
-        plt.show()
+        
+
+        if return_figure:
+            return fig, ax
+        else:
+            plt.show()
+
+    

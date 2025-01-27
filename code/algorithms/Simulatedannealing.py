@@ -5,7 +5,7 @@ import random, copy, math
 import matplotlib.pyplot as plt
 
 class SimulatedAnnealing:
-    def __init__(self, data: DataStoring, protein: Protein, max_attempts_per_temp=100, hillclimber_iterations=1000):
+    def __init__(self, data: DataStoring, protein: Protein, max_attempts_per_temp=100, hillclimber_iterations=100):
         """
         The algorithm begins by using the HillClimber algorithm to find a locally optimized
         starting structure for the protein. From this initial configuration, it iteratively
@@ -42,7 +42,7 @@ class SimulatedAnnealing:
             self.initial_temp = 3.0
             self.min_temp = 1
         elif 35 <= protein_length <= 50:
-            self.cooling_rate = 0.95
+            self.cooling_rate = 0.995
             self.initial_temp = 2
             self.min_temp = 0.6
         else:

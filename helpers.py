@@ -6,6 +6,14 @@ from code.algorithms.Simulatedannealing import *
 from code.classes.data_storing import DataStoring
 from code.visualisation.timer import Timer
 import os
+from code.visualisation.visualize import ProteinVisualizer
+from code.classes.protein import Protein
+import helpers
+from datetime import datetime, timedelta
+import time
+import csv
+import pandas as pd
+
 
 # Get information of the user via the terminal functions
 def get_sequence():
@@ -51,7 +59,6 @@ def get_algorithm():
         3: "Greedy Folding",
         4: "Beam search folding",
         5: "Simulatedannealing folding",
-        6: "lightBGM"
     }
     print("Choose a algorithm:")
     for key, value in algorithm.items():
@@ -193,3 +200,147 @@ def run_choise_menu(choice, protein):
     else:
         print("Invalid choice. Please select 1, 2, 3, 4, or 5.")
         return
+    
+
+
+def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
+    """
+    Laat een algoritme een aantal minuten draaien en sla de resultaten op in een map onder de opgegeven CSV-bestandsnaam.
+
+    :param choice: De keuze van het algoritme.
+    :param protein: Het Protein-object.
+    :param algorithm: De naam van het algoritme.
+    :param filename: Bestandsnaam van het CSV-bestand waarin resultaten worden opgeslagen.
+    :param x_times: Aantal minuten dat het algoritme moet draaien.
+    """
+
+    best_stability = None  # Best stabiele score (initieel onbekend)
+    best_protein = None  # Best folded protein (initieel onbekend)
+    
+    # Zorg ervoor dat de map "results/summary_loops" bestaat en dat plots bestaat
+    directory = os.path.join("results", "summary_loops")
+    plots_directory = os.path.join("results", "plots")
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    if not os.path.exists(plots_directory):
+        os.makedirs(plots_directory)
+
+
+    # Volledig pad naar het CSV-bestand
+    filepath = os.path.join(directory, filename)
+
+    # Zorg ervoor dat het CSV-bestand een header heeft als het nog niet bestaat
+    if not os.path.isfile(filepath):
+        with open(filepath, mode='w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['Run', 'Execution Time (s)', 'Stability', 'Protein Folding Sequence'])
+
+    end_time = datetime.now() + timedelta(minutes=x_times)
+    run_count = 0
+
+    print(f"Starting {x_times}-minute execution...")
+
+    while datetime.now() < end_time:
+        start_time = time.time()  # Starttijd van deze run
+
+        # Voer het algoritme uit
+        folded_protein = helpers.run_algorithm(choice=choice, protein=protein, algorithm=algorithm, filename=filename)
+
+        # Bereken de stabiliteit van de huidige vouwing
+        current_stability = folded_protein.calculate_stability()
+
+        # Als het de eerste run is, stel de eerste protein als de "beste"
+        if best_stability is None or current_stability < best_stability:
+            best_stability = current_stability
+            best_protein = folded_protein
+
+        execution_time = time.time() - start_time  # Looptijd van deze run
+
+        # Resultaten toevoegen aan CSV-bestand
+        with open(filepath, mode='a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([run_count + 1, execution_time, current_stability, folded_protein.sequence])
+
+        print(f"Run {run_count + 1} completed: Time={execution_time:.2f}s, Stability={current_stability}")
+        run_count += 1
+
+    print(f"Finished {x_times} minutes of execution. Total runs: {run_count}")
+
+    # Toon de beste vouwing na afloop van de loop
+    if best_protein:
+        print(f"Best folding found:")
+        print(f"Stability: {best_stability}")
+        print(f"Protein folding sequence: {best_protein.sequence}")
+
+        # Visualiseer het beste eiwit
+        visualizer = ProteinVisualizer(best_protein)
+        fig, ax = visualizer.display(return_figure =True)  # Haal de figuur op om op te slaan
+
+        # Sla de figuur op als PNG
+        plot_path = os.path.join(plots_directory, filename.replace('.csv', '_best_folding.png'))
+        fig.savefig(plot_path)
+        plt.close(fig)
+
+        amino_acids_filename = filename.replace('.csv', '_best_folding.csv')
+        amino_acids_path = os.path.join(plots_directory, amino_acids_filename)
+        with open(amino_acids_path, mode='w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['Index', 'Type', 'Position'])
+            for index, amino_acid in enumerate(best_protein.amino_acids):
+                writer.writerow([index, amino_acid['type'], amino_acid['position']])
+    else:
+        print("No valid folding found.")
+
+    visualize_stability_distribution_from_results(filename)
+
+def visualize_stability_distribution_from_results(filename):
+    """
+    Maakt een distributiegrafiek van stabiliteit op basis van de gegevens in de tweede kolom van een CSV-bestand
+    en slaat deze op als een PNG-bestand in de map 'results/distribution'.
+
+    :param filename: Naam van het CSV-bestand in de map 'results'.
+    """
+    # Zorg ervoor dat de map 'results/distribution' bestaat
+    distribution_dir = os.path.join("results", "distribution")
+    if not os.path.exists(distribution_dir):
+        os.makedirs(distribution_dir)
+
+    # Pad naar het bestand
+    filepath = os.path.join("results", filename)
+    
+    try:
+        # Lees het CSV-bestand
+        stabilities = []
+        with open(filepath, mode='r') as csvfile:
+            reader = csv.reader(csvfile)
+            next(reader)  # Sla de header over als die aanwezig is
+            for row in reader:
+                if len(row) > 1:  # Controleer of er een tweede kolom is
+                    try:
+                        stability = float(row[1])  # Haal het tweede element (Stability) op
+                        stabilities.append(stability)
+                    except ValueError:
+                        continue  # Sla rijen over met ongeldige waarden
+        
+        # Controleer of we stabiliteitsgegevens hebben
+        if not stabilities:
+            print(f"Geen stabiliteitsgegevens gevonden in {filename}.")
+            return
+        
+        # Maak de distributiegrafiek met de Distribution-klasse
+        distribution = Distribution(stabilities)
+        
+        # Sla de grafiek op met de naam aangepast aan het bestand
+        plot_filename = os.path.splitext(filename)[0] + "_distribution.png"
+        plot_path = os.path.join(distribution_dir, plot_filename)
+        
+        # Sla de distributiegrafiek op
+        plt.savefig(plot_path)
+        plt.close()
+        
+        print(f"Distributiegrafiek opgeslagen in {plot_path}")
+    except FileNotFoundError:
+        print(f"Het bestand '{filename}' bestaat niet.")
+    except Exception as e:
+        print(f"Er ging iets fout: {e}")
+
