@@ -1,28 +1,30 @@
 from code.classes.protein import Protein
 from code.classes.data_storing import DataStoring
-from code.algorithms.hillclimber import HillClimber  # Importeer HillClimber
-import random, copy, math
+from code.algorithms.hillclimber import HillClimber
+import random
+import copy
+import math
 import matplotlib.pyplot as plt
 
 class SimulatedAnnealing:
+    """
+    Implements the Simulated Annealing algorithm for protein folding optimization.
+
+    This algorithm combines global search (via probabilistic exploration) with 
+    local refinement (using the HillClimber algorithm). By starting at a high 
+    "temperature" and gradually cooling, it balances exploration and exploitation, 
+    enabling escape from local minima and convergence to an optimized solution.
+    """
+
     def __init__(self, data: DataStoring, protein: Protein, max_attempts_per_temp=100, hillclimber_iterations=100):
         """
-        The algorithm begins by using the HillClimber algorithm to find a locally optimized
-        starting structure for the protein. From this initial configuration, it iteratively
-        modifies the protein's structure by selecting random pivots and applying rotations.
+        Initializes the Simulated Annealing algorithm.
 
-        At each step, the new configuration is evaluated for stability. Better configurations 
-        are always accepted, while worse configurations are accepted probabilistically based 
-        on the current temperature. This probabilistic acceptance allows the algorithm to 
-        escape local minima.
-
-        The temperature gradually decreases after each iteration following an exponential 
-        cooling schedule, reducing the likelihood of accepting worse solutions over time. 
-        Periodically, the HillClimber algorithm is applied locally to refine the current 
-        configuration further.
-
-        The algorithm terminates when the temperature drops below a minimum threshold,
-        returning the best-found protein configuration with the lowest stability score.
+        Args:
+            data (DataStoring): Object to store and manage result data.
+            protein (Protein): The protein to optimize.
+            max_attempts_per_temp (int): Number of attempts per temperature level.
+            hillclimber_iterations (int): Number of iterations for the HillClimber algorithm.
         """
         self.data = data
         self.protein = protein
@@ -31,7 +33,7 @@ class SimulatedAnnealing:
         self.current_protein = None  # Store the initial folded protein
         self.best_protein = None  # Track the best protein configuration found
 
-        # Adjust cooling rate and initial temperature based on protein length
+        # Configure cooling parameters based on protein length
         protein_length = len(protein.sequence)
         if protein_length < 25:
             self.cooling_rate = 0.999
@@ -52,14 +54,21 @@ class SimulatedAnnealing:
 
     def initialize_with_hillclimber(self) -> Protein:
         """
-        Use the HillClimber algorithm to generate an optimized initial protein configuration.
+        Uses the HillClimber algorithm to generate an optimized initial protein configuration.
+
+        Returns:
+            Protein: The locally optimized protein structure.
         """
         hill_climber = HillClimber(protein=self.protein, max_iterations=self.hillclimber_iterations)
         return hill_climber.execute()
     
     def plot_temperature_vs_iterations(self, temperatures, iterations):
         """
-        Plot the temperature against the number of iterations.
+        Plots the temperature over the course of iterations.
+
+        Args:
+            temperatures (list): List of temperatures recorded at each step.
+            iterations (list): Corresponding iteration numbers.
         """
         plt.figure(figsize=(10, 6))
         plt.plot(iterations, temperatures, label="Temperature")
@@ -72,11 +81,12 @@ class SimulatedAnnealing:
 
     def execute(self) -> Protein:
         """
-        Apply simulated annealing to optimize the protein folding.
-        Uses HillClimber for intermediate local optimization.
-        Always returns the best found protein configuration.
+        Executes the Simulated Annealing algorithm.
+
+        Returns:
+            Protein: The best protein configuration found during optimization.
         """
-        # Use HillClimber for the initial configuration
+        # Initialize with HillClimber if not already done
         if self.current_protein is None:
             self.current_protein = self.initialize_with_hillclimber()
 
@@ -87,40 +97,37 @@ class SimulatedAnnealing:
 
         current_temp = self.initial_temp
         iteration_count = 0
-        si_graph = []
 
-        temperatures = []
-        iterations = []
-
-        best_stabillity_hundred = []
-        data = []
-
-        si_graph.append(f"{best_stability},{iteration_count}")
+        temperatures = []  # Track temperatures for plotting
+        iterations = []  # Track iteration counts for plotting
 
         while current_temp > self.min_temp:
             for attempt in range(self.max_attempts_per_temp):
-                print(f"Iteration: {iteration_count}, Temperature: {current_temp:.6f}, Attempt: {attempt+1}, Current Stability: {current_stability}, Best Stability: {best_stability}")
+                print(f"Iteration: {iteration_count}, Temperature: {current_temp:.6f}, Attempt: {attempt + 1}, Current Stability: {current_stability}, Best Stability: {best_stability}")
 
+                # Generate a list of valid pivot points
                 possible_folds = list(range(len(current_protein.amino_acids) - 1))
                 if not possible_folds:
                     break
 
+                # Randomly select a pivot point and rotation
                 pivot = random.choice(possible_folds)
                 rotation_matrix = random.choice(list(current_protein.get_rotation_matrices().values()))
                 new_protein = copy.deepcopy(current_protein)
 
+                # Apply rotation if valid
                 if new_protein.is_rotation_valid(pivot, rotation_matrix):
                     for amino_index in range(pivot + 1, len(new_protein.amino_acids)):
                         new_protein.rotate_amino_acid(amino_index, pivot, rotation_matrix)
 
+                    # Calculate the stability difference
                     new_stability = new_protein.calculate_stability()
                     delta_e = new_stability - current_stability
 
+                    # Determine acceptance based on stability and temperature
                     if delta_e < 0:
-                        # Always accept improvements
-                        accept = True
+                        accept = True  # Always accept improvements
                     else:
-                        # Accept worse solutions with a probability
                         probability = math.exp(-delta_e / current_temp)
                         accept = random.uniform(0, 1) < probability
 
@@ -128,37 +135,33 @@ class SimulatedAnnealing:
                         current_protein = copy.deepcopy(new_protein)
                         current_stability = new_stability
 
-                        # Apply HillClimber locally every few iterations
+                        # Periodically refine using HillClimber
                         if iteration_count % 10 == 0:
                             hill_climber = HillClimber(protein=current_protein, max_iterations=10)
                             current_protein = hill_climber.execute()
                             current_stability = current_protein.calculate_stability()
 
+                        # Update the best configuration found
                         if current_stability < best_stability:
                             self.best_protein = copy.deepcopy(current_protein)
                             best_stability = current_stability
-                            si_graph.append(f"{best_stability},{iteration_count}")
-                
-                best_stabillity_hundred.append(current_stability)
 
-                if (attempt + 1) % 100 == 0:
-                    best_stabillity_hundred.append(current_stability)
-                    data.append(f"{iteration_count}, {min(best_stabillity_hundred)}, {current_temp}")
-                    best_stabillity_hundred = []
-
+            # Update temperature and iteration tracking
             temperatures.append(current_temp)
             iterations.append(iteration_count)
 
+            # Reduce temperature based on the cooling rate
             current_temp *= self.cooling_rate
             iteration_count += 1
 
-        self.export_results(data)
-
+        # Return the best configuration found
         return self.best_protein
     
     def export_results(self, data):
         """
-        Exporteer de resultaten in het juiste format naar een bestand.
+        Exports the results to a file in the appropriate format.
+
+        Args:
+            data (list): List of data points to export.
         """
         self.data.simulatedannealing(data)
-
