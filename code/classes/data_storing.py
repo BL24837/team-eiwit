@@ -8,6 +8,7 @@ class DataStoring:
     utility methods for generating output, handling files, and recording data
     from various algorithms.
     """
+
     def __init__(self, 
                  algorithm: str = None, 
                  parameters: dict = None, 
@@ -28,7 +29,7 @@ class DataStoring:
         self.parameters = parameters
         self.protein = best_protein
     
-    def ensure_csv_headers(self):
+    def ensure_csv_headers(self) -> None:
         """
         Ensures the CSV file contains the appropriate headers.
         Adds headers if the file does not exist or is empty.
@@ -41,11 +42,12 @@ class DataStoring:
                 writer.writerow(['Run', 'Execution Time (s)', 'Stability', 'Protein Folding Sequence'])
                 print(f"Headers added to file: {full_path}")
 
-    def log_beam_search(self, beam_data):
+    def log_beam_search(self, beam_data: list[tuple[int, float, float]]) -> None:
         """
-        Logt gegevens van meerdere Beam Search-runs naar een CSV-bestand.
+        Logs data from multiple Beam Search runs into a CSV file.
 
-        :param beam_data: Een lijst van tuples (beam_width, elapsed_time, stability).
+        Args:
+            beam_data (list): A list of tuples (beam_width, elapsed_time, stability).
         """
         filepath = self.get_path()
         self.ensure_csv_headers()
@@ -53,9 +55,9 @@ class DataStoring:
         with open(filepath, mode='a', newline='') as csv_file:
             writer = csv.writer(csv_file)
             for beam_width, elapsed_time, stability in beam_data:
-                writer.writerow([beam_width, stability,elapsed_time])
+                writer.writerow([beam_width, stability, elapsed_time])
 
-    def simulatedannealing(self, data):
+    def simulatedannealing(self, data: list[str]) -> None:
         """
         Writes Simulated Annealing results to the CSV file.
 
@@ -69,7 +71,7 @@ class DataStoring:
             for entry in data:
                 csv_file.write(entry + "\n")
 
-    def greedy_algorithm(self, run, execution_time, stability, folding_sequence):
+    def greedy_algorithm(self, run: int, execution_time: float, stability: float, folding_sequence: str) -> None:
         """
         Writes the results of the Greedy Algorithm to the CSV file.
 
@@ -87,7 +89,7 @@ class DataStoring:
             writer.writerow([run, execution_time, stability, folding_sequence])
         print(f"Run {run}: Time={execution_time:.2f}s, Stability={stability}, Sequence={folding_sequence}")
     
-    def random_folding(self, iteration, stability):
+    def random_folding(self, iteration: int, stability: float) -> None:
         """
         Writes Random Folding results to the CSV file.
 
@@ -103,7 +105,7 @@ class DataStoring:
             writer.writerow([iteration, stability])
         print(f"Iteration {iteration}: Stability={stability} added to {full_path}")
 
-    def beam_search_data(self, protein, score, elapsed_time):
+    def beam_search_data(self, protein: object, score: float, elapsed_time: float) -> None:
         """
         Writes Beam Search results and elapsed time to the CSV file.
 
@@ -122,7 +124,7 @@ class DataStoring:
             csv_file.write(output)
             csv_file.write("\n")
   
-    def get_path(self):  
+    def get_path(self) -> str:
         """
         Constructs the full path for the CSV file.
 
@@ -144,12 +146,12 @@ class DataStoring:
         print(f"File found: {full_path}")
         return full_path
     
-    def get_movement_directions(self):
+    def get_movement_directions(self) -> list[int]:
         """
         Calculates movement directions based on positions of consecutive amino acids.
 
         Returns:
-            list: List of movement directions for the protein.
+            list[int]: List of movement directions for the protein.
         """
         directions = []
         for i in range(1, len(self.protein.amino_acids)):
@@ -162,7 +164,7 @@ class DataStoring:
                 directions.append(int(delta[2]) * 3)
         return directions
 
-    def generate_output(self, score):
+    def generate_output(self, score: float) -> str:
         """
         Generates formatted output for the protein configuration.
 

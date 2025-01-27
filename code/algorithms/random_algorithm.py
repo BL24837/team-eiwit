@@ -14,7 +14,7 @@ class RandomFolding:
     score found during the iterations.
     """
 
-    def __init__(self, data, protein):
+    def __init__(self, data: DataStoring, protein: Protein):
         """
         Initializes the RandomFolding class.
 
@@ -25,7 +25,7 @@ class RandomFolding:
         self.data = data
         self.protein = protein
 
-    def execute(self, iterations=10000):
+    def execute(self, iterations: int = 10000) -> Protein:
         """
         Executes the random folding algorithm to optimize the protein structure.
 
@@ -68,7 +68,7 @@ class RandomFolding:
         
         return best_protein
 
-    def perform_random_rotation(self):
+    def perform_random_rotation(self) -> bool:
         """
         Performs a single random rotation on the protein structure.
 

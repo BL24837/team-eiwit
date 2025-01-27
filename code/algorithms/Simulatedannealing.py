@@ -16,7 +16,7 @@ class SimulatedAnnealing:
     enabling escape from local minima and convergence to an optimized solution.
     """
 
-    def __init__(self, data: DataStoring, protein: Protein, max_attempts_per_temp=100, hillclimber_iterations=100):
+    def __init__(self, data: DataStoring, protein: Protein, max_attempts_per_temp: int = 100, hillclimber_iterations: int = 100) -> None:
         """
         Initializes the Simulated Annealing algorithm.
 
@@ -38,19 +38,19 @@ class SimulatedAnnealing:
         if protein_length < 25:
             self.cooling_rate = 0.999
             self.initial_temp = 3.0
-            self.min_temp = 1
+            self.min_temp = 1.0
         elif 25 <= protein_length < 35:
             self.cooling_rate = 0.997
             self.initial_temp = 3.0
-            self.min_temp = 1
+            self.min_temp = 1.0
         elif 35 <= protein_length <= 50:
             self.cooling_rate = 0.995
-            self.initial_temp = 2
+            self.initial_temp = 2.0
             self.min_temp = 0.6
         else:
             self.cooling_rate = 0.990
             self.initial_temp = 3.0
-            self.min_temp = 1
+            self.min_temp = 1.0
 
     def initialize_with_hillclimber(self) -> Protein:
         """
@@ -62,13 +62,13 @@ class SimulatedAnnealing:
         hill_climber = HillClimber(protein=self.protein, max_iterations=self.hillclimber_iterations)
         return hill_climber.execute()
     
-    def plot_temperature_vs_iterations(self, temperatures, iterations):
+    def plot_temperature_vs_iterations(self, temperatures: list[float], iterations: list[int]) -> None:
         """
         Plots the temperature over the course of iterations.
 
         Args:
-            temperatures (list): List of temperatures recorded at each step.
-            iterations (list): Corresponding iteration numbers.
+            temperatures (list[float]): List of temperatures recorded at each step.
+            iterations (list[int]): Corresponding iteration numbers.
         """
         plt.figure(figsize=(10, 6))
         plt.plot(iterations, temperatures, label="Temperature")
@@ -157,11 +157,11 @@ class SimulatedAnnealing:
         # Return the best configuration found
         return self.best_protein
     
-    def export_results(self, data):
+    def export_results(self, data: list[str]) -> None:
         """
         Exports the results to a file in the appropriate format.
 
         Args:
-            data (list): List of data points to export.
+            data (list[str]): List of data points to export.
         """
         self.data.simulatedannealing(data)
