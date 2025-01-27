@@ -112,6 +112,12 @@ class GreedyFolding:
                 print(f"Improved to stability {best_score} after random folding.")
 
         return current_protein
+    
+    def export_results(self, data):
+        """
+        Exporteer de resultaten in het juiste format naar een bestand.
+        """
+        self.data.greedy_algorithm(data)
 
     def test_greedy_folding_with_one_amino_acid(self, protein: Protein, n: int, current_best_score: int) -> bool:
         """

@@ -10,7 +10,7 @@ class RandomFolding:
         self.data = data
         self.protein = protein
 
-    def execute(self, iterations):
+    def execute(self, iterations=10000):
         """
         Voert het random folding-algoritme uit en zoekt naar de beste stabiliteit.
 
@@ -24,14 +24,16 @@ class RandomFolding:
         best_stability = best_protein.calculate_stability()
         stabilities = []
 
-        for _ in range(iterations):
-            print(f"Iteration {_ + 1}/{iterations}, Current best stability: {best_stability}")
+        for i in range(iterations):
+            print(f"Iteration {i + 1}/{iterations}, Current best stability: {best_stability}")
             print(f"Current best stability: {best_stability}")
 
             success = self.perform_random_rotation()
 
             if success:
                 stability = self.protein.calculate_stability()
+                self.data.random_folding(i + 1, stability)
+                
                 stabilities.append(stability)
 
                 if stability < best_stability:
@@ -42,6 +44,8 @@ class RandomFolding:
 
         # Visualisatie
         Distribution(stabilities)
+
+        self.data.random_folding(iterations, stability)
         
         return best_protein
     

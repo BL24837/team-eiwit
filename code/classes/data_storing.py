@@ -42,6 +42,53 @@ class DataStoring:
             for entry in data:
                 csv_file.write(entry + "\n")
 
+    def greedy_algorithm(self, run, execution_time, stability, folding_sequence):
+        """
+        Schrijft de resultaten van het Greedy Algorithm naar de CSV-bestand.
+        
+        :param run: De nummer van de huidige run.
+        :param execution_time: De tijd die de run heeft geduurd.
+        :param stability: De stabiliteitsscore van de run.
+        :param folding_sequence: De vouwingssequentie van het eiwit.
+        """
+        full_path = self.get_path()
+
+        # Controleer of de CSV een header nodig heeft
+        self.ensure_csv_headers()
+
+        # Voeg de gegevens toe aan het bestand
+        with open(full_path, mode='a', newline='') as csv_file:
+            print('Run', 'Execution Time (s)', 'Stability', 'Protein Folding Sequence')
+            writer = csv.writer(csv_file)
+            writer.writerow([run, execution_time, stability, folding_sequence])
+
+        print(f"Run {run}: Time={execution_time:.2f}s, Stability={stability}, Sequence={folding_sequence}")
+    
+
+    def random_folding(self, iteration, stability):
+        """
+        Schrijft de resultaten van Random Folding naar de CSV-bestand.
+
+        :param iteration: Het nummer van de huidige iteratie.
+        :param stability: De stabiliteitsscore van de huidige iteratie.
+        """
+        full_path = self.get_path()
+
+        # Controleer of de CSV een header nodig heeft en voeg deze toe als dat nodig is
+        if not os.path.isfile(full_path) or os.stat(full_path).st_size == 0:
+            with open(full_path, mode='w', newline='') as csv_file:
+                writer = csv.writer(csv_file)
+                writer.writerow(['Iteration', 'Stability'])  # Header toevoegen
+                print(f"Headers toegevoegd aan bestand: {full_path}")
+
+        # Voeg de gegevens van de huidige iteratie toe aan het CSV-bestand
+        with open(full_path, mode='a', newline='') as csv_file:
+            writer = csv.writer(csv_file)
+            writer.writerow([iteration, stability])
+
+        print(f"Iteration {iteration}: Stability={stability} toegevoegd aan {full_path}")
+
+
     def beam_search_data(self, protein, score, elapsed_time):
         """
         Schrijft de gegenereerde output en elapsed_time naar de CSV-bestand.
