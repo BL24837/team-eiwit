@@ -62,6 +62,6 @@ def run_beam_search_experiments(sequence, max_beam_width, output_file):
 if __name__ == "__main__":
     sequence = "HCPHPHP"  # Vervang dit door de gewenste eiwitsequentie
     max_beam_width = 10
-    output_file = "beam_search_experiments2.csv"
+    output_file = "beam_search_experiments3.csv"
     
     run_beam_search_experiments(sequence, max_beam_width, output_file)
