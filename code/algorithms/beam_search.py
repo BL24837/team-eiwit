@@ -158,7 +158,7 @@ class BeamSearchProteinFolding:
 
 
             # Verhoog de beam width voor de volgende iteratie
-            beam_width += 1
+            beam_width += 5
 
         # Log alle verzamelde beam search gegevens via DataStoring
         # self.data.log_beam_search(beam_data)
