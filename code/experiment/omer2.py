@@ -63,8 +63,8 @@ def run_and_export_beam_search(sequence, max_beam_width, output_file):
 
 # Voorbeeldgebruik
 if __name__ == "__main__":
-    sequence = "HCHHCHC"  # De gewenste eiwitsequentie
-    max_beam_width = 10  # Maximale beam width om te proberen
+    sequence = "HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH"  # De gewenste eiwitsequentie
+    max_beam_width = 100  # Maximale beam width om te proberen
     output_file = "beam_search_results_omer.csv"  # Naam van het uitvoerbestand
     
     run_and_export_beam_search(sequence, max_beam_width, output_file)
