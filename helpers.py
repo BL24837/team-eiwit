@@ -205,7 +205,8 @@ def run_choise_menu(choice, protein):
 
 def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
     """
-    Laat een algoritme een aantal minuten draaien en sla de resultaten op in een map onder de opgegeven CSV-bestandsnaam.
+    Laat een algoritme een aantal minuten draaien en sla de resultaten op in de map onder de opgegeven CSV-bestandsnamen.
+    Zowel raw data als een samenvatting worden opgeslagen.
 
     :param choice: De keuze van het algoritme.
     :param protein: Het Protein-object.
@@ -213,28 +214,63 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
     :param filename: Bestandsnaam van het CSV-bestand waarin resultaten worden opgeslagen.
     :param x_times: Aantal minuten dat het algoritme moet draaien.
     """
-
     best_stability = None  # Best stabiele score (initieel onbekend)
     best_protein = None  # Best folded protein (initieel onbekend)
-    
-    # Zorg ervoor dat de map "results/summary_loops" bestaat en dat plots bestaat
-    directory = os.path.join("results", "summary_loops")
+
+    # Zorg ervoor dat de benodigde directories bestaan
+    results_directory = os.path.join("results")
+    summary_directory = os.path.join("results", "summary_loops")
     plots_directory = os.path.join("results", "plots")
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    if not os.path.exists(plots_directory):
-        os.makedirs(plots_directory)
 
+    for directory in [results_directory, summary_directory, plots_directory]:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
 
-    # Volledig pad naar het CSV-bestand
-    filepath = os.path.join(directory, filename)
+    # Bestandslocaties voor ruwe data en samenvatting
+    raw_filepath = os.path.join(results_directory, filename)
+    summary_filepath = os.path.join(summary_directory, filename)
 
-    # Zorg ervoor dat het CSV-bestand een header heeft als het nog niet bestaat
-    if not os.path.isfile(filepath):
-        with open(filepath, mode='w', newline='') as f:
+    if os.path.isfile(raw_filepath):
+        # Controleer of de header al aanwezig is
+        with open(raw_filepath, mode='r') as f:
+            existing_data = f.readlines()
+            if len(existing_data) == 0 or not existing_data[0].strip().startswith("Iteration"):
+                # Voeg de header toe bovenaan
+                temp_data = existing_data[:]
+                with open(raw_filepath, mode='w', newline='') as fw:
+                    writer = csv.writer(fw)
+                    if choice == 5:  # Simulated Annealing
+                        writer.writerow(['Iteration', 'Stability', 'Temperature'])
+                    elif choice == 3:  # Greedy Algorithm
+                        writer.writerow(['Iteration', 'Stability'])
+                    elif choice == 1:  # Random Folding
+                        writer.writerow(['Iteration', 'Stability'])
+                    elif choice == 4:  # beam search Folding
+                        writer.writerow(['Beam Width', 'Stability',' elapsed_time'])
+                    # Schrijf de bestaande gegevens opnieuw
+                    fw.writelines(temp_data)
+    else:
+        # Als het bestand niet bestaat, maak het aan met de header
+        with open(raw_filepath, mode='w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow(['Run', 'Execution Time (s)', 'Stability', 'Protein Folding Sequence'])
+            if choice == 5:  # Simulated Annealing
+                writer.writerow(['Iteration', 'Stability', 'Temperature'])
+            elif choice == 3:  # Greedy Algorithm
+                writer.writerow(['Iteration', 'Stability'])
+            elif choice == 1:  # Random Algorithm
+                writer.writerow(['Iteration', 'Stability'])
+            elif choice == 4:  # beam search Folding
+                writer.writerow(['Beam Width', 'Stability',' elapsed_time'])
 
+    if not os.path.isfile(summary_filepath):
+        with open(summary_filepath, mode='w', newline='') as f:
+            writer = csv.writer(f)
+            if choice == 4:
+                writer.writerow(['Beam Width', 'Elapsed Time (s)', 'Stability', 'Protein Folding Sequence'])
+            else:
+                writer.writerow(['Run', 'Execution Time (s)', 'Stability', 'Protein Folding Sequence'])
+
+    # Looptijden instellen
     end_time = datetime.now() + timedelta(minutes=x_times)
     run_count = 0
 
@@ -243,28 +279,70 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
     while datetime.now() < end_time:
         start_time = time.time()  # Starttijd van deze run
 
-        # Voer het algoritme uit
-        folded_protein = helpers.run_algorithm(choice=choice, protein=protein, algorithm=algorithm, filename=filename)
+        if choice == 4:  # Beam Search
+            beam_search = BeamSearchProteinFolding(DataStoring(algorithm=algorithm, filename=filename), protein, beam_width=1)
+            folded_protein, beam_data = beam_search.execute_with_dynamic_beam_width(end_time)
 
-        # Bereken de stabiliteit van de huidige vouwing
+            # Log de Beam Search gegevens naar raw data CSV
+            with open(raw_filepath, mode='a', newline='') as f:
+                writer = csv.writer(f)
+                for beam_width,elapsed_time, stability in beam_data:
+                    writer.writerow([beam_width,stability,elapsed_time])
+
+        elif choice == 5:  # Simulated Annealing
+            # Simulated Annealing uitvoeren
+            sa = SimulatedAnnealing(DataStoring(algorithm=algorithm, filename=filename), protein)
+            folded_protein, iteration_data = sa.execute()
+
+            # Log de iteration data naar raw data CSV
+            with open(raw_filepath, mode='a', newline='') as f:
+                writer = csv.writer(f)
+                for iteration, temp, stability in iteration_data:
+                    writer.writerow([iteration, stability, temp])
+
+        elif choice == 3:  # Greedy Algorithm
+            # Greedy Algorithm uitvoeren
+            greedy_folding = GreedyFolding(DataStoring(algorithm=algorithm, filename=filename), protein)
+            folded_protein = greedy_folding.execute()
+
+            # Stabiliteit van de huidige vouwing berekenen
+            current_stability = folded_protein.calculate_stability()
+
+            # Log gegevens naar raw data CSV
+            with open(raw_filepath, mode='a', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow([run_count + 1, current_stability])
+
+        elif choice == 1:  # Random Folding
+            random_folding = RandomFolding(DataStoring(algorithm=algorithm, filename=filename), protein)
+            folded_protein = random_folding.execute(iterations=10000)
+
+            # Log de random folding data
+            current_stability = folded_protein.calculate_stability()
+            with open(raw_filepath, mode='a', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow([run_count + 1, current_stability])
+
+        # Bereken de stabiliteit en tijd van de huidige run
         current_stability = folded_protein.calculate_stability()
+        execution_time = time.time() - start_time  # Looptijd van deze run
 
-        # Als het de eerste run is, stel de eerste protein als de "beste"
         if best_stability is None or current_stability < best_stability:
             best_stability = current_stability
             best_protein = folded_protein
 
-        execution_time = time.time() - start_time  # Looptijd van deze run
-
-        # Resultaten toevoegen aan CSV-bestand
-        with open(filepath, mode='a', newline='') as f:
+        # Voeg samenvattingsgegevens toe aan het summary-bestand
+        with open(summary_filepath, mode='a', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow([run_count + 1, execution_time, current_stability, folded_protein.sequence])
+            if choice == 4:  # Beam Search
+                writer.writerow([beam_width, elapsed_time, current_stability, folded_protein.sequence])
+            else:  # Andere algoritmen
+                writer.writerow([run_count + 1, execution_time, current_stability, folded_protein.sequence])
 
         print(f"Run {run_count + 1} completed: Time={execution_time:.2f}s, Stability={current_stability}")
         run_count += 1
 
-    print(f"Finished {x_times} minutes of execution. Total runs: {run_count}")
+
 
     # Toon de beste vouwing na afloop van de loop
     if best_protein:
@@ -274,13 +352,12 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
 
         # Visualiseer het beste eiwit
         visualizer = ProteinVisualizer(best_protein)
-        fig, ax = visualizer.display(return_figure =True)  # Haal de figuur op om op te slaan
-
-        # Sla de figuur op als PNG
+        fig, ax = visualizer.display(return_figure=True)  # Haal de figuur op om op te slaan
         plot_path = os.path.join(plots_directory, filename.replace('.csv', '_best_folding.png'))
         fig.savefig(plot_path)
         plt.close(fig)
 
+        # Sla de aminozuurgegevens van de beste vouwing op
         amino_acids_filename = filename.replace('.csv', '_best_folding.csv')
         amino_acids_path = os.path.join(plots_directory, amino_acids_filename)
         with open(amino_acids_path, mode='w', newline='') as f:
@@ -292,6 +369,7 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
         print("No valid folding found.")
 
     visualize_stability_distribution_from_results(filename)
+
 
 def visualize_stability_distribution_from_results(filename):
     """

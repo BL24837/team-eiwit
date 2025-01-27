@@ -3,11 +3,25 @@ import os
 import re
 
 class DataStoring:
+    """
+    Handles the storage of protein folding results in CSV format and provides
+    utility methods for generating output, handling files, and recording data
+    from various algorithms.
+    """
     def __init__(self, 
                  algorithm: str = None, 
                  parameters: dict = None, 
                  best_protein: object = None, 
                  filename: str = None):
+        """
+        Initializes the DataStoring object.
+
+        Args:
+            algorithm (str): Name of the algorithm used.
+            parameters (dict): Parameters used for the algorithm.
+            best_protein (Protein): The best protein structure found.
+            filename (str): The CSV filename where data will be stored.
+        """
         self.csv_directory = os.path.join(os.path.dirname(__file__), '../..', 'results')
         self.algorithm = algorithm
         self.filename = filename
@@ -16,120 +30,168 @@ class DataStoring:
     
     def ensure_csv_headers(self):
         """
-        Controleer of de CSV-bestand een header bevat en voeg deze toe indien niet aanwezig.
+        Ensures the CSV file contains the appropriate headers.
+        Adds headers if the file does not exist or is empty.
         """
         full_path = self.get_path()
 
-        # Controleer of het bestand leeg is of headers mist
         if not os.path.isfile(full_path) or os.stat(full_path).st_size == 0:
             with open(full_path, mode='w', newline='') as csv_file:
                 writer = csv.writer(csv_file)
                 writer.writerow(['Run', 'Execution Time (s)', 'Stability', 'Protein Folding Sequence'])
-                print(f"Headers toegevoegd aan bestand: {full_path}")
+                print(f"Headers added to file: {full_path}")
+
+    def log_beam_search(self, beam_data):
+        """
+        Logt gegevens van meerdere Beam Search-runs naar een CSV-bestand.
+
+        :param beam_data: Een lijst van tuples (beam_width, elapsed_time, stability).
+        """
+        filepath = self.get_path()
+        self.ensure_csv_headers()
+
+        with open(filepath, mode='a', newline='') as csv_file:
+            writer = csv.writer(csv_file)
+            for beam_width, elapsed_time, stability in beam_data:
+                writer.writerow([beam_width, stability,elapsed_time])
 
     def simulatedannealing(self, data):
         """
-        Schrijft de resultaten van Simulated Annealing naar de CSV-bestand.
+        Writes Simulated Annealing results to the CSV file.
+
+        Args:
+            data (list): List of results to be written to the file.
         """
         full_path = self.get_path()
 
-        # Voeg een lege regel toe voordat we de resultaten toevoegen
         with open(full_path, mode='a', newline='') as csv_file:
-            print('Run', 'Execution Time (s)', 'Stability', 'Protein Folding Sequence')
-            csv_file.write("\n")  # Voeg een lege regel toe om data te scheiden
-            
-            # Voeg de resultaten toe aan het bestand
+            csv_file.write("\n")  # Add a blank line for separation
             for entry in data:
                 csv_file.write(entry + "\n")
 
+    def greedy_algorithm(self, run, execution_time, stability, folding_sequence):
+        """
+        Writes the results of the Greedy Algorithm to the CSV file.
+
+        Args:
+            run (int): The current run number.
+            execution_time (float): The time taken for the run.
+            stability (float): The stability score of the run.
+            folding_sequence (str): The protein folding sequence.
+        """
+        full_path = self.get_path()
+        self.ensure_csv_headers()
+
+        with open(full_path, mode='a', newline='') as csv_file:
+            writer = csv.writer(csv_file)
+            writer.writerow([run, execution_time, stability, folding_sequence])
+        print(f"Run {run}: Time={execution_time:.2f}s, Stability={stability}, Sequence={folding_sequence}")
+    
+    def random_folding(self, iteration, stability):
+        """
+        Writes Random Folding results to the CSV file.
+
+        Args:
+            iteration (int): The current iteration number.
+            stability (float): The stability score for the iteration.
+        """
+        full_path = self.get_path()
+        self.ensure_csv_headers()
+
+        with open(full_path, mode='a', newline='') as csv_file:
+            writer = csv.writer(csv_file)
+            writer.writerow([iteration, stability])
+        print(f"Iteration {iteration}: Stability={stability} added to {full_path}")
+
     def beam_search_data(self, protein, score, elapsed_time):
         """
-        Schrijft de gegenereerde output en elapsed_time naar de CSV-bestand.
+        Writes Beam Search results and elapsed time to the CSV file.
+
+        Args:
+            protein (Protein): The protein configuration.
+            score (float): Stability score of the configuration.
+            elapsed_time (float): Time taken to execute the algorithm.
         """
-        self.protein = protein  # Set de huidige protein
-        full_path = self.get_path()  # Verkrijg het pad naar de CSV-bestand
-
-        # Genereer de output van generate_output
+        self.protein = protein
+        full_path = self.get_path()
         output = self.generate_output(score)
-
-        # Voeg elapsed_time toe aan het output
         output += f"\nTIME elapsed: {elapsed_time:.2f} seconds"
 
-        # Zorg dat de output wordt toegevoegd aan de CSV zonder de huidige inhoud te overschrijven
         with open(full_path, mode='a', newline='') as csv_file:
-            csv_file.write("\n")  # Voeg een lege regel toe om data te scheiden
-            csv_file.write(output)  # Schrijf de gegenereerde output naar de CSV
-            csv_file.write("\n")  
+            csv_file.write("\n")
+            csv_file.write(output)
+            csv_file.write("\n")
   
     def get_path(self):  
-        # Controleer of de bestandsnaam geldig is
+        """
+        Constructs the full path for the CSV file.
+
+        Returns:
+            str: Full path to the CSV file.
+
+        Raises:
+            ValueError: If the filename is invalid.
+            FileNotFoundError: If the file does not exist.
+        """
         if not self.filename or not self.filename.endswith('.csv'):
-            raise ValueError("Geef een bestandsnaam op met de extensie '.csv'.")
+            raise ValueError("Filename must have a '.csv' extension.")
         
-        # Construeer het volledige pad naar het bestand
         full_path = os.path.join(self.csv_directory, self.filename)
 
-        # Controleer of het bestand bestaat
         if not os.path.isfile(full_path):
-            raise FileNotFoundError(f"Het bestand '{full_path}' bestaat niet.")
+            raise FileNotFoundError(f"File '{full_path}' does not exist.")
         
-        print(f"Bestand gevonden: {full_path}")
+        print(f"File found: {full_path}")
         return full_path
     
     def get_movement_directions(self):
-            """
-            Calculates movement directions based on positions of consecutive amino acids.
-            """
-            directions = []
-            for i in range(1, len(self.protein.amino_acids)):
-                delta = self.protein.amino_acids[i]["position"] - self.protein.amino_acids[i - 1]["position"]
-                if delta[0] != 0:
-                    directions.append(int(delta[0]))
-                elif delta[1] != 0:
-                    directions.append(int(delta[1]) * 2)
-                elif delta[2] != 0:
-                    directions.append(int(delta[2]) * 3)
-            return directions
+        """
+        Calculates movement directions based on positions of consecutive amino acids.
+
+        Returns:
+            list: List of movement directions for the protein.
+        """
+        directions = []
+        for i in range(1, len(self.protein.amino_acids)):
+            delta = self.protein.amino_acids[i]["position"] - self.protein.amino_acids[i - 1]["position"]
+            if delta[0] != 0:
+                directions.append(int(delta[0]))
+            elif delta[1] != 0:
+                directions.append(int(delta[1]) * 2)
+            elif delta[2] != 0:
+                directions.append(int(delta[2]) * 3)
+        return directions
 
     def generate_output(self, score):
         """
-        Generates the formatted output for the protein.
-        :param score: The score to display in the output.
+        Generates formatted output for the protein configuration.
+
+        Args:
+            score (float): Stability score of the protein.
+
+        Returns:
+            str: Formatted string with protein data.
         """
         directions = self.get_movement_directions()
-        output = []
+        output = [f"HEADER score: {score}"]
 
-        # Add header
-        output.append(f"HEADER score: {score}")
-
-        # Add amino acid information
         for i, amino_acid in enumerate(self.protein.amino_acids):
-            # Het eerste element krijgt een beweging vanuit directions
             if i == 0:
                 movement = directions[0] if directions else 0
-            # Het laatste element heeft geen beweging
             elif i == len(self.protein.amino_acids) - 1:
                 movement = 0
-            # Alle andere elementen krijgen beweging vanuit directions
             else:
                 movement = directions[i - 1]
             output.append(f"{amino_acid['type']}, {movement}")
-
-        # Add footer
         output.append(f"FOOTER score: {score}")
-
         return "\n".join(output)
 
-
-
 if __name__ == "__main__":
-    # Voeg de extensie toe aan de bestandsnaam
-    filename = "exp1.csv"  # Zorg ervoor dat dit een .csv-bestand is
+    filename = "exp1.csv"
     data = DataStoring(filename=filename)
     
     try:
-        # Roep de execute-methode aan
-        file_path = data.execute()
-        print(f"Het geselecteerde bestand is: {file_path}")
+        file_path = data.get_path()
+        print(f"Selected file: {file_path}")
     except (ValueError, FileNotFoundError) as e:
-        print(f"Fout: {e}")
+        print(f"Error: {e}")
