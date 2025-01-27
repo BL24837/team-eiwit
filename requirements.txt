@@ -2,3 +2,4 @@ numpy
 random
 copy
 matplotlib.pyplot
+pandas

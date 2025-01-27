@@ -23,7 +23,7 @@ class Distribution:
             plt.xlabel('Stabiliteit (gehele getallen)')
             plt.ylabel('Frequentie')
             plt.xticks(ticks=np.arange(min(self.stabilities), max(self.stabilities) + 1, 1))
-            plt.show()
+            
 
 # Example usage:
 # stabilities = [0, -1, -1.5, -2, -3, -2.5, -1]

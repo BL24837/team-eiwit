@@ -13,6 +13,19 @@ class DataStoring:
         self.filename = filename
         self.parameters = parameters
         self.protein = best_protein
+    
+    def ensure_csv_headers(self):
+        """
+        Controleer of de CSV-bestand een header bevat en voeg deze toe indien niet aanwezig.
+        """
+        full_path = self.get_path()
+
+        # Controleer of het bestand leeg is of headers mist
+        if not os.path.isfile(full_path) or os.stat(full_path).st_size == 0:
+            with open(full_path, mode='w', newline='') as csv_file:
+                writer = csv.writer(csv_file)
+                writer.writerow(['Run', 'Execution Time (s)', 'Stability', 'Protein Folding Sequence'])
+                print(f"Headers toegevoegd aan bestand: {full_path}")
 
     def simulatedannealing(self, data):
         """
@@ -22,6 +35,7 @@ class DataStoring:
 
         # Voeg een lege regel toe voordat we de resultaten toevoegen
         with open(full_path, mode='a', newline='') as csv_file:
+            print('Run', 'Execution Time (s)', 'Stability', 'Protein Folding Sequence')
             csv_file.write("\n")  # Voeg een lege regel toe om data te scheiden
             
             # Voeg de resultaten toe aan het bestand
