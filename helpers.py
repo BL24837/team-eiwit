@@ -18,8 +18,8 @@ import csv
 import pandas as pd
 
 
-
 # Get information of the user via the terminal functions
+
 def get_sequence():
     """
     Get a sequence from the user. The user can choose from a list of predefined sequences or enter their own sequence. 
@@ -69,7 +69,7 @@ def get_algorithm():
         print(f"{key}: {value}")
     print("6: Other menu")
 
-    choice = input("Enter your choice (1, 2 ,3 ,4, 5 or 6): ").strip()
+    choice = input("Enter your choice (1, 2 ,3 ,4 or 5): ").strip()
     try:
         choice = int(choice)
         if choice in algorithm:
@@ -219,6 +219,7 @@ def run_choise_menu(choice, protein):
         return
 
 def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
+    
     """
     Laat een algoritme een aantal minuten draaien en sla de resultaten op in de map onder de opgegeven CSV-bestandsnamen.
     Zowel raw data als een samenvatting worden opgeslagen.
@@ -263,22 +264,22 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
         if choice == 1:  # Random Folding
             rf = RandomFolding(protein,data)
             folded_protein = rf.execute(iterations=1000)
-
+        
         elif choice == 2:  # hillclimber
-            max_iterations = int(1000)
+            max_iterations = int(10000)
             hillclimber_folding = HillClimber( protein,max_iterations=max_iterations,data = data)
             folded_protein = hillclimber_folding.execute()
-
+        
         elif choice == 3:  # Greedy Algorithm
-            # Greedy Algorithm uitvoeren
             gf = GreedyFolding(data, protein)
             folded_protein = gf.execute()
-
+            
         elif choice == 4:  # Beam Search
             bs = BeamSearchProteinFolding(data, protein, beam_width=1)
             folded_protein = bs.execute_with_dynamic_beam_width(end_time)
-  
+
         elif choice == 5:  # Simulated Annealing
+            # Simulated Annealing uitvoeren
             sa = SimulatedAnnealing(data, protein)
             folded_protein = sa.execute()
 
@@ -289,6 +290,15 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
         if best_stability is None or current_stability < best_stability:
             best_stability = current_stability
             best_protein = folded_protein
+        
+        sequence_protein=folded_protein.sequence
+        
+        CsvFunctions.csv_summary(summary_filepath ,
+            current_stability ,
+            sequence_protein ,
+            run_count ,
+            execution_time 
+                                )
 
         print(f"Run {run_count + 1} completed: Time={execution_time:.2f}s, Stability={current_stability}")
         run_count += 1

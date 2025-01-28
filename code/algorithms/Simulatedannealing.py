@@ -16,7 +16,7 @@ class SimulatedAnnealing:
     enabling escape from local minima and convergence to an optimized solution.
     """
 
-    def __init__(self, data: DataStoring, protein: Protein, max_attempts_per_temp: int = 100, hillclimber_iterations: int = 100) -> None:
+    def __init__(self, data: DataStoring, protein: Protein, max_attempts_per_temp: int = 100, hillclimber_iterations: int = 1000) -> None:
         """
         Initializes the Simulated Annealing algorithm.
 

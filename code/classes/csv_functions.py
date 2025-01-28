@@ -52,6 +52,7 @@ class CsvFunctions():
                     writer.writerow(['Beam Width', 'Elapsed Time (s)', 'Stability', 'Protein Folding Sequence'])
                 else:
                     writer.writerow(['Run', 'Execution Time (s)', 'Stability', 'Protein Folding Sequence'])
+<<<<<<< HEAD
 
     def csv_summary(
             summary_filepath = None,
@@ -70,3 +71,17 @@ class CsvFunctions():
                 writer.writerow([beam_width, elapsed_time, current_stability, folded_protein.sequence])
             else:  # Andere algoritmen
                 writer.writerow([run_count + 1, execution_time, current_stability, folded_protein.sequence])
+=======
+    
+    def csv_summary(
+            summary_filepath ,
+            current_stability,
+            sequence_protein,
+            run_count,
+            execution_time
+                    ):
+            # Voeg samenvattingsgegevens toe aan het summary-bestand
+        with open(summary_filepath, mode='a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([run_count + 1, execution_time, current_stability, sequence_protein])
+>>>>>>> 3d2e1965ed29b98a91ba70c98e7763ac81c8e3d6

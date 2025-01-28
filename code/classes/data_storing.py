@@ -121,12 +121,17 @@ class DataStoring:
             score (float): Stability score of the configuration.
             elapsed_time (float): Time taken to execute the algorithm.
         """
+
+        
         full_path = self.get_path()
+        self.ensure_csv_headers()
 
         with open(full_path, mode='a', newline='') as f:
                 writer = csv.writer(f)
                 for beam_width,elapsed_time, stability in beam_data:
                     writer.writerow([beam_width,stability,elapsed_time])
+
+
 
     def get_path(self) -> str:
         """
