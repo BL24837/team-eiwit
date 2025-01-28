@@ -13,7 +13,7 @@ class HillClimber:
     iterations or if no further improvements are found.
     """
 
-    def __init__(self, protein: Protein, max_iterations=1000):
+    def __init__(self, protein: Protein, max_iterations=1000, start = None):
         """
         Initializes the HillClimber class.
 
@@ -23,6 +23,7 @@ class HillClimber:
         """
         self.protein = protein
         self.max_iterations = max_iterations
+        self.start = start
 
     def execute(self) -> Protein:
         """
