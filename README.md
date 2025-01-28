@@ -83,11 +83,13 @@ To reproduce the results, follow these steps:
 2. **Run the Main Program**  
    Execute the program by running `python3 main.py`. The main program will present you with five different algorithms to choose from:
 
-   1 `Random Folding`
-   2 `Hillclimber`
-   3 `Greedy Folding`
-   4 `Beam Search Folding`
-   5 `Simulated Annealing Folding`
+   ```
+   1. Random Folding
+   2. Hillclimber
+   3. Greedy Folding
+   4. Beam Search Folding
+   5. Simulated Annealing Folding
+   ```
 
 3. **Choose an Algorithm**  
    Select the algorithm for which you want to reproduce results.
