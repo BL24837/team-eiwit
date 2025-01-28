@@ -28,7 +28,7 @@ def main():
             # Voer een enkele run uit
             folded_protein = helpers.run_algorithm(choice=choice, protein=protein, algorithm=algorithm, filename=filename)
 
-            sub_menu = helpers.get_sub_menu
+            sub_menu = helpers.get_sub_menu()
 
             if sub_menu == "1":
                 # Stabiliteit tonen

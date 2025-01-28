@@ -316,8 +316,6 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
         print(f"Run {run_count + 1} completed: Time={execution_time:.2f}s, Stability={current_stability}")
         run_count += 1
 
-
-
     # Toon de beste vouwing na afloop van de loop
     if best_protein:
         print(f"Best folding found:")

@@ -155,7 +155,7 @@ class SimulatedAnnealing:
             iteration_count += 1
 
         # Return the best configuration found
-        return self.best_protein 
+        return self.best_protein
     
     def export_results(self, data: list[str]) -> None:
         """

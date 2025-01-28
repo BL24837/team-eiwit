@@ -131,20 +131,6 @@ class BeamSearchProteinFolding:
 
         return best_protein, beam_data
 
-    def plot_stability_distribution(self) -> None:
-        """
-        Plots the distribution of stability scores across all generated configurations.
-        """
-        if not self.stabilities:
-            print("No stability scores to visualize. Run the algorithm first.")
-            return
-
-        plt.hist(self.stabilities, bins=30, edgecolor='black')
-        plt.title('Distribution of Stability Scores in Beam Search')
-        plt.xlabel('Stability Score')
-        plt.ylabel('Frequency')
-        plt.show()
-
     def export_results(self, protein: Protein, score: float, elapsed_time: float) -> None:
         """
         Exports the results of the Beam Search to a file.
