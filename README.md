@@ -91,5 +91,64 @@ The Hill Climber Algorithm is a local search optimization technique used to find
 5. Simmulated Annealing:
 The Simulated Annealing Algorithm is a probabilistic optimization technique inspired by the annealing process in metallurgy. It seeks to optimize protein folding by balancing exploration of the solution space with exploitation of promising configurations. By gradually lowering the "temperature," the algorithm transitions from broad exploration to focused refinement, effectively escaping local minima.
 
-# How to reproduce results
-Create a CSV file to store the results. Next, run `python3 main.py` and follow the instructions provided. Select the algorithm for which you want to reproduce the results. The program will prompt you to choose between a single run or a loop (the loop will run for a user-specified duration in minutes). Then, select the CSV file you just created to save the results. Once the execution is complete, a distribution plot will be generated automatically.
+# How to Reproduce Results (scripts)
+
+All results can be found in the `results` folder, which contains CSV files. 
+
+### Explanation of the CSV Files
+- `p1` stands for protein sequence 1, `p2` for protein sequence 2, and so on.
+- The file names also include the name of the algorithm used.
+- Finally, the duration for which the algorithm was looped (in minutes) is indicated in the file name.
+
+For example, a file named `p1_simulated_120min.csv` represents the results for:
+- Protein sequence 1 (`p1`),
+- Using the simulated annealing algorithm,
+- Looped for 120 minutes.
+
+
+To reproduce the results, follow these steps:
+
+1. **Prepare a CSV File**  
+   First, create a CSV file in the `results` directory to store the output data. 
+
+2. **Run the Main Program**  
+   Execute the program by running `python3 main.py`. The main program will present you with five different algorithms to choose from:
+
+   1. `Random Folding`
+   2. `Hillclimber`
+   3. `Greedy Folding`
+   4. `Beam Search Folding`
+   5. `Simulated Annealing Folding`
+
+3. **Choose an Algorithm**  
+   Select the algorithm for which you want to reproduce results.
+
+4. **Choose a Protein Sequence**  
+   After selecting an algorithm, you will be prompted to choose a protein sequence. The available sequences are:
+
+   1. `HHPHHHPH`
+   2. `HHPHHHPHPHHHPH`
+   3. `HPHPPHHPHPPHPHHPPHPH`
+   4. `PPPHHPPHHPPPPPHHHHHHHPPHHPPPPHHPPHPP`
+   5. `HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH`
+   6. `PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP`
+   7. `CPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPC`
+   8. `HCPHPCPHPCHCHPHPPPHPPPHPPPPHPCPHPPPHPHHHCCHCHCHCHH`
+   9. `HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH`
+   10. Enter your own sequence.
+
+   Select the protein sequence for which you want to reproduce results.
+
+5. **Specify the Output File**  
+   Enter the name of the file where the data should be saved. This is the file you created on step 1.
+
+6. **Choose an Execution Mode**  
+   After specifying the output file, the program will present you with two options:
+
+   1. `Single Run`  
+      For this option, depending on the algorithm chosen, the program will ask you to input specific parameters.
+
+   2. `Loop Algorithm`  
+      For this option, the program will ask how many minutes you want the algorithm to run in a loop and specific parameters.
+
+Follow these steps to reproduce the results accurately.
