@@ -11,7 +11,6 @@ The goal of this project is to find a configuration with the lowest possible sta
 
 # Installing
 
-
 ### Clone the repository
 Before cloning make sure you make a empty directory to clone into.
 ```
@@ -28,49 +27,6 @@ After opening the right repository instal all requirements.
 ```
 pip install -r requirements.txt
 ```
-
-This program is run on ```Python 3.10.12```
-
-# Running
-
-## main program
-Run this code:
-```
-python3 main.py
-```
-OR
-```
-python main.py
-```
-After running this code you have to choose which algorithm you want to run.
-
-### Select algorithm
-Select folding algorithm:
-1: Random Folding
-2: Hillclimber
-3: Greedy Folding
-4: Beam Search
-5: Simmulated Annealing
-```Enter your choice (1, 2, 3, 4 or 5): into your terminal```
-
-After choosing your algorithm, the program presents you 10 different options. Nine options are the standard protein sequences and the tenth option is a sequence you can choose by yourself.
-### Select Protein Sequence
-
-Choose a sequence:
-
-1. `HHPHHHPH`  
-2. `HHPHHHPHPHHHPH`  
-3. `HPHPPHHPHPPHPHHPPHPH`  
-4. `PPPHHPPHHPPPPPHHHHHHHPPHHPPPPHHPPHPP`  
-5. `HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH`  
-6. `PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP`  
-7. `CPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPC`  
-8. `HCPHPCPHPCHCHPHPPPHPPPHPPPPHPCPHPPPHPHHHCCHCHCHCHH`  
-9. `HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH`  
-10. Enter your own sequence
-
-
-### Enter filename
 
 ## Operation of the different algorithms
 
@@ -90,6 +46,19 @@ The Hill Climber Algorithm is a local search optimization technique used to find
 
 5. Simmulated Annealing:
 The Simulated Annealing Algorithm is a probabilistic optimization technique inspired by the annealing process in metallurgy. It seeks to optimize protein folding by balancing exploration of the solution space with exploitation of promising configurations. By gradually lowering the "temperature," the algorithm transitions from broad exploration to focused refinement, effectively escaping local minima.
+This program is run on ```Python 3.10.12```
+
+# Running
+
+## main program
+Run this code:
+```
+python3 main.py
+```
+OR
+```
+python main.py
+```
 
 # How to Reproduce Results (scripts)
 
