@@ -37,7 +37,6 @@ class Distribution:
                         try:
                             stability = float(row[1])  # Haal het tweede element (Stability) op
                             stabilities.append(stability)
-                            print(stability)
                         except ValueError:
                             continue  # Sla rijen over met ongeldige waarden
             

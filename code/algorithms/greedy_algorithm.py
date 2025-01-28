@@ -41,7 +41,7 @@ class GreedyFolding:
         print("Starting greedy refinement phase...")
         best_protein = self.iterative_random_and_greedy_folding(first_protein)
 
-        # self.export_results(best_protein)
+        self.export_results(best_protein)
 
         return best_protein
 
@@ -196,3 +196,6 @@ class GreedyFolding:
                 return True
 
         return False
+    
+    def export_results(self, best_protein: Protein):
+        self.data.greedy_algorithm_data(best_protein)

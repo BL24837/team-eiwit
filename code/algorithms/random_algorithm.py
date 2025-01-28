@@ -90,3 +90,7 @@ class RandomFolding:
             self.protein.rotate_protein(pivot_index, rotation_matrix)
             return True
         return False
+    
+    def export_data(self, folded_protein:Protein):
+        self.data.random_folding_data(folded_protein)
+

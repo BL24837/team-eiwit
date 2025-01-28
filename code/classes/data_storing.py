@@ -1,3 +1,5 @@
+from code.classes.protein import Protein
+
 import csv
 import os
 import re
@@ -13,7 +15,8 @@ class DataStoring:
                  algorithm: str = None, 
                  parameters: dict = None, 
                  best_protein: object = None, 
-                 filename: str = None):
+                 filename: str = None,
+                 run_count: int = None):
         """
         Initializes the DataStoring object.
 
@@ -28,6 +31,7 @@ class DataStoring:
         self.filename = filename
         self.parameters = parameters
         self.protein = best_protein
+        self.run_count = run_count
     
     def ensure_csv_headers(self) -> None:
         """
@@ -57,7 +61,7 @@ class DataStoring:
             for beam_width, elapsed_time, stability in beam_data:
                 writer.writerow([beam_width, stability, elapsed_time])
 
-    def simulatedannealing(self, data: list[str]) -> None:
+    def simulatedannealing_data(self, iteration_data: list[tuple[int, float, float]]) -> None:
         """
         Writes Simulated Annealing results to the CSV file.
 
@@ -66,12 +70,13 @@ class DataStoring:
         """
         full_path = self.get_path()
 
-        with open(full_path, mode='a', newline='') as csv_file:
-            csv_file.write("\n")  # Add a blank line for separation
-            for entry in data:
-                csv_file.write(entry + "\n")
+        # Log de iteration data naar raw data CSV
+        with open(full_path, mode='a', newline='') as f:
+            writer = csv.writer(f)
+            for iteration, temp, stability in iteration_data:
+                writer.writerow([iteration, stability, temp])
 
-    def greedy_algorithm(self, run: int, execution_time: float, stability: float, folding_sequence: str) -> None:
+    def greedy_algorithm_data(self, folded_protein) -> None:
         """
         Writes the results of the Greedy Algorithm to the CSV file.
 
@@ -82,14 +87,15 @@ class DataStoring:
             folding_sequence (str): The protein folding sequence.
         """
         full_path = self.get_path()
-        self.ensure_csv_headers()
+        
+        current_stability = folded_protein.calculate_stability()
 
-        with open(full_path, mode='a', newline='') as csv_file:
-            writer = csv.writer(csv_file)
-            writer.writerow([run, execution_time, stability, folding_sequence])
-        print(f"Run {run}: Time={execution_time:.2f}s, Stability={stability}, Sequence={folding_sequence}")
+        # Log gegevens naar raw data CSV
+        with open(full_path, mode='a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([self.run_count + 1, current_stability])
     
-    def random_folding(self, iteration: int, stability: float) -> None:
+    def random_folding_data(self, folded_protein: Protein) -> None:
         """
         Writes Random Folding results to the CSV file.
 
@@ -98,14 +104,14 @@ class DataStoring:
             stability (float): The stability score for the iteration.
         """
         full_path = self.get_path()
-        self.ensure_csv_headers()
 
-        with open(full_path, mode='a', newline='') as csv_file:
-            writer = csv.writer(csv_file)
-            writer.writerow([iteration, stability])
-        print(f"Iteration {iteration}: Stability={stability} added to {full_path}")
+        # Log de random folding data
+        current_stability = folded_protein.calculate_stability()
+        with open(full_path, mode='a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([self.run_count + 1, current_stability])
 
-    def beam_search_data(self, protein: object, score: float, elapsed_time: float) -> None:
+    def beam_search_data(self, beam_data:list[tuple[float, float, float]]) -> None:
         """
         Writes Beam Search results and elapsed time to the CSV file.
 
@@ -114,16 +120,14 @@ class DataStoring:
             score (float): Stability score of the configuration.
             elapsed_time (float): Time taken to execute the algorithm.
         """
-        self.protein = protein
+        self.beam_data = beam_data
         full_path = self.get_path()
-        output = self.generate_output(score)
-        output += f"\nTIME elapsed: {elapsed_time:.2f} seconds"
 
-        with open(full_path, mode='a', newline='') as csv_file:
-            csv_file.write("\n")
-            csv_file.write(output)
-            csv_file.write("\n")
-  
+        with open(full_path, mode='a', newline='') as f:
+                writer = csv.writer(f)
+                for beam_width,elapsed_time, stability in beam_data:
+                    writer.writerow([beam_width,stability,elapsed_time])
+
     def get_path(self) -> str:
         """
         Constructs the full path for the CSV file.

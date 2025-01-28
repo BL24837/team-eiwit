@@ -129,9 +129,12 @@ class BeamSearchProteinFolding:
 
             beam_width += 5  # Increase the beam width for the next iteration
 
-        return best_protein, beam_data
+            self.export_results(beam_data)
+            beam_data = []
 
-    def export_results(self, protein: Protein, score: float, elapsed_time: float) -> None:
+        return best_protein
+
+    def export_results(self, beam_data:list[tuple[float, float, float]]) -> None:
         """
         Exports the results of the Beam Search to a file.
 
@@ -140,4 +143,4 @@ class BeamSearchProteinFolding:
             score (float): The stability score of the final configuration.
             elapsed_time (float): The time taken to execute the algorithm.
         """
-        self.data.beam_search_data(protein, score, elapsed_time)
+        self.data.beam_search_data(beam_data)

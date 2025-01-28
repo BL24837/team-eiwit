@@ -166,7 +166,7 @@ def run_algorithm(choice: int, protein, algorithm, filename):
     elif choice == 5:
         # Perform simulated annealing
         sa = SimulatedAnnealing(data, protein)
-        folded_protein = sa.execute()
+        folded_protein ,interation_data = sa.execute()
 
     return folded_protein
 
@@ -251,51 +251,25 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
 
     while datetime.now() < end_time:
         start_time = time.time()  # Starttijd van deze run
-        data = DataStoring(algorithm=algorithm)
+        data = DataStoring(algorithm=algorithm ,filename=filename, run_count=run_count)
 
         if choice == 4:  # Beam Search
-            beam_search = BeamSearchProteinFolding(data, protein, beam_width=1)
-            folded_protein, beam_data = beam_search.execute_with_dynamic_beam_width(end_time)
-
-            # Log de Beam Search gegevens naar raw data CSV
-            with open(raw_filepath, mode='a', newline='') as f:
-                writer = csv.writer(f)
-                for beam_width,elapsed_time, stability in beam_data:
-                    writer.writerow([beam_width,stability,elapsed_time])
-
+            bs = BeamSearchProteinFolding(data, protein, beam_width=1)
+            folded_protein = bs.execute_with_dynamic_beam_width(end_time)
+            
         elif choice == 5:  # Simulated Annealing
             # Simulated Annealing uitvoeren
             sa = SimulatedAnnealing(data, protein)
-            folded_protein, iteration_data = sa.execute()
-
-            # Log de iteration data naar raw data CSV
-            with open(raw_filepath, mode='a', newline='') as f:
-                writer = csv.writer(f)
-                for iteration, temp, stability in iteration_data:
-                    writer.writerow([iteration, stability, temp])
+            folded_protein = sa.execute()
 
         elif choice == 3:  # Greedy Algorithm
             # Greedy Algorithm uitvoeren
-            greedy_folding = GreedyFolding(data, protein)
-            folded_protein = greedy_folding.execute()
-
-            # Stabiliteit van de huidige vouwing berekenen
-            current_stability = folded_protein.calculate_stability()
-
-            # Log gegevens naar raw data CSV
-            with open(raw_filepath, mode='a', newline='') as f:
-                writer = csv.writer(f)
-                writer.writerow([run_count + 1, current_stability])
+            gf = GreedyFolding(data, protein)
+            folded_protein = gf.execute()
 
         elif choice == 1:  # Random Folding
-            random_folding = RandomFolding(data, protein)
-            folded_protein = random_folding.execute(iterations=10000)
-
-            # Log de random folding data
-            current_stability = folded_protein.calculate_stability()
-            with open(raw_filepath, mode='a', newline='') as f:
-                writer = csv.writer(f)
-                writer.writerow([run_count + 1, current_stability])
+            rf = RandomFolding(data, protein)
+            folded_protein = rf.execute(iterations=10000)
 
         # Bereken de stabiliteit en tijd van de huidige run
         current_stability = folded_protein.calculate_stability()
