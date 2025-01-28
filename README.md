@@ -54,18 +54,21 @@ Select folding algorithm:
 ```Enter your choice (1, 2, 3, 4 or 5): into your terminal```
 
 After choosing your algorithm, the program presents you 10 different options. Nine options are the standard protein sequences and the tenth option is a sequence you can choose by yourself.
-### Select protein sequence
+### Select Protein Sequence
+
 Choose a sequence:
-1: HHPHHHPH
-2: HHPHHHPHPHHHPH
-3: HPHPPHHPHPPHPHHPPHPH
-4: PPPHHPPHHPPPPPHHHHHHHPPHHPPPPHHPPHPP
-5: HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH
-6: PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP
-7: CPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPC
-8: HCPHPCPHPCHCHPHPPPHPPPHPPPPHPCPHPPPHPHHHCCHCHCHCHH
-9: HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH
-10: Enter your own sequence
+
+1. `HHPHHHPH`  
+2. `HHPHHHPHPHHHPH`  
+3. `HPHPPHHPHPPHPHHPPHPH`  
+4. `PPPHHPPHHPPPPPHHHHHHHPPHHPPPPHHPPHPP`  
+5. `HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH`  
+6. `PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP`  
+7. `CPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPC`  
+8. `HCPHPCPHPCHCHPHPPPHPPPHPPPPHPCPHPPPHPHHHCCHCHCHCHH`  
+9. `HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH`  
+10. Enter your own sequence
+
 
 ### Enter filename
 
@@ -87,3 +90,6 @@ The Hill Climber Algorithm is a local search optimization technique used to find
 
 5. Simmulated Annealing:
 The Simulated Annealing Algorithm is a probabilistic optimization technique inspired by the annealing process in metallurgy. It seeks to optimize protein folding by balancing exploration of the solution space with exploitation of promising configurations. By gradually lowering the "temperature," the algorithm transitions from broad exploration to focused refinement, effectively escaping local minima.
+
+# How to reproduce results
+Create a CSV file to store the results. Next, run `python3 main.py` and follow the instructions provided. Select the algorithm for which you want to reproduce the results. The program will prompt you to choose between a single run or a loop (the loop will run for a user-specified duration in minutes). Then, select the CSV file you just created to save the results. Once the execution is complete, a distribution plot will be generated automatically.

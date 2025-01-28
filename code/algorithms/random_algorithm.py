@@ -51,7 +51,6 @@ class RandomFolding:
             if success:
                 # Calculate the stability of the new configuration
                 stability = self.protein.calculate_stability()
-                self.data.random_folding(i + 1, stability)
                 stabilities.append(stability)
 
                 # Update the best protein if a better stability is found
@@ -65,8 +64,11 @@ class RandomFolding:
         Distribution(stabilities)
         # Store the final results if data is given
         if self.data:
-            self.data.random_folding(iterations, stability)
+            self.data.random_folding_data(self.protein)
 
+        # Store the final results
+        
+        
         return best_protein
 
     def perform_random_rotation(self) -> bool:
@@ -92,6 +94,6 @@ class RandomFolding:
             return True
         return False
     
-    def export_data(self, folded_protein:Protein):
-        self.data.random_folding_data(folded_protein)
+    def export_data(self, protein:Protein):
+        self.data.random_folding_data(protein)
 
