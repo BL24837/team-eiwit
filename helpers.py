@@ -166,7 +166,7 @@ def run_algorithm(choice: int, protein, algorithm, filename):
     elif choice == 5:
         # Perform simulated annealing
         sa = SimulatedAnnealing(data, protein)
-        folded_protein = sa.execute()
+        folded_protein ,interation_data = sa.execute()
 
     return folded_protein
 
@@ -251,7 +251,7 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
 
     while datetime.now() < end_time:
         start_time = time.time()  # Starttijd van deze run
-        data = DataStoring(algorithm=algorithm)
+        data = DataStoring(algorithm=algorithm ,filename=filename)
 
         if choice == 4:  # Beam Search
             beam_search = BeamSearchProteinFolding(data, protein, beam_width=1)

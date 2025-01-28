@@ -98,8 +98,7 @@ class SimulatedAnnealing:
         current_temp = self.initial_temp
         iteration_count = 0
 
-        temperatures = []  # Track temperatures for plotting
-        iterations = []  # Track iteration counts for plotting
+        iteration_data = []# Track iteration counts for plotting
 
         while current_temp > self.min_temp:
             for attempt in range(self.max_attempts_per_temp):
@@ -145,17 +144,19 @@ class SimulatedAnnealing:
                         if current_stability < best_stability:
                             self.best_protein = copy.deepcopy(current_protein)
                             best_stability = current_stability
+            iteration = iteration_count
+            temp = current_temp
+            stability= current_stability
 
             # Update temperature and iteration tracking
-            temperatures.append(current_temp)
-            iterations.append(iteration_count)
+            iteration_data.append((iteration, temp, stability))
 
             # Reduce temperature based on the cooling rate
             current_temp *= self.cooling_rate
             iteration_count += 1
 
         # Return the best configuration found
-        return self.best_protein 
+        return self.best_protein , iteration_data
     
     def export_results(self, data: list[str]) -> None:
         """

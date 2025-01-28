@@ -20,6 +20,7 @@ def main():
 
         # Vraag de gebruiker om de naam van het CSV-bestand
         filename = helpers.get_filename()
+        
 
         # Vraag of de gebruiker een enkele run wil of 30 minuten
         sort_run = helpers.get_sort_run()
@@ -28,7 +29,8 @@ def main():
             # Voer een enkele run uit
             folded_protein = helpers.run_algorithm(choice=choice, protein=protein, algorithm=algorithm, filename=filename)
 
-            sub_menu = helpers.get_sub_menu
+            sub_menu = helpers.get_sub_menu()
+            print("hallo")
 
             if sub_menu == "1":
                 # Stabiliteit tonen
