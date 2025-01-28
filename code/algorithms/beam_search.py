@@ -42,20 +42,17 @@ class BeamSearchProteinFolding:
         Returns:
             Protein: The best protein configuration found.
         """
+        beam_data=[]
         protein = Protein(self.protein.sequence)
         n = len(protein.amino_acids)
-
-        beam_data = []
 
         beam = [protein]  # Initialize the beam with the starting configuration
         timer = Timer()
         timer.start()
 
         for step in range(1, n):
-
-            current_stabillity = None
-            
             candidates = []  # Store candidate configurations for the current step
+            
 
             for current_protein in beam:
                 last_pos = current_protein.amino_acids[step - 1]["position"]
@@ -69,7 +66,6 @@ class BeamSearchProteinFolding:
                         new_protein.amino_acids[step]["position"] = new_pos
                         stability = new_protein.calculate_stability()
                         candidates.append((stability, new_protein))
-                        current_stabillity = stability
 
             candidates.sort(key=lambda x: x[0])  # Sort by stability (lower is better)
             beam = [protein for _, protein in candidates[:self.beam_width]]  # Retain top candidates
@@ -79,15 +75,12 @@ class BeamSearchProteinFolding:
 
             timer.stop()
             elapsed_time = timer.elapsed_time()
-
-            beam_data.append((self.beam_width, elapsed_time, current_stabillity))
-
+            beam_data.append((self.beam_width, elapsed_time, stability))
+        
             self.export_results(beam_data)
-            beam_data = []
 
         # Return the best configuration
         best_protein = min(beam, key=lambda protein: protein.calculate_stability())
-
         return best_protein
 
     def execute_with_dynamic_beam_width(self, end_time: datetime) -> tuple[Protein, list[tuple[int, float, float]]]:
@@ -148,7 +141,8 @@ class BeamSearchProteinFolding:
 
         return best_protein
 
-    def export_results(self, beam_data:list[tuple[float, float, float]]) -> None:
+    def export_results(self, beam_data:list[tuple[int, float, float]]) -> None:
+        
         """
         Exports the results of the Beam Search to a file.
 
