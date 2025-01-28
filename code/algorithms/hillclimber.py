@@ -40,7 +40,7 @@ class HillClimber:
        # random folding starting hillclimber
         if self.start is None:
             random_folding= RandomFolding(self.protein)
-            self.protein = random_folding.execute(iterations=10000)
+            self.protein = random_folding.execute(iterations=1000)
 
 
         # Deep copy the initial protein to avoid modifying the original
@@ -48,6 +48,8 @@ class HillClimber:
         best_protein = copy.deepcopy(current_protein)
         current_stability = current_protein.calculate_stability()
         best_stability = current_stability
+        iteration_count=1
+        hillclimber=[]
 
         # Iterate up to the maximum number of allowed iterations
         for iteration in range(self.max_iterations):
@@ -76,12 +78,25 @@ class HillClimber:
                 if new_stability < current_stability:
                     current_protein = copy.deepcopy(new_protein)
                     current_stability = new_stability
+                    hillclimber.append((iteration_count,current_stability))
 
                     # Update the best configuration found so far
                     if current_stability < best_stability:
                         best_protein = copy.deepcopy(new_protein)
                         best_stability = current_stability
+            hillclimber.append((iteration_count,current_stability))
+            iteration_count+=1
 
         print("HillClimber Optimization complete.")
         print(f"Best Stability: {best_stability}")
+
+        self.export_data_hil(hillclimber)
+
         return best_protein
+
+    def export_data_hil(self, hillclimber):
+    
+        self.data.hillclimber_data(hillclimber)
+
+    
+    

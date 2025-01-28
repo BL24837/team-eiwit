@@ -23,6 +23,8 @@ class CsvFunctions():
                             writer.writerow(['Iteration', 'Stability'])
                         elif choice == 4:  # beam search Folding
                             writer.writerow(['Beam Width', 'Stability',' elapsed_time'])
+                        elif choice == 2:  # beam search Folding
+                            writer.writerow(['Iteration', 'Stability'])
                         # Schrijf de bestaande gegevens opnieuw
                         fw.writelines(temp_data)
             return
@@ -38,6 +40,8 @@ class CsvFunctions():
                     writer.writerow(['Iteration', 'Stability'])
                 elif choice == 4:  # beam search Folding
                     writer.writerow(['Beam Width', 'Stability',' elapsed_time'])
+                elif choice == 1:  # hillclimber Algorithm
+                    writer.writerow(['Iteration', 'Stability'])
 
             return
 
