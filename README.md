@@ -109,7 +109,7 @@ For example, a file named `p1_simulated_120min.csv` represents the results for:
 To reproduce the results, follow these steps:
 
 1. **Prepare a CSV File**  
-   First, create a CSV file in the `results` directory to store the output data. 
+   First, create a CSV file in the `results` directory to store the output data.
 
 2. **Run the Main Program**  
    Execute the program by running `python3 main.py`. The main program will present you with five different algorithms to choose from:
@@ -140,7 +140,7 @@ To reproduce the results, follow these steps:
    Select the protein sequence for which you want to reproduce results.
 
 5. **Specify the Output File**  
-   Enter the name of the file where the data should be saved. This is the file you created on step 1.
+   Enter the name of the file where the data should be saved. This file must be the same one you created in step 1.
 
 6. **Choose an Execution Mode**  
    After specifying the output file, the program will present you with two options:
@@ -149,6 +149,18 @@ To reproduce the results, follow these steps:
       For this option, depending on the algorithm chosen, the program will ask you to input specific parameters.
 
    2. `Loop Algorithm`  
-      For this option, the program will ask how many minutes you want the algorithm to run in a loop and specific parameters.
+      For this option, the program will ask how many minutes you want the algorithm to run in a loop.
+
+7. **Choose Stability, Visualizer, or Both**  
+   After the program is done running, it will present you with three options:
+
+   1. `Stability`  
+      For this option, the program will print the stability score in the terminal.
+
+   2. `Visualizer`  
+      For this option, the program will plot the protein sequence.
+
+   3. `Both`  
+      The program will perform both actions.
 
 Follow these steps to reproduce the results accurately.
