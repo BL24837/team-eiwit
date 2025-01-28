@@ -4,6 +4,7 @@ from code.algorithms.hillclimber import *
 from code.algorithms.beam_search import *
 from code.algorithms.Simulatedannealing import *
 from code.classes.data_storing import DataStoring
+from code.classes.csv_functions import CsvFunctions
 from code.visualisation.timer import Timer
 import os
 from code.visualisation.visualize import ProteinVisualizer
@@ -63,9 +64,9 @@ def get_algorithm():
     print("Choose a algorithm:")
     for key, value in algorithm.items():
         print(f"{key}: {value}")
-    print("10: Enter your own sequence")
+    print("6: Other menu")
 
-    choice = input("Enter your choice (1, 2 ,3 ,4, 5, 6 or 7): ").strip()
+    choice = input("Enter your choice (1, 2 ,3 ,4, 5 or 6): ").strip()
     try:
         choice = int(choice)
         if choice in algorithm:
@@ -105,6 +106,12 @@ def get_filename():
 
     return filename
 
+def get_sort_run():
+    print("1: Single run")
+    print("2: loop algorithme")
+    execution_mode = input("Enter your choice (1 or 2): ").strip()
+    return execution_mode
+
 def get_choise_menu():
     print("1: Length of protein")
     print("2: Visualize protein")
@@ -113,6 +120,20 @@ def get_choise_menu():
     choice_menu = input("Enter your choice (1, 2 or 3: ").strip()
     
     return choice_menu
+
+def get_minutes():
+    print("How many minutes you want to loop")
+    x_times = input(" ").strip()
+    x_times = int(x_times)
+    return x_times
+
+def get_sub_menu():
+    print("1: Stability")
+    print("2: Visualizer")
+    print("3: Both")
+    choice = input("Enter your choice (1, 2 or 3): ").strip()
+
+    return choice
 
 # Run the chosen things functions
 def run_algorithm(choice: int, protein, algorithm, filename):
@@ -123,8 +144,6 @@ def run_algorithm(choice: int, protein, algorithm, filename):
         # Perform random folding
         iterations = int(input("Enter the number of iterations for random folding: ").strip())
         random_folding = RandomFolding(data, protein)
-        if random_folding:
-            print("Random folding is  possible")
         folded_protein = random_folding.execute(iterations=iterations)
     
     elif choice == 2:
@@ -140,18 +159,9 @@ def run_algorithm(choice: int, protein, algorithm, filename):
 
     elif choice == 4:
         # Perform beam search
-        sequence = protein.sequence
         beam_width = int(input("Enter the beam width for beam search folding: ").strip())
-        timer = Timer()
-        timer.start()
-        beam_search = BeamSearchProteinFolding(data, sequence, beam_width)
-        folded_protein = beam_search.execute() # extra optie plot_distribution = False
-        timer.stop()
-        elapsed = timer.elapsed_time()
-        score = folded_protein.calculate_stability()
-        print(elapsed)
-        beam_search.export_results(folded_protein, score, elapsed)
-
+        beam_search = BeamSearchProteinFolding(data, protein, beam_width)
+        folded_protein = beam_search.execute()
 
     elif choice == 5:
         # Perform simulated annealing
@@ -200,8 +210,6 @@ def run_choise_menu(choice, protein):
     else:
         print("Invalid choice. Please select 1, 2, 3, 4, or 5.")
         return
-    
-
 
 def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
     """
@@ -230,45 +238,10 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
     raw_filepath = os.path.join(results_directory, filename)
     summary_filepath = os.path.join(summary_directory, filename)
 
-    if os.path.isfile(raw_filepath):
-        # Controleer of de header al aanwezig is
-        with open(raw_filepath, mode='r') as f:
-            existing_data = f.readlines()
-            if len(existing_data) == 0 or not existing_data[0].strip().startswith("Iteration"):
-                # Voeg de header toe bovenaan
-                temp_data = existing_data[:]
-                with open(raw_filepath, mode='w', newline='') as fw:
-                    writer = csv.writer(fw)
-                    if choice == 5:  # Simulated Annealing
-                        writer.writerow(['Iteration', 'Stability', 'Temperature'])
-                    elif choice == 3:  # Greedy Algorithm
-                        writer.writerow(['Iteration', 'Stability'])
-                    elif choice == 1:  # Random Folding
-                        writer.writerow(['Iteration', 'Stability'])
-                    elif choice == 4:  # beam search Folding
-                        writer.writerow(['Beam Width', 'Stability',' elapsed_time'])
-                    # Schrijf de bestaande gegevens opnieuw
-                    fw.writelines(temp_data)
-    else:
-        # Als het bestand niet bestaat, maak het aan met de header
-        with open(raw_filepath, mode='w', newline='') as f:
-            writer = csv.writer(f)
-            if choice == 5:  # Simulated Annealing
-                writer.writerow(['Iteration', 'Stability', 'Temperature'])
-            elif choice == 3:  # Greedy Algorithm
-                writer.writerow(['Iteration', 'Stability'])
-            elif choice == 1:  # Random Algorithm
-                writer.writerow(['Iteration', 'Stability'])
-            elif choice == 4:  # beam search Folding
-                writer.writerow(['Beam Width', 'Stability',' elapsed_time'])
+    csv_object = CsvFunctions()
 
-    if not os.path.isfile(summary_filepath):
-        with open(summary_filepath, mode='w', newline='') as f:
-            writer = csv.writer(f)
-            if choice == 4:
-                writer.writerow(['Beam Width', 'Elapsed Time (s)', 'Stability', 'Protein Folding Sequence'])
-            else:
-                writer.writerow(['Run', 'Execution Time (s)', 'Stability', 'Protein Folding Sequence'])
+    csv_object.csv_header(raw_filepath, choice)
+    csv_object.csv_header_summary(summary_filepath, choice)
 
     # Looptijden instellen
     end_time = datetime.now() + timedelta(minutes=x_times)
@@ -278,9 +251,10 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
 
     while datetime.now() < end_time:
         start_time = time.time()  # Starttijd van deze run
+        data = DataStoring(algorithm=algorithm)
 
         if choice == 4:  # Beam Search
-            beam_search = BeamSearchProteinFolding(DataStoring(algorithm=algorithm, filename=filename), protein, beam_width=1)
+            beam_search = BeamSearchProteinFolding(data, protein, beam_width=1)
             folded_protein, beam_data = beam_search.execute_with_dynamic_beam_width(end_time)
 
             # Log de Beam Search gegevens naar raw data CSV
@@ -291,7 +265,7 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
 
         elif choice == 5:  # Simulated Annealing
             # Simulated Annealing uitvoeren
-            sa = SimulatedAnnealing(DataStoring(algorithm=algorithm, filename=filename), protein)
+            sa = SimulatedAnnealing(data, protein)
             folded_protein, iteration_data = sa.execute()
 
             # Log de iteration data naar raw data CSV
@@ -302,7 +276,7 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
 
         elif choice == 3:  # Greedy Algorithm
             # Greedy Algorithm uitvoeren
-            greedy_folding = GreedyFolding(DataStoring(algorithm=algorithm, filename=filename), protein)
+            greedy_folding = GreedyFolding(data, protein)
             folded_protein = greedy_folding.execute()
 
             # Stabiliteit van de huidige vouwing berekenen
@@ -314,7 +288,7 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
                 writer.writerow([run_count + 1, current_stability])
 
         elif choice == 1:  # Random Folding
-            random_folding = RandomFolding(DataStoring(algorithm=algorithm, filename=filename), protein)
+            random_folding = RandomFolding(data, protein)
             folded_protein = random_folding.execute(iterations=10000)
 
             # Log de random folding data
@@ -368,57 +342,6 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
     else:
         print("No valid folding found.")
 
-    visualize_stability_distribution_from_results(filename)
-
-
-def visualize_stability_distribution_from_results(filename):
-    """
-    Maakt een distributiegrafiek van stabiliteit op basis van de gegevens in de tweede kolom van een CSV-bestand
-    en slaat deze op als een PNG-bestand in de map 'results/distribution'.
-
-    :param filename: Naam van het CSV-bestand in de map 'results'.
-    """
-    # Zorg ervoor dat de map 'results/distribution' bestaat
-    distribution_dir = os.path.join("results", "distribution")
-    if not os.path.exists(distribution_dir):
-        os.makedirs(distribution_dir)
-
-    # Pad naar het bestand
-    filepath = os.path.join("results", filename)
-    
-    try:
-        # Lees het CSV-bestand
-        stabilities = []
-        with open(filepath, mode='r') as csvfile:
-            reader = csv.reader(csvfile)
-            next(reader)  # Sla de header over als die aanwezig is
-            for row in reader:
-                if len(row) > 1:  # Controleer of er een tweede kolom is
-                    try:
-                        stability = float(row[1])  # Haal het tweede element (Stability) op
-                        stabilities.append(stability)
-                    except ValueError:
-                        continue  # Sla rijen over met ongeldige waarden
-        
-        # Controleer of we stabiliteitsgegevens hebben
-        if not stabilities:
-            print(f"Geen stabiliteitsgegevens gevonden in {filename}.")
-            return
-        
-        # Maak de distributiegrafiek met de Distribution-klasse
-        distribution = Distribution(stabilities)
-        
-        # Sla de grafiek op met de naam aangepast aan het bestand
-        plot_filename = os.path.splitext(filename)[0] + "_distribution.png"
-        plot_path = os.path.join(distribution_dir, plot_filename)
-        
-        # Sla de distributiegrafiek op
-        plt.savefig(plot_path)
-        plt.close()
-        
-        print(f"Distributiegrafiek opgeslagen in {plot_path}")
-    except FileNotFoundError:
-        print(f"Het bestand '{filename}' bestaat niet.")
-    except Exception as e:
-        print(f"Er ging iets fout: {e}")
+    distribution = Distribution()
+    distribution.visualize_stability_distribution_from_results(filename)
 
