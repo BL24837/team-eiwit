@@ -143,14 +143,14 @@ def run_algorithm(choice: int, protein, algorithm, filename):
     if choice == 1:
         # Perform random folding
         iterations = int(input("Enter the number of iterations for random folding: ").strip())
-        random_folding = RandomFolding(data, protein)
+        random_folding = RandomFolding(protein,data)
         folded_protein = random_folding.execute(iterations=iterations)
     
     elif choice == 2:
         # Perform hillclimber folding
-        iterations = int(input("Enter the number of iterations for random folding: ").strip())
-        hillclimber_folding = HillClimber(data, protein)
-        folded_protein = hillclimber_folding.execute(iterations=iterations)
+        max_iterations = int(input("Enter the number of iterations for random folding: ").strip())
+        hillclimber_folding = HillClimber( protein,max_iterations=max_iterations,data = data)
+        folded_protein = hillclimber_folding.execute()
     
     elif choice == 3:
         # Perform greedy folding
@@ -166,7 +166,7 @@ def run_algorithm(choice: int, protein, algorithm, filename):
     elif choice == 5:
         # Perform simulated annealing
         sa = SimulatedAnnealing(data, protein)
-        folded_protein ,interation_data = sa.execute()
+        folded_protein = sa.execute()
 
     return folded_protein
 
@@ -268,7 +268,7 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
             folded_protein = gf.execute()
 
         elif choice == 1:  # Random Folding
-            rf = RandomFolding(data, protein)
+            rf = RandomFolding(protein,data)
             folded_protein = rf.execute(iterations=10000)
 
         # Bereken de stabiliteit en tijd van de huidige run

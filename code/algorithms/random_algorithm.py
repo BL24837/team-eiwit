@@ -4,6 +4,7 @@ from code.classes.data_storing import DataStoring
 from code.classes.protein import Protein
 from code.visualisation.visualize import ProteinVisualizer
 from code.visualisation.distribution import Distribution
+from helpers import *
 
 class RandomFolding:
     """
@@ -14,7 +15,7 @@ class RandomFolding:
     score found during the iterations.
     """
 
-    def __init__(self, data: DataStoring, protein: Protein):
+    def __init__(self, protein: Protein,data: DataStoring=None):
         """
         Initializes the RandomFolding class.
 
@@ -62,10 +63,10 @@ class RandomFolding:
 
         # Visualize the stability distribution over iterations
         Distribution(stabilities)
+        # Store the final results if data is given
+        if self.data:
+            self.data.random_folding(iterations, stability)
 
-        # Store the final results
-        self.data.random_folding(iterations, stability)
-        
         return best_protein
 
     def perform_random_rotation(self) -> bool:
