@@ -260,30 +260,27 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
         start_time = time.time()  # Starttijd van deze run
         data = DataStoring(algorithm=algorithm ,filename=filename, run_count=run_count)
 
-        if choice == 4:  # Beam Search
-            bs = BeamSearchProteinFolding(data, protein, beam_width=1)
-            folded_protein = bs.execute_with_dynamic_beam_width(end_time)
+        if choice == 1:  # Random Folding
+            rf = RandomFolding(protein,data)
+            folded_protein = rf.execute(iterations=1000)
 
         elif choice == 2:  # hillclimber
-            # Simulated Annealing uitvoeren
-
             max_iterations = int(1000)
             hillclimber_folding = HillClimber( protein,max_iterations=max_iterations,data = data)
             folded_protein = hillclimber_folding.execute()
-            
-        elif choice == 5:  # Simulated Annealing
-            # Simulated Annealing uitvoeren
-            sa = SimulatedAnnealing(data, protein)
-            folded_protein = sa.execute()
 
         elif choice == 3:  # Greedy Algorithm
             # Greedy Algorithm uitvoeren
             gf = GreedyFolding(data, protein)
             folded_protein = gf.execute()
 
-        elif choice == 1:  # Random Folding
-            rf = RandomFolding(protein,data)
-            folded_protein = rf.execute(iterations=1000)
+        elif choice == 4:  # Beam Search
+            bs = BeamSearchProteinFolding(data, protein, beam_width=1)
+            folded_protein = bs.execute_with_dynamic_beam_width(end_time)
+  
+        elif choice == 5:  # Simulated Annealing
+            sa = SimulatedAnnealing(data, protein)
+            folded_protein = sa.execute()
 
         # Bereken de stabiliteit en tijd van de huidige run
         current_stability = folded_protein.calculate_stability()
@@ -292,14 +289,6 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
         if best_stability is None or current_stability < best_stability:
             best_stability = current_stability
             best_protein = folded_protein
-
-        # Voeg samenvattingsgegevens toe aan het summary-bestand
-        with open(summary_filepath, mode='a', newline='') as f:
-            writer = csv.writer(f)
-            if choice == 4:  # Beam Search
-                writer.writerow([beam_width, elapsed_time, current_stability, folded_protein.sequence])
-            else:  # Andere algoritmen
-                writer.writerow([run_count + 1, execution_time, current_stability, folded_protein.sequence])
 
         print(f"Run {run_count + 1} completed: Time={execution_time:.2f}s, Stability={current_stability}")
         run_count += 1

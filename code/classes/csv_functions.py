@@ -1,4 +1,3 @@
-
 import os, csv
 
 class CsvFunctions():
@@ -53,3 +52,21 @@ class CsvFunctions():
                     writer.writerow(['Beam Width', 'Elapsed Time (s)', 'Stability', 'Protein Folding Sequence'])
                 else:
                     writer.writerow(['Run', 'Execution Time (s)', 'Stability', 'Protein Folding Sequence'])
+
+    def csv_summary(
+            summary_filepath = None,
+            choice = None,
+            beam_width = None,
+            elapsed_time = None,
+            current_stability = None,
+            folded_protein = None,
+            run_count = None,
+            execution_time = None
+                    ):
+        # Voeg samenvattingsgegevens toe aan het summary-bestand
+        with open(summary_filepath, mode='a', newline='') as f:
+            writer = csv.writer(f)
+            if choice == 4:  # Beam Search
+                writer.writerow([beam_width, elapsed_time, current_stability, folded_protein.sequence])
+            else:  # Andere algoritmen
+                writer.writerow([run_count + 1, execution_time, current_stability, folded_protein.sequence])
