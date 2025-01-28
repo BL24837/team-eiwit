@@ -3,8 +3,8 @@
 This project focuses on optimizing protein folding using a different algorithm. Proteins in this project consist of three types of amino acids: hydrophobic amino acids (H), polar amino acids (P), and cysteine (C). These amino acids can be folded around each other to form a compact structure.
 
 The strength of the protein structure is determined by the stability score, which is calculated based on bonds between specific amino acids:
-- **H-H bonds**: Contribute a stability of `-1`.
-- **C-H or C-C bonds**: Contribute a stronger stability of `-5`.
+- **H-H or C-H bonds**: Contribute a stability of `-1`.
+- **C-C bonds**: Contribute a stronger stability of `-5`.
 
 The goal of this project is to find a configuration with the lowest possible stability score, as a lower score indicates a more stable and tightly folded protein.
 
@@ -83,11 +83,11 @@ To reproduce the results, follow these steps:
 2. **Run the Main Program**  
    Execute the program by running `python3 main.py`. The main program will present you with five different algorithms to choose from:
 
-   1. `Random Folding`
-   2. `Hillclimber`
-   3. `Greedy Folding`
-   4. `Beam Search Folding`
-   5. `Simulated Annealing Folding`
+   1 `Random Folding`
+   2 `Hillclimber`
+   3 `Greedy Folding`
+   4 `Beam Search Folding`
+   5 `Simulated Annealing Folding`
 
 3. **Choose an Algorithm**  
    Select the algorithm for which you want to reproduce results.
@@ -95,16 +95,16 @@ To reproduce the results, follow these steps:
 4. **Choose a Protein Sequence**  
    After selecting an algorithm, you will be prompted to choose a protein sequence. The available sequences are:
 
-   1. `HHPHHHPH`
-   2. `HHPHHHPHPHHHPH`
-   3. `HPHPPHHPHPPHPHHPPHPH`
-   4. `PPPHHPPHHPPPPPHHHHHHHPPHHPPPPHHPPHPP`
-   5. `HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH`
-   6. `PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP`
-   7. `CPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPC`
-   8. `HCPHPCPHPCHCHPHPPPHPPPHPPPPHPCPHPPPHPHHHCCHCHCHCHH`
-   9. `HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH`
-   10. Enter your own sequence.
+   1 `HHPHHHPH`
+   2 `HHPHHHPHPHHHPH`
+   3 `HPHPPHHPHPPHPHHPPHPH`
+   4 `PPPHHPPHHPPPPPHHHHHHHPPHHPPPPHHPPHPP`
+   5 `HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH`
+   6 `PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP`
+   7 `CPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPC`
+   8 `HCPHPCPHPCHCHPHPPPHPPPHPPPPHPCPHPPPHPHHHCCHCHCHCHH`
+   9 `HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH`
+   10 Enter your own sequence.
 
    Select the protein sequence for which you want to reproduce results.
 
