@@ -1,3 +1,4 @@
+from code.algorithms import *
 from code.algorithms.greedy_algorithm import *
 from code.algorithms.random_algorithm import *
 from code.algorithms.hillclimber import *
@@ -7,7 +8,6 @@ from code.classes.data_storing import DataStoring
 from code.classes.csv_functions import CsvFunctions
 from code.visualisation.timer import Timer
 import os
-from code.visualisation.visualize import ProteinVisualizer
 from code.classes.protein import Protein
 import helpers
 from datetime import datetime, timedelta

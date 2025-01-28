@@ -64,10 +64,7 @@ class RandomFolding:
         Distribution(stabilities)
         # Store the final results if data is given
         if self.data:
-            self.data.random_folding_data(self.protein)
-
-        # Store the final results
-        
+            self.export_data(best_protein)        
         
         return best_protein
 
@@ -94,6 +91,6 @@ class RandomFolding:
             return True
         return False
     
-    def export_data(self, protein:Protein):
-        self.data.random_folding_data(protein)
+    def export_data(self, best_protein:Protein):
+        self.data.random_folding_data(best_protein)
 

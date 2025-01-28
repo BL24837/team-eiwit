@@ -95,7 +95,7 @@ class DataStoring:
             writer = csv.writer(f)
             writer.writerow([self.run_count + 1, current_stability])
     
-    def random_folding_data(self, protein: Protein) -> None:
+    def random_folding_data(self, best_protein: Protein) -> None:
         """
         Writes Random Folding results to the CSV file.
 
@@ -106,7 +106,7 @@ class DataStoring:
         full_path = self.get_path()
 
         # Log de random folding data
-        current_stability = protein.calculate_stability()
+        current_stability = best_protein.calculate_stability()
         with open(full_path, mode='a', newline='') as f:
             writer = csv.writer(f)
             writer.writerow([self.run_count + 1, current_stability])
