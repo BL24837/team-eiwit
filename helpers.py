@@ -166,7 +166,7 @@ def run_algorithm(choice: int, protein, algorithm, filename):
     elif choice == 5:
         # Perform simulated annealing
         sa = SimulatedAnnealing(data, protein)
-        folded_protein ,interation_data = sa.execute()
+        folded_protein = sa.execute()
 
     return folded_protein
 
