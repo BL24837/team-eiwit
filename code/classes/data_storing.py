@@ -95,7 +95,7 @@ class DataStoring:
             writer = csv.writer(f)
             writer.writerow([self.run_count + 1, current_stability])
     
-    def random_folding_data(self, protein: Protein) -> None:
+    def random_folding_data(self, stabilities) -> None:
         """
         Writes Random Folding results to the CSV file.
 
@@ -106,10 +106,26 @@ class DataStoring:
         full_path = self.get_path()
 
         # Log de random folding data
-        current_stability = protein.calculate_stability()
         with open(full_path, mode='a', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow([self.run_count + 1, current_stability])
+            for iterations_count, stability in stabilities:
+                writer.writerow([iterations_count, stability])
+
+    def hillclimber_data(self,hillclimber) -> None:
+        """
+        Writes hillclimber Folding results to the CSV file.
+
+        Args:
+            iteration (int): The current iteration number.
+            stability (float): The stability score for the iteration.
+        """
+        full_path = self.get_path()
+
+        # Log de random folding data
+        with open(full_path, mode='a', newline='') as f:
+            writer = csv.writer(f)
+            for iterations_count, stability in hillclimber:
+                writer.writerow([iterations_count, stability])
 
     def beam_search_data(self, beam_data:list[tuple[float, float, float]]) -> None:
         """
@@ -120,7 +136,6 @@ class DataStoring:
             score (float): Stability score of the configuration.
             elapsed_time (float): Time taken to execute the algorithm.
         """
-        self.beam_data = beam_data
         full_path = self.get_path()
 
         with open(full_path, mode='a', newline='') as f:

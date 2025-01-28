@@ -8,12 +8,14 @@ from code.classes.csv_functions import CsvFunctions
 from code.visualisation.timer import Timer
 import os
 from code.visualisation.visualize import ProteinVisualizer
+from code.visualisation.distribution import *
 from code.classes.protein import Protein
 import helpers
 from datetime import datetime, timedelta
 import time
 import csv
 import pandas as pd
+
 
 
 # Get information of the user via the terminal functions
@@ -139,6 +141,10 @@ def get_sub_menu():
 def run_algorithm(choice: int, protein, algorithm, filename):
     data = DataStoring(algorithm=algorithm, filename=filename)
     folded_protein = None
+    results_directory = os.path.join("results")
+    raw_filepath = os.path.join(results_directory, filename)
+    csv_object = CsvFunctions()
+    csv_object.csv_header(raw_filepath, choice)
 
     if choice == 1:
         # Perform random folding
@@ -256,6 +262,13 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
         if choice == 4:  # Beam Search
             bs = BeamSearchProteinFolding(data, protein, beam_width=1)
             folded_protein = bs.execute_with_dynamic_beam_width(end_time)
+
+        elif choice == 2:  # hillclimber
+            # Simulated Annealing uitvoeren
+
+            max_iterations = int(1000)
+            hillclimber_folding = HillClimber( protein,max_iterations=max_iterations,data = data)
+            folded_protein = hillclimber_folding.execute()
             
         elif choice == 5:  # Simulated Annealing
             # Simulated Annealing uitvoeren
@@ -269,7 +282,7 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
 
         elif choice == 1:  # Random Folding
             rf = RandomFolding(protein,data)
-            folded_protein = rf.execute(iterations=10000)
+            folded_protein = rf.execute(iterations=1000)
 
         # Bereken de stabiliteit en tijd van de huidige run
         current_stability = folded_protein.calculate_stability()

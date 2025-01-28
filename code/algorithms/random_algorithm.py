@@ -39,7 +39,10 @@ class RandomFolding:
         # Initialize the best protein and its stability
         best_protein = copy.deepcopy(self.protein)
         best_stability = best_protein.calculate_stability()
+        
         stabilities = []  # Track stability scores for visualization
+        iteration_count=1
+
 
         # Perform random rotations for the specified number of iterations
         for i in range(iterations):
@@ -51,12 +54,17 @@ class RandomFolding:
             if success:
                 # Calculate the stability of the new configuration
                 stability = self.protein.calculate_stability()
-                stabilities.append(stability)
+                stabilities.append((iteration_count,stability))
 
                 # Update the best protein if a better stability is found
                 if stability < best_stability:
                     best_stability = stability
                     best_protein = copy.deepcopy(self.protein)
+            else:
+                stability = self.protein.calculate_stability()
+                stabilities.append((iteration_count,stability))
+            
+            iteration_count+=1
 
         print(f"Final best stability: {best_stability}")
 
@@ -64,11 +72,9 @@ class RandomFolding:
         Distribution(stabilities)
         # Store the final results if data is given
         if self.data:
-            self.data.random_folding_data(self.protein)
+            self.data.random_folding_data(stabilities)
 
         # Store the final results
-        
-        
         return best_protein
 
     def perform_random_rotation(self) -> bool:
