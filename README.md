@@ -93,45 +93,61 @@ To reproduce the results, follow these steps:
 
 3. **Choose an Algorithm**  
    Select the algorithm for which you want to reproduce results.
+   ```
+   Enter your choice (1, 2 ,3 ,4 or 5):
+   ```
+
 
 4. **Choose a Protein Sequence**  
    After selecting an algorithm, you will be prompted to choose a protein sequence. The available sequences are:
-
-   1 `HHPHHHPH`
-   2 `HHPHHHPHPHHHPH`
-   3 `HPHPPHHPHPPHPHHPPHPH`
-   4 `PPPHHPPHHPPPPPHHHHHHHPPHHPPPPHHPPHPP`
-   5 `HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH`
-   6 `PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP`
-   7 `CPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPC`
-   8 `HCPHPCPHPCHCHPHPPPHPPPHPPPPHPCPHPPPHPHHHCCHCHCHCHH`
-   9 `HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH`
+   
+   ```
+   1  HHPHHHPH
+   2  HHPHHHPHPHHHPH
+   3  HPHPPHHPHPPHPHHPPHPH
+   4  PPPHHPPHHPPPPPHHHHHHHPPHHPPPPHHPPHPP
+   5  HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH
+   6  PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP
+   7  CPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPC
+   8  HCPHPCPHPCHCHPHPPPHPPPHPPPPHPCPHPPPHPHHHCCHCHCHCHH
+   9  HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH
    10 Enter your own sequence.
+   ```
 
    Select the protein sequence for which you want to reproduce results.
+   
+   ```
+   Enter a number between 1 and 9 to select the sequence:
+   ```
 
 5. **Specify the Output File**  
    Enter the name of the file where the data should be saved. This file must be the same one you created in step 1.
 
 6. **Choose an Execution Mode**  
    After specifying the output file, the program will present you with two options:
+   
+   ```
+   1 Single Run
+   2 Loop Algorithm
+   ```
 
-   1. `Single Run`  
-      For this option, depending on the algorithm chosen, the program will ask you to input specific parameters.
-
-   2. `Loop Algorithm`  
-      For this option, the program will ask how many minutes you want the algorithm to run in a loop.
-
+    1 : For this option, depending on the algorithm chosen, the program will ask you to input specific parameters.
+    
+    2 : For this option, the program will ask how many minutes you want the algorithm to run in a loop.
+    
 7. **Choose Stability, Visualizer, or Both**  
    After the program is done running, it will present you with three options:
+   
+   ```
+   1 Stability
+   2 Visualizer
+   3 Both 
+   ```
 
-   1. `Stability`  
-      For this option, the program will print the stability score in the terminal.
+    1 : For this option, the program will print the stability score in the terminal.
 
-   2. `Visualizer`  
-      For this option, the program will plot the protein sequence.
+    2 : For this option, the program will plot the protein sequence.
 
-   3. `Both`  
-      The program will perform both actions.
+    3 : The program will perform both actions.
 
 Follow these steps to reproduce the results accurately.
