@@ -266,7 +266,7 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
             folded_protein = rf.execute(iterations=1000)
         
         elif choice == 2:  # hillclimber
-            max_iterations = int(1000)
+            max_iterations = int(10000)
             hillclimber_folding = HillClimber( protein,max_iterations=max_iterations,data = data)
             folded_protein = hillclimber_folding.execute()
         
