@@ -1,6 +1,8 @@
 from code.classes.protein import Protein
 import random
 import copy
+from code.classes.data_storing import DataStoring
+from code.algorithms.random_algorithm import RandomFolding
 
 class HillClimber:
     """
@@ -13,7 +15,8 @@ class HillClimber:
     iterations or if no further improvements are found.
     """
 
-    def __init__(self, protein: Protein, max_iterations=1000, start = None):
+    def __init__(self,  protein: Protein, max_iterations:int, data: DataStoring = None, start: int = None):
+        
         """
         Initializes the HillClimber class.
 
@@ -21,9 +24,11 @@ class HillClimber:
             protein (Protein): The initial protein configuration to optimize.
             max_iterations (int): The maximum number of iterations to perform.
         """
+        self.data = data
         self.protein = protein
         self.max_iterations = max_iterations
         self.start = start
+
 
     def execute(self) -> Protein:
         """
@@ -32,6 +37,12 @@ class HillClimber:
         Returns:
             Protein: The best protein configuration found during the search.
         """
+       # random folding starting hillclimber
+        if self.start is None:
+            random_folding= RandomFolding(self.protein)
+            self.protein = random_folding.execute(iterations=10000)
+
+
         # Deep copy the initial protein to avoid modifying the original
         current_protein = copy.deepcopy(self.protein)
         best_protein = copy.deepcopy(current_protein)

@@ -59,8 +59,7 @@ class SimulatedAnnealing:
         Returns:
             Protein: The locally optimized protein structure.
         """
-        start = 1
-        hill_climber = HillClimber(protein=self.protein, max_iterations=self.hillclimber_iterations, start)
+        hill_climber = HillClimber(protein=self.protein, max_iterations=self.hillclimber_iterations)
         return hill_climber.execute()
     
     def plot_temperature_vs_iterations(self, temperatures: list[float], iterations: list[int]) -> None:
@@ -137,7 +136,7 @@ class SimulatedAnnealing:
 
                         # Periodically refine using HillClimber
                         if iteration_count % 10 == 0:
-                            hill_climber = HillClimber(protein=current_protein, max_iterations=10)
+                            hill_climber = HillClimber(protein=current_protein, max_iterations=10, start=1)
                             current_protein = hill_climber.execute()
                             current_stability = current_protein.calculate_stability()
 
