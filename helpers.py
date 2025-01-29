@@ -286,15 +286,16 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
             best_protein = folded_protein
         
         sequence_protein=folded_protein.sequence
-        
-        CsvFunctions.csv_summary(summary_filepath ,
-            current_stability ,
-            sequence_protein ,
-            run_count ,
-            execution_time 
-                                )
 
         print(f"Run {run_count + 1} completed: Time={execution_time:.2f}s, Stability={current_stability}")
+        
+        csv_object.csv_summary(
+            summary_filepath,
+            current_stability,
+            sequence_protein,
+            run_count,
+            execution_time)
+
         run_count += 1
 
     # Toon de beste vouwing na afloop van de loop

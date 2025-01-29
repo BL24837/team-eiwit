@@ -1,43 +1,42 @@
+from helpers import *
 from code.visualisation.visualize import ProteinVisualizer
 from code.classes.protein import Protein
-from helpers import *
 
 def main():
     choice, algorithm = helpers.get_algorithm()
     sequence = None
 
     if not choice == "7":
-        # Vraag de gebruiker om de sequentie en maak het Protein-object
+        # Ask the user for the sequence and create the Protein object
         sequence = helpers.get_sequence()
 
-        # Maakt het proteine object aan
+        # Create the Protein object
         protein = Protein(sequence)
 
-        # Vraag de gebruiker om de naam van het CSV-bestand
+        # Ask the user for the name of the CSV file
         filename = helpers.get_filename()
         
-
-        # Vraag of de gebruiker een enkele run wil of 30 minuten
+        # Ask the user if they want to run a single execution or for multiple minutes
         sort_run = helpers.get_sort_run()
 
         if sort_run == "1":
-            # Voer een enkele run uit
+            # Perform a single execution
             folded_protein = helpers.run_algorithm(choice=choice, protein=protein, algorithm=algorithm, filename=filename)
 
             sub_menu = helpers.get_sub_menu()
 
             if sub_menu == "1":
-                # Stabiliteit tonen
+                # Display stability
                 stability = folded_protein.calculate_stability()
                 print(f"Protein Stability after folding: {stability}")
 
             elif sub_menu == "2":
-                # Protein visualiseren
+                # Visualize the protein
                 visualizer = ProteinVisualizer(folded_protein)
                 visualizer.display()
 
             elif sub_menu == "3":
-                # Stabiliteit en visualisatie
+                # Display stability and visualize the protein
                 stability = folded_protein.calculate_stability()
                 print(f"Protein Stability after folding: {stability}")
                 visualizer = ProteinVisualizer(folded_protein)
@@ -51,7 +50,7 @@ def main():
             print("Invalid execution mode selected.")
 
     elif choice == "7":
-        # Speciale menu-opties
+        # Special menu options
         choice_menu = helpers.get_choise_menu()
         helpers.run_choise_menu(choice_menu, protein)
 

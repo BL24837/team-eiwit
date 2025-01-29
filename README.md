@@ -134,7 +134,7 @@ To reproduce the results, follow these steps:
     1 : For this option, depending on the algorithm chosen, the program will ask you to input specific parameters.
     
     2 : For this option, the program will ask how many minutes you want the algorithm to run in a loop.
-    
+
 7. **Choose Stability, Visualizer, or Both**  
    After the program is done running, it will present you with three options:
    
@@ -150,4 +150,40 @@ To reproduce the results, follow these steps:
 
     3 : The program will perform both actions.
 
+8. **Create distribution, graph or histogram plot**   
+
+   Once the results have been saved in the chosen CSV file, you can visualize them following the steps below.
+
+   First, while inside **team-eiwit** folder run:
+   ```
+   python3 -m code.visualisation.csv_plotter
+   ```
+
+   ```
+   Enter the name of the CSV file (e.g., 'o_p5_beam_120min.csv'):
+   ```
+   Here, fill in the csv file you used to save the results
+
+   ```
+   Available columns: ['Beam Width', 'Stability', 'elapsed_time']
+   Select the type of plot you want to generate:
+   1. Distribution Plot
+   2. Graph (Line Plot)
+   3. Histogram (Bar Chart)
+   Enter your choice (1, 2, or 3):
+   ```
+   Select the type of plot you want to generate
+   ```
+   Enter the column name for the x-axis:
+   Enter the column name for the y-axis:
+   ```
+   From the avalaible columns list above you can choose an available column.
+
+
 Follow these steps to reproduce the results accurately.
+
+
+# Auteurs
+- Björn Lemmens
+- Daan Pijfers
+- Ömer Eroglu 
