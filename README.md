@@ -183,7 +183,7 @@ To reproduce the results, follow these steps:
 Follow these steps to reproduce the results accurately.
 
 
-# Auterus
+# Auteurs
 - Björn Lemmens
 - Daan Pijfers
 - Ömer Eroglu 
