@@ -87,7 +87,7 @@ class CSVToDistribution:
         return self.headers
 
 
-# Main function for testing
+
 if __name__ == "__main__":
     # Example CSV file from your 'results' folder
     results_dir = "../team-eiwit/results"
