@@ -218,8 +218,11 @@ if __name__ == "__main__":
     choice = input("Enter your choice (1, 2, or 3): ").strip()
 
     if choice == "1":
-        column = input("Enter the column name for the distribution plot: ").strip()
-        plotter.plot_distribution(column=column)
+        # Automatically use the Stability column
+        if "Stability" in plotter.list_headers():
+            plotter.plot_distribution(column="Stability")
+        else:
+            print("Error: 'Stability' column not found in the CSV file.")
     elif choice == "2":
         x_col = input("Enter the column name for the x-axis: ").strip()
         y_col = input("Enter the column name for the y-axis: ").strip()
