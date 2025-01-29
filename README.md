@@ -134,7 +134,7 @@ To reproduce the results, follow these steps:
     1 : For this option, depending on the algorithm chosen, the program will ask you to input specific parameters.
     
     2 : For this option, the program will ask how many minutes you want the algorithm to run in a loop.
-    
+
 7. **Choose Stability, Visualizer, or Both**  
    After the program is done running, it will present you with three options:
    
@@ -151,3 +151,8 @@ To reproduce the results, follow these steps:
     3 : The program will perform both actions.
 
 Follow these steps to reproduce the results accurately.
+
+# Auterus
+- Björn lemmens
+- Daan Pijfers
+- Ömer 
