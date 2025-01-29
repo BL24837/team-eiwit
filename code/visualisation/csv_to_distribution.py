@@ -91,7 +91,7 @@ class CSVToDistribution:
 if __name__ == "__main__":
     # Example CSV file from your 'results' folder
     results_dir = "../team-eiwit/results"
-    csv_file = "d_p9_random_120min.csv"  # Replace with your file
+    csv_file = "o_p5_beam_120min.csv"  # Replace with your file
     csv_path = f"{results_dir}/{csv_file}"
 
     # Initialize the CSVToDistribution class
@@ -101,4 +101,4 @@ if __name__ == "__main__":
     print("Available columns:", csv_distribution.list_headers())
 
     # Plot the distribution for a chosen column
-    csv_distribution.plot_distribution(column="Stability", bins=30, title="Stabiliteit bij Random Folding")
+    csv_distribution.plot_distribution(column="Stability", bins=30, title="Distributie van scores voor simulated annealing")

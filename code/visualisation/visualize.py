@@ -1,15 +1,30 @@
-
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
 class ProteinVisualizer:
-    def __init__(self, protein):
+    """
+    A class to visualize the 3D structure of a protein using matplotlib.
+    """
+    
+    def __init__(self, protein) -> None:
+        """
+        Initializes the ProteinVisualizer.
+        
+        Args:
+            protein: A protein object containing amino acid sequence and positions.
+        """
         self.protein = protein
 
-    def display(self, return_figure=False):
+    def display(self, return_figure: bool = False):
         """
-        Visualize the 3D structure of the protein using matplotlib.
+        Visualizes the 3D structure of the protein using matplotlib.
+        
+        Args:
+            return_figure (bool, optional): If True, returns the figure and axes objects. Defaults to False.
+        
+        Returns:
+            Optional[Tuple[plt.Figure, plt.Axes]]: If return_figure is True, returns the figure and axes.
         """
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
@@ -19,7 +34,7 @@ class ProteinVisualizer:
         types = [aa["type"] for aa in self.protein.amino_acids]
 
         # Map amino acid types to colors
-        color_map = {"H": "red", "P": "blue","C": "green"}
+        color_map = {"H": "red", "P": "blue", "C": "green"}
         colors = [color_map.get(t, "gray") for t in types]
 
         # Plot the positions
@@ -41,6 +56,7 @@ class ProteinVisualizer:
         ax.set_zlabel("Z")
         ax.set_title("3D Visualization of Protein Structure")
 
+        # Adjust axis limits
         x_min, x_max = positions[:, 0].min(), positions[:, 0].max()
         y_min, y_max = positions[:, 1].min(), positions[:, 1].max()
         z_min, z_max = positions[:, 2].min(), positions[:, 2].max()
@@ -57,10 +73,7 @@ class ProteinVisualizer:
         
         plt.legend()
         
-
         if return_figure:
             return fig, ax
         else:
             plt.show()
-
-    

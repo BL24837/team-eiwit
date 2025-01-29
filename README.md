@@ -150,7 +150,33 @@ To reproduce the results, follow these steps:
 
     3 : The program will perform both actions.
 
+8. **Create distribution, graph or histogram plot**   
+
+   Once the results have been saved in the chosen CSV file, you can visualize them following the steps below.
+
+   ```
+   Enter the name of the CSV file (e.g., 'o_p5_beam_120min.csv'):
+   ```
+   Here, fill in the csv file you used to save the results
+
+   ```
+   Available columns: ['Beam Width', 'Stability', 'elapsed_time']
+   Select the type of plot you want to generate:
+   1. Distribution Plot
+   2. Graph (Line Plot)
+   3. Histogram (Bar Chart)
+   Enter your choice (1, 2, or 3):
+   ```
+   Select the type of plot you want to generate
+   ```
+   Enter the column name for the x-axis:
+   Enter the column name for the y-axis:
+   ```
+   From the avalaible columns list above you can choose an available column.
+
+
 Follow these steps to reproduce the results accurately.
+
 
 # Auterus
 - Björn lemmens

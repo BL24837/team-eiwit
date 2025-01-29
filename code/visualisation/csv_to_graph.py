@@ -109,4 +109,4 @@ if __name__ == "__main__":
     print("Available columns:", csv_graph.list_headers())
 
     # Test plotting (adjust column names based on your CSV headers)
-    csv_graph.plot(x_col="Beam Width", y_col="Stability", title="Beam Width vs Stability")
+    csv_graph.plot(x_col="Beam Width", y_col="Stability", title="Simulated annealing")
