@@ -99,7 +99,7 @@ class CSVToGraph:
 if __name__ == "__main__":
     # Path to the CSV file (use one of your files, e.g., 'b_p3_simulated_120min.csv')
     results_dir = "../team-eiwit/results"  # Adjust the path as needed
-    csv_file = "o_p7_simulated_120min.csv"  # Example CSV file
+    csv_file = "o_p7_beam_120min.csv"  # Example CSV file
     csv_path = os.path.join(results_dir, csv_file)
 
     # Initialize the CSVToGraph class
@@ -109,4 +109,4 @@ if __name__ == "__main__":
     print("Available columns:", csv_graph.list_headers())
 
     # Test plotting (adjust column names based on your CSV headers)
-    csv_graph.plot(x_col="Iteration", y_col="Stability", title="Simulated annealing")
+    csv_graph.plot(x_col="Beam Width", y_col="Stability", title="Simulated annealing")

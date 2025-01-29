@@ -91,7 +91,7 @@ class CSVToDistribution:
 if __name__ == "__main__":
     # Example CSV file from your 'results' folder
     results_dir = "../team-eiwit/results"
-    csv_file = "o_p7_simulated_120min.csv"  # Replace with your file
+    csv_file = "o_p5_beam_120min.csv"  # Replace with your file
     csv_path = f"{results_dir}/{csv_file}"
 
     # Initialize the CSVToDistribution class
