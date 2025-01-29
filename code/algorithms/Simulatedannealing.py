@@ -60,23 +60,6 @@ class SimulatedAnnealing:
         """
         hill_climber = HillClimber(protein=self.protein, max_iterations=self.hillclimber_iterations)
         return hill_climber.execute()
-    
-    def plot_temperature_vs_iterations(self, temperatures: list[float], iterations: list[int]) -> None:
-        """
-        Plots the temperature over the course of iterations.
-
-        Args:
-            temperatures (list[float]): List of temperatures recorded at each step.
-            iterations (list[int]): Corresponding iteration numbers.
-        """
-        plt.figure(figsize=(10, 6))
-        plt.plot(iterations, temperatures, label="Temperature")
-        plt.xlabel("Iterations")
-        plt.ylabel("Temperature")
-        plt.title("Temperature vs Iterations")
-        plt.legend()
-        plt.grid(True)
-        plt.show()
 
     def execute(self) -> Protein:
         """

@@ -3,6 +3,9 @@ from code.visualisation.visualize import ProteinVisualizer
 from code.classes.protein import Protein
 
 def main():
+    """
+    This is the function of the main program, where you can choose between different algorithms, sequences and other options.
+    """
     choice, algorithm = helpers.get_algorithm()
     sequence = None
 

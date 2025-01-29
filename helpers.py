@@ -63,7 +63,7 @@ def get_algorithm():
         print(f"{key}: {value}")
     print("6: Other menu")
 
-    choice = input("Enter your choice (1, 2 ,3 ,4 or 5): ").strip()
+    choice = input("Enter your choice (1, 2 ,3 ,4, 5 or 6): ").strip()
     try:
         choice = int(choice)
         if choice in algorithm:
@@ -77,29 +77,29 @@ def get_algorithm():
         return None
     
 def get_filename():
-    while True:  # Blijf vragen totdat een geldig bestaand bestand wordt ingevoerd
+    while True:
         print("Check your file where you want to save the data. Check the parameters. For example exp1.csv")
         filename = input("Enter the filename: ").strip()
 
-        # Controleer of de bestandsnaam leeg is
+        # Control if file is empty
         if not filename:  
             print("No filename provided. Please enter a valid filename.")
-            continue  # Vraag opnieuw om de bestandsnaam
+            continue  
 
-        # Controleer of de bestandsnaam eindigt op .csv
+        # Control if file ends on csv
         if not filename.endswith('.csv'):
             print("Invalid file extension. Please use a .csv file extension.")
-            continue  # Vraag opnieuw om de bestandsnaam
+            continue  
 
-        # Controleer of het bestand al bestaat
+        # Control if file exists
         file_path = os.path.join(os.path.dirname(__file__), 'results', filename)
 
-        if os.path.isfile(file_path):  # Bestand bestaat al
+        if os.path.isfile(file_path): 
             print(f"File '{filename}' found. Data will be appended.")
-            break  # Als het bestand bestaat, stop met vragen
-        else:  # Bestand bestaat niet
+            break  
+        else:  
             print(f"File '{filename}' does not exist. Please enter an existing file.")
-            continue  # Vraag opnieuw om de bestandsnaam
+            continue 
 
     return filename
 
@@ -132,7 +132,7 @@ def get_sub_menu():
 
     return choice
 
-# Run the chosen things functions
+# Functions to run algorithms
 def run_algorithm(choice: int, protein, algorithm, filename):
     data = DataStoring(algorithm=algorithm, filename=filename)
     folded_protein = None
@@ -215,19 +215,21 @@ def run_choise_menu(choice, protein):
 def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
     
     """
-    Laat een algoritme een aantal minuten draaien en sla de resultaten op in de map onder de opgegeven CSV-bestandsnamen.
-    Zowel raw data als een samenvatting worden opgeslagen.
+    Run an algorithm for a specified number of minutes and save the results in the folder under the given CSV file names.
+    Both raw data and a summary will be saved.
 
-    :param choice: De keuze van het algoritme.
-    :param protein: Het Protein-object.
-    :param algorithm: De naam van het algoritme.
-    :param filename: Bestandsnaam van het CSV-bestand waarin resultaten worden opgeslagen.
-    :param x_times: Aantal minuten dat het algoritme moet draaien.
+    Parameters:
+
+    choice: The selected algorithm.
+    protein: The Protein object.
+    algorithm: The name of the algorithm.
+    filename: The filename of the CSV file where the results will be saved.
+    x_times: The number of minutes the algorithm should run.
     """
-    best_stability = None  # Best stabiele score (initieel onbekend)
-    best_protein = None  # Best folded protein (initieel onbekend)
+    best_stability = None  
+    best_protein = None  
 
-    # Zorg ervoor dat de benodigde directories bestaan
+    # Directories
     results_directory = os.path.join("results")
     summary_directory = os.path.join("results", "summary_loops")
     plots_directory = os.path.join("results", "plots")
@@ -236,7 +238,6 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-    # Bestandslocaties voor ruwe data en samenvatting
     raw_filepath = os.path.join(results_directory, filename)
     summary_filepath = os.path.join(summary_directory, filename)
 
@@ -245,14 +246,14 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
     csv_object.csv_header(raw_filepath, choice)
     csv_object.csv_header_summary(summary_filepath, choice)
 
-    # Looptijden instellen
+    # Set looptime
     end_time = datetime.now() + timedelta(minutes=x_times)
     run_count = 0
 
     print(f"Starting {x_times}-minute execution...")
 
     while datetime.now() < end_time:
-        start_time = time.time()  # Starttijd van deze run
+        start_time = time.time()  # Starting time
         data = DataStoring(algorithm=algorithm ,filename=filename, run_count=run_count)
 
         if choice == 1:  # Random Folding
@@ -273,13 +274,12 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
             folded_protein = bs.execute_with_dynamic_beam_width(end_time)
 
         elif choice == 5:  # Simulated Annealing
-            # Simulated Annealing uitvoeren
             sa = SimulatedAnnealing(data, protein)
             folded_protein = sa.execute()
 
-        # Bereken de stabiliteit en tijd van de huidige run
+        # Calculates stabbility and time of the best protein from this run
         current_stability = folded_protein.calculate_stability()
-        execution_time = time.time() - start_time  # Looptijd van deze run
+        execution_time = time.time() - start_time
 
         if best_stability is None or current_stability < best_stability:
             best_stability = current_stability
@@ -298,20 +298,20 @@ def run_algorithm_for_x_minutes(choice, protein, algorithm, filename, x_times):
 
         run_count += 1
 
-    # Toon de beste vouwing na afloop van de loop
+    # Shows the best folding
     if best_protein:
         print(f"Best folding found:")
         print(f"Stability: {best_stability}")
         print(f"Protein folding sequence: {best_protein.sequence}")
 
-        # Visualiseer het beste eiwit
+        # Visualize the protein
         visualizer = ProteinVisualizer(best_protein)
-        fig, ax = visualizer.display(return_figure=True)  # Haal de figuur op om op te slaan
+        fig, ax = visualizer.display(return_figure=True)  
         plot_path = os.path.join(plots_directory, filename.replace('.csv', '_best_folding.png'))
         fig.savefig(plot_path)
         plt.close(fig)
 
-        # Sla de aminozuurgegevens van de beste vouwing op
+        # Saves the amino acids placing of the best protein
         amino_acids_filename = filename.replace('.csv', '_best_folding.csv')
         amino_acids_path = os.path.join(plots_directory, amino_acids_filename)
         with open(amino_acids_path, mode='w', newline='') as f:
