@@ -151,6 +151,7 @@ To reproduce the results, follow these steps:
     3 : The program will perform both actions.
 
 8. **Create distribution, graph or histogram plot**
+
    Once the results have been saved in the chosen CSV file, you can visualize them using the `csv_to_distribution`, `csv_to_graph`, or `csv_to_histogram` functions.
 
    Each of these functions operates similarly in generating plots, so we will explain one as an example. To create a graph, navigate to the `csv_to_graph` function inside the `visualisation` folder. 
