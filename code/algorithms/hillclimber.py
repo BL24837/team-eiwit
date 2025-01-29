@@ -1,8 +1,8 @@
 from code.classes.protein import Protein
-import random
-import copy
 from code.classes.data_storing import DataStoring
 from code.algorithms.random_algorithm import RandomFolding
+
+import copy, random
 
 class HillClimber:
     """

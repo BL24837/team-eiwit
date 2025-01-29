@@ -1,8 +1,4 @@
-from code.classes.protein import Protein
-
-import csv
-import os
-import re
+import csv, os
 
 class DataStoring:
     """

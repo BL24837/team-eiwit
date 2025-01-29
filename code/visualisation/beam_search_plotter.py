@@ -1,8 +1,6 @@
-import csv
-import matplotlib.pyplot as plt
-from code.visualisation.timer import Timer
 from code.algorithms.beam_search import BeamSearchProteinFolding
-from code.classes.protein import Protein
+
+import matplotlib.pyplot as plt
 
 def run_and_export_beam_search(sequence, max_beam_width, output_file):
     """

@@ -1,6 +1,3 @@
-import csv
-import numpy as np
-import matplotlib.pyplot as plt
 from code.classes.data_storing import DataStoring
 from code.classes.protein import Protein
 from code.classes.protein import Protein
@@ -8,7 +5,7 @@ from code.visualisation.timer import Timer
 from datetime import datetime
 
 import copy
-
+import numpy as np
 
 class BeamSearchProteinFolding:
     """

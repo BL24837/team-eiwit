@@ -1,5 +1,5 @@
-import csv
 import matplotlib.pyplot as plt
+import csv
 
 class CSVToDistribution:
     """

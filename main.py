@@ -1,11 +1,6 @@
-from code.visualisation.visualize import *
+from code.visualisation.visualize import ProteinVisualizer
 from code.classes.protein import Protein
 from helpers import *
-from code.algorithms.greedy_algorithm import *
-from code.algorithms.random_algorithm import *
-from code.algorithms.hillclimber import *
-from code.algorithms.beam_search import *
-from code.algorithms.Simulatedannealing import *
 
 def main():
     choice, algorithm = helpers.get_algorithm()

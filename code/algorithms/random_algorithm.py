@@ -1,10 +1,8 @@
-import copy
-import random
 from code.classes.data_storing import DataStoring
 from code.classes.protein import Protein
-from code.visualisation.visualize import ProteinVisualizer
 from code.visualisation.distribution import Distribution
-from helpers import *
+
+import copy, random
 
 class RandomFolding:
     """

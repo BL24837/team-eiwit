@@ -1,7 +1,7 @@
 from code.classes.protein import Protein
 from code.classes.data_storing import DataStoring
-import copy
-import random
+
+import copy, random
 
 class GreedyFolding:
     """

@@ -1,25 +1,19 @@
-from code.algorithms import *
-from code.algorithms.greedy_algorithm import *
-from code.algorithms.random_algorithm import *
-from code.algorithms.hillclimber import *
-from code.algorithms.beam_search import *
-from code.algorithms.Simulatedannealing import *
+from code.algorithms.greedy_algorithm import GreedyFolding
+from code.algorithms.random_algorithm import RandomFolding
+from code.algorithms.hillclimber import HillClimber
+from code.algorithms.beam_search import BeamSearchProteinFolding
+from code.algorithms.Simulatedannealing import SimulatedAnnealing
 from code.classes.data_storing import DataStoring
 from code.classes.csv_functions import CsvFunctions
-from code.visualisation.timer import Timer
-import os
 from code.visualisation.visualize import ProteinVisualizer
-from code.visualisation.distribution import *
-from code.classes.protein import Protein
-import helpers
+from code.visualisation.distribution import Distribution
 from datetime import datetime, timedelta
-import time
-import csv
-import pandas as pd
 
+import matplotlib.pyplot as plt
+import os, time, csv
+import helpers
 
-# Get information of the user via the terminal functions
-
+# Functions to retrieve users data via the terminal
 def get_sequence():
     """
     Get a sequence from the user. The user can choose from a list of predefined sequences or enter their own sequence. 
