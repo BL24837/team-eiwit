@@ -150,7 +150,7 @@ To reproduce the results, follow these steps:
 
     3 : The program will perform both actions.
 
-8. **Create distribution, graph or histogram plot**
+8. **Create distribution, graph or histogram plot**   
 
    Once the results have been saved in the chosen CSV file, you can visualize them using the `csv_to_distribution`, `csv_to_graph`, or `csv_to_histogram` functions.
 
@@ -159,6 +159,7 @@ To reproduce the results, follow these steps:
    1. Open the script and locate the **main section**.
    2. Assign the CSV filename to the `csv_file` variable.
    3. In the `csv_graph.plot()` method, specify the columns for the x-axis and y-axis. The names of the columns are saved at the top of the csv files.
+   4. In the terminal run `python3 -m code.visualisation.csv_to_graph`
 
    This same approach applies to the distribution and histogram functions, allowing you to easily visualize your results in different ways.
 
