@@ -159,7 +159,7 @@ To reproduce the results, follow these steps:
    1. Open the script and locate the **main section**.
    2. Assign the CSV filename to the `csv_file` variable.
    3. In the `csv_graph.plot()` method, specify the columns for the x-axis and y-axis. The names of the columns are saved at the top of the csv files.
-   4. In the terminal run `python3 -m code.visualisation.csv_to_graph`
+   4. While inside the **team-eiwit** folder run in the terminal `python3 -m code.visualisation.csv_to_graph`
 
    This same approach applies to the distribution and histogram functions, allowing you to easily visualize your results in different ways.
 
