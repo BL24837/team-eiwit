@@ -154,6 +154,11 @@ To reproduce the results, follow these steps:
 
    Once the results have been saved in the chosen CSV file, you can visualize them following the steps below.
 
+   First, while inside **team-eiwit** folder run:
+   ```
+   python3 -m code.visualisation.csv_plotter
+   ```
+
    ```
    Enter the name of the CSV file (e.g., 'o_p5_beam_120min.csv'):
    ```
