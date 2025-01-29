@@ -184,6 +184,6 @@ Follow these steps to reproduce the results accurately.
 
 
 # Auterus
-- Björn lemmens
+- Björn Lemmens
 - Daan Pijfers
-- Ömer 
+- Ömer Eroglu 
